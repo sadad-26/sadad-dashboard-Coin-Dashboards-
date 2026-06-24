@@ -264,21 +264,27 @@ canvas{display:block;width:100%!important}
 <div class="section" id="tab-teachers">
   <div class="card">
     <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem">Class Teacher &amp; Mentors</div>
-    <div class="faculty-card">
-      <div class="faculty-av" style="background:linear-gradient(135deg,#6C63FF,#8B5CF6)">MA</div>
-      <div>
-        <div style="font-size:14px;font-weight:600;color:var(--text)">Usthad Muhammed Arafath Hudawi</div>
-        <div style="font-size:12px;color:var(--text3)">Vanimel &bull; Class teacher</div>
+    <div class="faculty-card" id="fc-0">
+      <div class="faculty-av-wrap" style="position:relative;flex-shrink:0">
+        <div class="faculty-av" id="fav-0" style="background:linear-gradient(135deg,#6C63FF,#8B5CF6);width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;overflow:hidden">MA</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;color:var(--text)" id="fname-0">Usthad Muhammed Arafath Hudawi</div>
+        <div style="font-size:12px;color:var(--text3)" id="fdet-0">Vanimel &bull; Class teacher</div>
         <span class="hbadge green" style="display:inline-block;margin-top:4px">Admin</span>
       </div>
+      <button id="fedit-btn-0" style="display:none;background:rgba(108,99,255,.15);color:#a78bfa;border:1px solid rgba(108,99,255,.25);border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer" onclick="openFacultyEdit(0)">Edit</button>
     </div>
-    <div class="faculty-card">
-      <div class="faculty-av" style="background:linear-gradient(135deg,#43B89C,#2d9e6b)">SW</div>
-      <div>
-        <div style="font-size:14px;font-weight:600;color:var(--text)">Usthad Savad Wafy</div>
-        <div style="font-size:12px;color:var(--text3)">Kunjom &bull; Mentor</div>
+    <div class="faculty-card" id="fc-1">
+      <div class="faculty-av-wrap" style="position:relative;flex-shrink:0">
+        <div class="faculty-av" id="fav-1" style="background:linear-gradient(135deg,#43B89C,#2d9e6b);width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;overflow:hidden">SW</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;color:var(--text)" id="fname-1">Usthad Savad Wafy</div>
+        <div style="font-size:12px;color:var(--text3)" id="fdet-1">Kunjom &bull; Mentor</div>
         <span class="hbadge green" style="display:inline-block;margin-top:4px">Admin</span>
       </div>
+      <button id="fedit-btn-1" style="display:none;background:rgba(108,99,255,.15);color:#a78bfa;border:1px solid rgba(108,99,255,.25);border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer" onclick="openFacultyEdit(1)">Edit</button>
     </div>
   </div>
 </div>
@@ -289,6 +295,7 @@ canvas{display:block;width:100%!important}
     <button class="sub-tab" onclick="showSub('editProf',this)">Profile</button>
     <button class="sub-tab" onclick="showSub('cats',this)">Categories</button>
     <button class="sub-tab" onclick="showSub('hist',this)">History</button>
+    <button class="sub-tab" onclick="showSub('report',this)">&#128196; Report</button>
   </div>
   <div id="subtab-addCoins">
     <div class="card">
@@ -354,10 +361,44 @@ canvas{display:block;width:100%!important}
       <div id="histList"></div>
     </div>
   </div>
+
+  <div id="subtab-report" style="display:none">
+    <div class="card">
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:.75rem">&#128196; Monthly Report</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem">
+        <div>
+          <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Month</label>
+          <select id="repMonth">
+            <option value="0">January</option><option value="1">February</option>
+            <option value="2">March</option><option value="3">April</option>
+            <option value="4">May</option><option value="5" selected>June</option>
+            <option value="6">July</option><option value="7">August</option>
+            <option value="8">September</option><option value="9">October</option>
+            <option value="10">November</option><option value="11">December</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Year</label>
+          <select id="repYear">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026" selected>2026</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="generateReport()" style="width:100%;padding:10px">&#11015; Generate PDF Report</button>
+      <div id="repMsg" style="font-size:12px;margin-top:.5rem;color:var(--text3);text-align:center"></div>
+    </div>
+    <div class="card" style="margin-top:.75rem">
+      <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">All-time Report</div>
+      <button class="btn btn-primary" onclick="generateAllTimeReport()" style="width:100%;padding:10px">&#11015; Generate Full Report PDF</button>
+    </div>
+  </div>
 </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
@@ -549,12 +590,14 @@ function checkPw(){
     document.querySelectorAll('.tab-btn')[3].classList.add('active');
     fillSelects();renderCatList();renderHist();
     document.getElementById('importBtnWrap').style.display='inline-block';
+    renderFaculty();
   }else{document.getElementById('pwErr').textContent='Incorrect password.';}
 }
 document.getElementById('pwIn').addEventListener('keydown',function(e){if(e.key==='Enter')checkPw();});
 function logout(){
   admin=null;document.getElementById('adminBar').style.display='none';
   document.getElementById('importBtnWrap').style.display='none';
+  renderFaculty();
   document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active','slide-in');});
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   var el=document.getElementById('tab-lb');el.classList.add('active');
@@ -868,9 +911,526 @@ function importData(input){
   reader.readAsText(input.files[0]);
 }
 
+
+// ── REPORT GENERATION ──
+function getMonthData(month, year){
+  var data=[];
+  STU.forEach(function(s){
+    var hist=S.history.filter(function(h){
+      if(h.r!==s.r)return false;
+      var pts=h.date.split('/');if(pts.length<3)return false;
+      var hd=new Date(parseInt(pts[2]),parseInt(pts[1])-1,parseInt(pts[0]));
+      return hd.getMonth()===month&&hd.getFullYear()===year;
+    });
+    var coins=hist.reduce(function(a,h){return a+h.coins;},0);
+    var cats={};
+    hist.forEach(function(h){if(!cats[h.cat])cats[h.cat]=0;cats[h.cat]+=h.coins;});
+    data.push({roll:s.r,name:s.n,coins:coins,hist:hist,cats:cats});
+  });
+  data.sort(function(a,b){return b.coins-a.coins;});
+  return data;
+}
+
+function generateReport(){
+  var month=parseInt(document.getElementById('repMonth').value);
+  var year=parseInt(document.getElementById('repYear').value);
+  var monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var data=getMonthData(month,year);
+  var total=data.reduce(function(a,d){return a+d.coins;},0);
+  var active=data.filter(function(d){return d.coins>0;}).length;
+  document.getElementById('repMsg').textContent='Generating PDF...';
+
+  var doc=new jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  var W=210,H=297,y=0;
+
+  // White background
+  doc.setFillColor(255,255,255);
+  doc.rect(0,0,W,H,'F');
+
+  // Top green header bar
+  doc.setFillColor(26,122,74);
+  doc.rect(0,0,W,38,'F');
+
+  // Gold accent line at top
+  doc.setFillColor(212,175,55);
+  doc.rect(0,0,W,2,'F');
+
+  // Institution name
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(16);
+  doc.text('VALIYULLAHI THANGAL MEMORIAL',W/2,11,{align:'center'});
+  doc.text('DARUSSALAM ACADEMY (SADAD)',W/2,19,{align:'center'});
+  doc.setFontSize(10);
+  doc.setFont('helvetica','normal');
+  doc.setTextColor(200,235,210);
+  doc.text('Velliyode, Kerala',W/2,25,{align:'center'});
+
+  // Report title box
+  doc.setFillColor(212,175,55);
+  doc.rect(0,30,W,10,'F');
+  doc.setTextColor(26,60,26);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(11);
+  doc.text('SECOND BATCH-DSA  \u2014  MONTHLY COIN REPORT  \u2014  '+monthNames[month].toUpperCase()+' '+year,W/2,37,{align:'center'});
+
+  y=48;
+
+  // Info section
+  doc.setDrawColor(220,220,220);
+  doc.setLineWidth(0.3);
+  doc.rect(10,y,190,16);
+  doc.setFillColor(248,250,248);
+  doc.rect(10,y,190,16,'F');
+  doc.rect(10,y,190,16,'S');
+
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(8.5);
+  doc.setTextColor(40,40,40);
+  doc.text('Class Teacher:',14,y+6);
+  doc.setFont('helvetica','normal');
+  doc.text('Usthad Muhammed Arafath Hudawi, Vanimel',46,y+6);
+  doc.setFont('helvetica','bold');
+  doc.text('Mentor:',14,y+12);
+  doc.setFont('helvetica','normal');
+  doc.text('Usthad Savad Wafy, Kunjom',36,y+12);
+  doc.setFont('helvetica','bold');
+  doc.text('Date:',130,y+6);
+  doc.setFont('helvetica','normal');
+  doc.text(new Date().toLocaleDateString('en-IN'),145,y+6);
+  doc.setFont('helvetica','bold');
+  doc.text('Total Students:',130,y+12);
+  doc.setFont('helvetica','normal');
+  doc.text('33',165,y+12);
+
+  y+=22;
+
+  // Summary boxes
+  var bw=57,bh=20,bm=8;
+  // Box 1
+  doc.setFillColor(26,122,74);
+  doc.roundedRect(10,y,bw,bh,2,2,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(18);
+  doc.text(String(total),10+bw/2,y+11,{align:'center'});
+  doc.setFontSize(7);
+  doc.setFont('helvetica','normal');
+  doc.text('TOTAL COINS',10+bw/2,y+17,{align:'center'});
+  // Box 2
+  doc.setFillColor(212,175,55);
+  doc.roundedRect(10+bw+bm,y,bw,bh,2,2,'F');
+  doc.setTextColor(40,40,40);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(18);
+  doc.text(String(active),10+bw+bm+bw/2,y+11,{align:'center'});
+  doc.setFontSize(7);
+  doc.setFont('helvetica','normal');
+  doc.text('ACTIVE STUDENTS',10+bw+bm+bw/2,y+17,{align:'center'});
+  // Box 3
+  doc.setFillColor(44,158,107);
+  doc.roundedRect(10+2*(bw+bm),y,bw,bh,2,2,'F');
+  doc.setTextColor(255,255,255);
+  var top=data.find(function(d){return d.coins>0;});
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(11);
+  doc.text(top?top.name.split(' ')[0]+' '+top.name.split(' ')[1]:'-',10+2*(bw+bm)+bw/2,y+11,{align:'center'});
+  doc.setFontSize(7);
+  doc.setFont('helvetica','normal');
+  doc.text('TOP STUDENT',10+2*(bw+bm)+bw/2,y+17,{align:'center'});
+
+  y+=27;
+
+  // Section title
+  doc.setFillColor(26,122,74);
+  doc.rect(10,y,190,7,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(9);
+  doc.text('STUDENT RANKINGS',W/2,y+5,{align:'center'});
+  y+=7;
+
+  // Table header
+  doc.setFillColor(240,247,242);
+  doc.rect(10,y,190,7,'F');
+  doc.setDrawColor(200,220,205);
+  doc.rect(10,y,190,7,'S');
+  doc.setTextColor(26,122,74);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(8);
+  doc.text('Rank',14,y+5);
+  doc.text('Roll No.',28,y+5);
+  doc.text('Student Name',48,y+5);
+  doc.text('No. of Achievements',130,y+5);
+  doc.text('Coins',193,y+5,{align:'right'});
+  y+=7;
+
+  data.forEach(function(d,i){
+    if(y>265){
+      doc.addPage();
+      doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
+      y=15;
+      doc.setFillColor(240,247,242);doc.rect(10,y,190,7,'F');
+      doc.setDrawColor(200,220,205);doc.rect(10,y,190,7,'S');
+      doc.setTextColor(26,122,74);doc.setFont('helvetica','bold');doc.setFontSize(8);
+      doc.text('Rank',14,y+5);doc.text('Roll No.',28,y+5);doc.text('Student Name',48,y+5);
+      doc.text('No. of Achievements',130,y+5);doc.text('Coins',193,y+5,{align:'right'});
+      y+=7;
+    }
+
+    if(i%2===0){doc.setFillColor(252,252,252);}else{doc.setFillColor(255,255,255);}
+    doc.rect(10,y,190,8,'F');
+    doc.setDrawColor(230,235,230);
+    doc.line(10,y+8,200,y+8);
+
+    // Rank with medal color
+    doc.setFont('helvetica','bold');doc.setFontSize(8);
+    if(i===0&&d.coins>0){doc.setTextColor(184,142,0);}
+    else if(i===1&&d.coins>0){doc.setTextColor(120,120,120);}
+    else if(i===2&&d.coins>0){doc.setTextColor(160,82,45);}
+    else{doc.setTextColor(100,100,100);}
+    var rankStr=i===0&&d.coins>0?'1st':i===1&&d.coins>0?'2nd':i===2&&d.coins>0?'3rd':String(i+1);
+    doc.text(rankStr,14,y+5.5);
+
+    doc.setTextColor(60,60,60);doc.setFont('helvetica','normal');
+    doc.text(String(d.roll),28,y+5.5);
+    doc.text(d.name,48,y+5.5);
+    doc.text(String(d.hist.length),130,y+5.5);
+
+    if(d.coins>0){doc.setFont('helvetica','bold');doc.setTextColor(26,122,74);}
+    else{doc.setTextColor(180,180,180);}
+    doc.text(String(d.coins),193,y+5.5,{align:'right'});
+    y+=8;
+  });
+
+  y+=8;
+
+  // Achievement details
+  var activeStudents=data.filter(function(d){return d.coins>0;});
+  if(activeStudents.length>0){
+    if(y>240){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=15;}
+    doc.setFillColor(26,122,74);
+    doc.rect(10,y,190,7,'F');
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');doc.setFontSize(9);
+    doc.text('ACHIEVEMENT DETAILS',W/2,y+5,{align:'center'});
+    y+=10;
+
+    activeStudents.forEach(function(d){
+      if(y>260){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=15;}
+      // Student name row
+      doc.setFillColor(240,247,242);
+      doc.rect(10,y,190,7,'F');
+      doc.setDrawColor(26,122,74);
+      doc.setLineWidth(0.5);
+      doc.line(10,y,10,y+7);
+      doc.setLineWidth(0.3);
+      doc.setTextColor(26,60,26);
+      doc.setFont('helvetica','bold');doc.setFontSize(8.5);
+      doc.text(d.name+'  (Roll No: '+d.roll+')',14,y+5);
+      doc.setTextColor(26,122,74);
+      doc.text(d.coins+' coins',193,y+5,{align:'right'});
+      y+=9;
+
+      Object.keys(d.cats).forEach(function(cat){
+        if(y>270){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=15;}
+        doc.setTextColor(80,80,80);
+        doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+        doc.text('\u2022  '+cat,18,y+3.5);
+        doc.setTextColor(26,122,74);doc.setFont('helvetica','bold');
+        doc.text('+'+d.cats[cat]+' coins',193,y+3.5,{align:'right'});
+        y+=5.5;
+      });
+      y+=4;
+    });
+  }
+
+  // Signature section
+  if(y>240){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=15;}
+  y+=10;
+  doc.setDrawColor(150,150,150);doc.setLineWidth(0.3);
+  doc.line(20,y,80,y);
+  doc.line(130,y,190,y);
+  doc.setTextColor(80,80,80);doc.setFont('helvetica','normal');doc.setFontSize(8);
+  doc.text('Class Teacher',50,y+5,{align:'center'});
+  doc.text('Mentor',160,y+5,{align:'center'});
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);
+  doc.text('Usthad Muhammed Arafath Hudawi',50,y+10,{align:'center'});
+  doc.text('Usthad Savad Wafy',160,y+10,{align:'center'});
+
+  // Footer on all pages
+  var pageCount=doc.internal.getNumberOfPages();
+  for(var i=1;i<=pageCount;i++){
+    doc.setPage(i);
+    doc.setDrawColor(26,122,74);doc.setLineWidth(0.5);
+    doc.line(10,H-14,200,H-14);
+    doc.setTextColor(100,100,100);doc.setFontSize(7);doc.setFont('helvetica','normal');
+    doc.text('SECOND BATCH-DSA, SADAD Velliyode  |  Valiyullahi Thangal Memorial Darussalam Academy',10,H-9);
+    doc.text('Page '+i+' of '+pageCount,200,H-9,{align:'right'});
+  }
+
+  doc.save('SADAD_Monthly_Report_'+monthNames[month]+'_'+year+'.pdf');
+  document.getElementById('repMsg').textContent='PDF downloaded! \u2713';
+  setTimeout(function(){document.getElementById('repMsg').textContent='';},3000);
+}
+
+function generateAllTimeReport(){
+  var data=[];
+  STU.forEach(function(s){
+    var hist=S.history.filter(function(h){return h.r===s.r;});
+    var coins=S.coins[s.r]||0;
+    var cats={};
+    hist.forEach(function(h){if(!cats[h.cat])cats[h.cat]=0;cats[h.cat]+=h.coins;});
+    data.push({roll:s.r,name:s.n,coins:coins,count:hist.length,cats:cats});
+  });
+  data.sort(function(a,b){return b.coins-a.coins;});
+  var total=data.reduce(function(a,d){return a+d.coins;},0);
+
+  var doc=new jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  var W=210,H=297,y=0;
+
+  doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
+  doc.setFillColor(26,122,74);doc.rect(0,0,W,38,'F');
+  doc.setFillColor(212,175,55);doc.rect(0,0,W,2,'F');
+
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(16);
+  doc.text('VALIYULLAHI THANGAL MEMORIAL',W/2,11,{align:'center'});
+  doc.text('DARUSSALAM ACADEMY (SADAD)',W/2,19,{align:'center'});
+  doc.setFontSize(10);doc.setFont('helvetica','normal');doc.setTextColor(200,235,210);
+  doc.text('Velliyode, Kerala',W/2,25,{align:'center'});
+
+  doc.setFillColor(212,175,55);doc.rect(0,30,W,10,'F');
+  doc.setTextColor(26,60,26);doc.setFont('helvetica','bold');doc.setFontSize(11);
+  doc.text('SECOND BATCH-DSA  \u2014  ALL-TIME COIN REPORT',W/2,37,{align:'center'});
+
+  y=48;
+  doc.setFillColor(248,250,248);doc.rect(10,y,190,16,'F');
+  doc.setDrawColor(220,220,220);doc.setLineWidth(0.3);doc.rect(10,y,190,16,'S');
+  doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(40,40,40);
+  doc.text('Class Teacher:',14,y+6);doc.setFont('helvetica','normal');
+  doc.text('Usthad Muhammed Arafath Hudawi, Vanimel',46,y+6);
+  doc.setFont('helvetica','bold');doc.text('Mentor:',14,y+12);doc.setFont('helvetica','normal');
+  doc.text('Usthad Savad Wafy, Kunjom',36,y+12);
+  doc.setFont('helvetica','bold');doc.text('Generated:',130,y+6);doc.setFont('helvetica','normal');
+  doc.text(new Date().toLocaleDateString('en-IN'),155,y+6);
+  doc.setFont('helvetica','bold');doc.text('Total Students:',130,y+12);doc.setFont('helvetica','normal');
+  doc.text('33',165,y+12);
+  y+=22;
+
+  var bw=57,bh=20,bm=8;
+  doc.setFillColor(26,122,74);doc.roundedRect(10,y,bw,bh,2,2,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(18);
+  doc.text(String(total),10+bw/2,y+11,{align:'center'});
+  doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('TOTAL COINS',10+bw/2,y+17,{align:'center'});
+
+  doc.setFillColor(212,175,55);doc.roundedRect(10+bw+bm,y,bw,bh,2,2,'F');
+  doc.setTextColor(40,40,40);doc.setFont('helvetica','bold');doc.setFontSize(18);
+  doc.text(String(S.history.length),10+bw+bm+bw/2,y+11,{align:'center'});
+  doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('TOTAL ACHIEVEMENTS',10+bw+bm+bw/2,y+17,{align:'center'});
+
+  doc.setFillColor(44,158,107);doc.roundedRect(10+2*(bw+bm),y,bw,bh,2,2,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(11);
+  doc.text(data[0]?data[0].name.split(' ')[0]+' '+data[0].name.split(' ')[1]:'-',10+2*(bw+bm)+bw/2,y+11,{align:'center'});
+  doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('TOP STUDENT',10+2*(bw+bm)+bw/2,y+17,{align:'center'});
+  y+=27;
+
+  doc.setFillColor(26,122,74);doc.rect(10,y,190,7,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(9);
+  doc.text('ALL-TIME STUDENT RANKINGS',W/2,y+5,{align:'center'});
+  y+=7;
+
+  doc.setFillColor(240,247,242);doc.rect(10,y,190,7,'F');
+  doc.setDrawColor(200,220,205);doc.rect(10,y,190,7,'S');
+  doc.setTextColor(26,122,74);doc.setFont('helvetica','bold');doc.setFontSize(8);
+  doc.text('Rank',14,y+5);doc.text('Roll No.',28,y+5);doc.text('Student Name',48,y+5);
+  doc.text('Achievements',130,y+5);doc.text('Total Coins',193,y+5,{align:'right'});
+  y+=7;
+
+  data.forEach(function(d,i){
+    if(y>265){
+      doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=15;
+      doc.setFillColor(240,247,242);doc.rect(10,y,190,7,'F');
+      doc.setDrawColor(200,220,205);doc.rect(10,y,190,7,'S');
+      doc.setTextColor(26,122,74);doc.setFont('helvetica','bold');doc.setFontSize(8);
+      doc.text('Rank',14,y+5);doc.text('Roll No.',28,y+5);doc.text('Student Name',48,y+5);
+      doc.text('Achievements',130,y+5);doc.text('Total Coins',193,y+5,{align:'right'});
+      y+=7;
+    }
+    if(i%2===0){doc.setFillColor(252,252,252);}else{doc.setFillColor(255,255,255);}
+    doc.rect(10,y,190,8,'F');
+    doc.setDrawColor(230,235,230);doc.line(10,y+8,200,y+8);
+
+    doc.setFont('helvetica','bold');doc.setFontSize(8);
+    if(i===0&&d.coins>0){doc.setTextColor(184,142,0);}
+    else if(i===1&&d.coins>0){doc.setTextColor(120,120,120);}
+    else if(i===2&&d.coins>0){doc.setTextColor(160,82,45);}
+    else{doc.setTextColor(100,100,100);}
+    var rankStr=i===0&&d.coins>0?'1st':i===1&&d.coins>0?'2nd':i===2&&d.coins>0?'3rd':String(i+1);
+    doc.text(rankStr,14,y+5.5);
+
+    doc.setTextColor(60,60,60);doc.setFont('helvetica','normal');
+    doc.text(String(d.roll),28,y+5.5);
+    doc.text(d.name,48,y+5.5);
+    doc.text(String(d.count),130,y+5.5);
+
+    if(d.coins>0){doc.setFont('helvetica','bold');doc.setTextColor(26,122,74);}
+    else{doc.setTextColor(180,180,180);}
+    doc.text(String(d.coins),193,y+5.5,{align:'right'});
+    y+=8;
+  });
+
+  y+=10;
+  if(y>240){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=15;}
+  doc.setDrawColor(150,150,150);doc.setLineWidth(0.3);
+  doc.line(20,y,80,y);doc.line(130,y,190,y);
+  doc.setTextColor(80,80,80);doc.setFont('helvetica','normal');doc.setFontSize(8);
+  doc.text('Class Teacher',50,y+5,{align:'center'});doc.text('Mentor',160,y+5,{align:'center'});
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);
+  doc.text('Usthad Muhammed Arafath Hudawi',50,y+10,{align:'center'});
+  doc.text('Usthad Savad Wafy',160,y+10,{align:'center'});
+
+  var pageCount=doc.internal.getNumberOfPages();
+  for(var i=1;i<=pageCount;i++){
+    doc.setPage(i);
+    doc.setDrawColor(26,122,74);doc.setLineWidth(0.5);
+    doc.line(10,H-14,200,H-14);
+    doc.setTextColor(100,100,100);doc.setFontSize(7);doc.setFont('helvetica','normal');
+    doc.text('SECOND BATCH-DSA, SADAD Velliyode  |  Valiyullahi Thangal Memorial Darussalam Academy',10,H-9);
+    doc.text('Page '+i+' of '+pageCount,200,H-9,{align:'right'});
+  }
+  doc.save('SADAD_AllTime_Report.pdf');
+}
+
+
+// ── FACULTY PROFILES ──
+var currentFacIdx = -1;
+var facColors = ['linear-gradient(135deg,#6C63FF,#8B5CF6)', 'linear-gradient(135deg,#43B89C,#2d9e6b)'];
+var facDefaults = [
+  {name:'Usthad Muhammed Arafath Hudawi', place:'Vanimel', role:'Class teacher', phone:'', ini:'MA', pic:''},
+  {name:'Usthad Savad Wafy', place:'Kunjom', role:'Mentor', phone:'', ini:'SW', pic:''}
+];
+
+function loadFacultyProfiles(){
+  try{
+    var fp = JSON.parse(localStorage.getItem('sadad_faculty')||'[]');
+    if(fp.length===2){
+      facDefaults[0] = Object.assign({},facDefaults[0],fp[0]);
+      facDefaults[1] = Object.assign({},facDefaults[1],fp[1]);
+    }
+  }catch(e){}
+  renderFaculty();
+}
+
+function saveFacultyProfiles(){
+  try{localStorage.setItem('sadad_faculty', JSON.stringify(facDefaults));}catch(e){}
+}
+
+function renderFaculty(){
+  [0,1].forEach(function(i){
+    var f = facDefaults[i];
+    var av = document.getElementById('fav-'+i);
+    if(f.pic){
+      av.innerHTML='<img src="'+f.pic+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+      av.style.background='none';
+    }else{
+      av.innerHTML=f.ini;
+      av.style.background=facColors[i];
+    }
+    document.getElementById('fname-'+i).textContent=f.name;
+    document.getElementById('fdet-'+i).textContent=f.place+' \u2022 '+f.role;
+    // show edit button only for admin
+    var btn = document.getElementById('fedit-btn-'+i);
+    if(btn) btn.style.display = admin ? 'inline-block' : 'none';
+  });
+}
+
+function openFacultyEdit(idx){
+  currentFacIdx = idx;
+  var f = facDefaults[idx];
+  document.getElementById('facEditTitle').textContent = 'Edit — '+(idx===0?'Class Teacher':'Mentor');
+  document.getElementById('facName').value = f.name||'';
+  document.getElementById('facPlace').value = f.place||'';
+  document.getElementById('facRole').value = f.role||'';
+  document.getElementById('facPhone').value = f.phone||'';
+  var prev = document.getElementById('facAvPreview');
+  if(f.pic){
+    prev.innerHTML='<img src="'+f.pic+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    prev.style.background='none';
+    document.getElementById('facRemovePhotoBtn').style.display='inline-block';
+  }else{
+    prev.innerHTML=f.ini;
+    prev.style.background=facColors[idx].replace('linear-gradient(135deg,','').split(',')[0];
+    document.getElementById('facRemovePhotoBtn').style.display='none';
+  }
+  openModal('facEditOv');
+}
+
+function handleFacPhoto(input){
+  if(!input.files[0]||currentFacIdx<0)return;
+  compressImage(input.files[0],function(compressed){
+    facDefaults[currentFacIdx].pic = compressed;
+    var prev = document.getElementById('facAvPreview');
+    prev.innerHTML='<img src="'+compressed+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    prev.style.background='none';
+    document.getElementById('facRemovePhotoBtn').style.display='inline-block';
+    input.value='';
+  });
+}
+
+function removeFacPhoto(){
+  if(currentFacIdx<0)return;
+  facDefaults[currentFacIdx].pic='';
+  var prev=document.getElementById('facAvPreview');
+  prev.innerHTML=facDefaults[currentFacIdx].ini;
+  prev.style.background='#6C63FF';
+  document.getElementById('facRemovePhotoBtn').style.display='none';
+}
+
+function saveFacultyEdit(){
+  if(currentFacIdx<0)return;
+  facDefaults[currentFacIdx].name = document.getElementById('facName').value.trim()||facDefaults[currentFacIdx].name;
+  facDefaults[currentFacIdx].place = document.getElementById('facPlace').value.trim();
+  facDefaults[currentFacIdx].role = document.getElementById('facRole').value.trim();
+  facDefaults[currentFacIdx].phone = document.getElementById('facPhone').value.trim();
+  saveFacultyProfiles();
+  renderFaculty();
+  closeModal('facEditOv');
+  showToast('Faculty profile saved!','success');
+}
+
 // ── INIT ──
+loadFacultyProfiles();
 loadFromFirebase();
 
 </script>
+
+<!-- FACULTY EDIT MODAL -->
+<div class="modal-overlay" id="facEditOv">
+  <div class="edit-modal" style="max-width:380px">
+    <h3 id="facEditTitle">Edit Faculty</h3>
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding:.75rem;background:var(--card);border-radius:12px;border:1px solid var(--border)">
+      <div id="facAvPreview" style="width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;overflow:hidden;flex-shrink:0;background:#6C63FF"></div>
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        <label style="cursor:pointer">
+          <span class="btn btn-primary btn-sm">&#128247; Upload photo</span>
+          <input type="file" id="facPhotoIn" accept="image/*" style="display:none" onchange="handleFacPhoto(this)">
+        </label>
+        <button class="btn btn-danger btn-sm" id="facRemovePhotoBtn" onclick="removeFacPhoto()" style="display:none">&#128465; Remove</button>
+      </div>
+    </div>
+    <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Name</label>
+    <input type="text" id="facName" placeholder="Full name">
+    <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Place</label>
+    <input type="text" id="facPlace" placeholder="e.g. Vanimel">
+    <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Role</label>
+    <input type="text" id="facRole" placeholder="e.g. Class teacher">
+    <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Phone (optional)</label>
+    <input type="text" id="facPhone" placeholder="Phone number">
+    <div style="display:flex;gap:.5rem;margin-top:.75rem">
+      <button class="btn btn-primary" style="flex:1" onclick="saveFacultyEdit()">Save</button>
+      <button class="btn" style="background:var(--card2);color:var(--text2)" onclick="closeModal('facEditOv')">Cancel</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
