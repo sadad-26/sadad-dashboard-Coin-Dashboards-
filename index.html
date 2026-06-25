@@ -693,13 +693,13 @@ function compressImage(file,callback){
     var img=new Image();
     img.onload=function(){
       var canvas=document.createElement('canvas');
-      var MAX=150;
+      var MAX=80;
       var w=img.width,h=img.height;
       if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}
       canvas.width=w;canvas.height=h;
       var ctx=canvas.getContext('2d');
       ctx.drawImage(img,0,0,w,h);
-      callback(canvas.toDataURL('image/jpeg',0.7));
+      callback(canvas.toDataURL('image/jpeg',0.5));
     };
     img.src=e.target.result;
   };
