@@ -148,7 +148,7 @@ canvas{display:block;width:100%!important}
 <div class="pw-overlay" id="pwOv">
   <div class="pw-box">
     <h2>&#128274; Admin Login</h2>
-    <p>Usthad Arafath Hudawi &bull; Usthad Savad Wafy</p>
+    <p>Usthad Arafath Hudawi &bull; Usthad Savad Wafy &bull; Usthad Sharafuddeen Hudawi</p>
     <input type="password" id="pwIn" placeholder="Enter password">
     <div class="err" id="pwErr"></div>
     <div style="display:flex;gap:.5rem;margin-top:.75rem">
@@ -288,6 +288,17 @@ canvas{display:block;width:100%!important}
       </div>
       <button id="fedit-btn-1" style="display:none;background:rgba(108,99,255,.15);color:#a78bfa;border:1px solid rgba(108,99,255,.25);border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer" onclick="openFacultyEdit(1)">Edit</button>
     </div>
+    <!-- PRINCIPAL -->
+    <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin:.75rem 0 .5rem">Principal</div>
+    <div class="faculty-card">
+      <div class="faculty-av" id="fav-principal" style="background:linear-gradient(135deg,#F7A440,#e07a10);width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;overflow:hidden;flex-shrink:0">SH</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;color:var(--text)">Usthad Sharafuddeen Hudawi</div>
+        <div style="font-size:12px;color:var(--text3)">Kondotty &bull; Principal, Darussalam Academy Velliyode</div>
+        <span class="hbadge" style="display:inline-block;margin-top:4px;background:rgba(247,164,64,.15);color:#F7A440;border:1px solid rgba(247,164,64,.3)">Principal</span>
+        <span class="hbadge green" style="display:inline-block;margin-top:4px;margin-left:4px">Admin</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -422,7 +433,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const DOC_REF = db.collection('sadad').doc('data');
 
-const ADMINS=[{name:"Usthad Arafath Hudawi",pw:"arafa"},{name:"Usthad Savad Wafy",pw:"sadad"}];
+const ADMINS=[{name:"Usthad Arafath Hudawi",pw:"arafa"},{name:"Usthad Savad Wafy",pw:"sadad"},{name:"Usthad Sharafuddeen Hudawi",pw:"sadad"}];
 let admin=null,chart=null,editIdx=-1,editRoll=-1,profRoll=-1;
 const STU=[
   {r:16,n:"Aslam Hammadi"},{r:18,n:"Abdul Adhilu"},{r:33,n:"Muhammad Abdullah Hazim"},
@@ -1346,7 +1357,8 @@ var currentFacIdx = -1;
 var facColors = ['linear-gradient(135deg,#6C63FF,#8B5CF6)', 'linear-gradient(135deg,#43B89C,#2d9e6b)'];
 var facDefaults = [
   {name:'Usthad Muhammed Arafath Hudawi', place:'Vanimel', role:'Class teacher', phone:'', ini:'MA', pic:''},
-  {name:'Usthad Savad Wafy', place:'Kunjom', role:'Mentor', phone:'', ini:'SW', pic:''}
+  {name:'Usthad Savad Wafy', place:'Kunjom', role:'Mentor', phone:'', ini:'SW', pic:''},
+  {name:'Usthad Sharafuddeen Hudawi', place:'Kondotty', role:'Principal, Darussalam Academy Velliyode', phone:'', ini:'SH', pic:''}
 ];
 
 function loadFacultyProfiles(){
