@@ -140,6 +140,16 @@ option{background:var(--card2);color:var(--text)}
 .faculty-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;flex-shrink:0}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--surface2)}::-webkit-scrollbar-thumb{background:rgba(108,99,255,.35);border-radius:3px}
 canvas{display:block;width:100%!important}
+.podium-card{display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:transform .2s;text-align:center}
+.podium-card:hover{transform:translateY(-4px)}
+.podium-av-wrap{position:relative;margin-bottom:.4rem}
+.podium-av{width:62px;height:62px;border-radius:50%;background:#6C63FF;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;overflow:hidden;border:2px solid rgba(255,255,255,.15)}
+.podium-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.podium-medal{position:absolute;bottom:-4px;right:-4px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--surface)}
+.podium-name{font-size:12px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:2px}
+.podium-adm{font-size:9px;color:var(--text3);margin-bottom:3px}
+.podium-coins{font-size:14px;font-weight:700;color:var(--gold)}
+
 </style>
 </head>
 <body>
@@ -252,8 +262,49 @@ canvas{display:block;width:100%!important}
     <div class="metric-card"><div class="metric-val" id="totCoins">0</div><div class="metric-lbl">Total coins awarded</div></div>
     <div class="metric-card"><div class="metric-val" id="topName" style="font-size:20px">-</div><div class="metric-lbl">Top student</div></div>
   </div>
+
+  <!-- TOP 3 PODIUM -->
+  <div id="top3Podium" style="display:none;margin-bottom:1rem">
+    <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.6rem">&#127942; Top Rankers</div>
+    <div style="display:flex;gap:.5rem;align-items:flex-end;justify-content:center;padding:.5rem 0 1rem">
+      <!-- Silver - 2nd -->
+      <div class="podium-card" id="pod-1" onclick="openPodiumProfile(1)" style="order:1;flex:1;max-width:140px">
+        <div class="podium-av-wrap">
+          <div class="podium-av" id="pod-av-1"></div>
+          <div class="podium-medal" style="background:linear-gradient(135deg,#C0C0C0,#a0a0a0)">&#129208;</div>
+        </div>
+        <div class="podium-name" id="pod-name-1">-</div>
+        <div class="podium-adm" id="pod-adm-1"></div>
+        <div class="podium-coins" id="pod-coins-1">0</div>
+        <div class="podium-bar" style="height:60px;background:linear-gradient(180deg,rgba(192,192,192,.3),rgba(192,192,192,.1));border-radius:6px 6px 0 0;margin-top:.5rem"></div>
+      </div>
+      <!-- Gold - 1st -->
+      <div class="podium-card" id="pod-0" onclick="openPodiumProfile(0)" style="order:0;flex:1;max-width:150px">
+        <div class="podium-av-wrap">
+          <div class="podium-av" id="pod-av-0" style="width:72px;height:72px;font-size:22px;border:3px solid #FFD700;box-shadow:0 0 20px rgba(255,215,0,.4)"></div>
+          <div class="podium-medal" style="background:linear-gradient(135deg,#FFD700,#FFA500);box-shadow:0 0 12px rgba(255,215,0,.5)">&#127945;</div>
+        </div>
+        <div class="podium-name" id="pod-name-0" style="font-size:13px;font-weight:700">-</div>
+        <div class="podium-adm" id="pod-adm-0"></div>
+        <div class="podium-coins" id="pod-coins-0" style="font-size:18px;color:#FFD700">0</div>
+        <div class="podium-bar" style="height:80px;background:linear-gradient(180deg,rgba(255,215,0,.25),rgba(255,215,0,.05));border-radius:6px 6px 0 0;margin-top:.5rem;border:1px solid rgba(255,215,0,.2)"></div>
+      </div>
+      <!-- Bronze - 3rd -->
+      <div class="podium-card" id="pod-2" onclick="openPodiumProfile(2)" style="order:2;flex:1;max-width:130px">
+        <div class="podium-av-wrap">
+          <div class="podium-av" id="pod-av-2" style="width:56px;height:56px;font-size:16px"></div>
+          <div class="podium-medal" style="background:linear-gradient(135deg,#CD7F32,#a05a20)">&#129192;</div>
+        </div>
+        <div class="podium-name" id="pod-name-2" style="font-size:11px">-</div>
+        <div class="podium-adm" id="pod-adm-2"></div>
+        <div class="podium-coins" id="pod-coins-2" style="font-size:13px">0</div>
+        <div class="podium-bar" style="height:45px;background:linear-gradient(180deg,rgba(205,127,50,.25),rgba(205,127,50,.05));border-radius:6px 6px 0 0;margin-top:.5rem"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="card">
-    <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.6rem">Rankings &mdash; tap to view profile</div>
+    <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.6rem">All Rankings &mdash; tap to view profile</div>
     <div id="lbList"></div>
   </div>
 </div>
@@ -407,6 +458,21 @@ canvas{display:block;width:100%!important}
     <div class="card" style="margin-top:.75rem">
       <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">All-time Report</div>
       <button class="btn btn-primary" onclick="generateAllTimeReport()" style="width:100%;padding:10px">&#11015; Generate Full Report PDF</button>
+    </div>
+    <div class="card" style="margin-top:.75rem">
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:.75rem">&#128197; Weekly Report</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem">
+        <div>
+          <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">From Date</label>
+          <input type="date" id="weekFrom" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--card2);color:var(--text);margin-bottom:0">
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">To Date</label>
+          <input type="date" id="weekTo" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--card2);color:var(--text);margin-bottom:0">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="generateWeeklyReport()" style="width:100%;padding:10px">&#11015; Generate Weekly Report PDF</button>
+      <div id="weekRepMsg" style="font-size:12px;margin-top:.4rem;color:var(--text3);text-align:center"></div>
     </div>
   </div>
 </div>
@@ -653,6 +719,7 @@ function renderLB(){
     el.style.opacity='0';el.style.transform='translateX(-18px)';
     setTimeout(function(){el.style.transition='all .3s cubic-bezier(.4,0,.2,1)';el.style.opacity='1';el.style.transform='none';},i*35+50);
   });
+  renderPodium(sorted);
 }
 
 function renderGrid(){
@@ -961,6 +1028,221 @@ function importData(input){
   reader.readAsText(input.files[0]);
 }
 
+
+
+// ── TOP 3 PODIUM ──
+var podiumRolls = [];
+function renderPodium(sorted){
+  var uc=uniqueCoins();
+  // Get unique top 3 coin values
+  var top3coins=uc.slice(0,3);
+  if(top3coins.length===0||top3coins[0]===0){document.getElementById('top3Podium').style.display='none';return;}
+  document.getElementById('top3Podium').style.display='block';
+  podiumRolls=[];
+  // Get one student per medal position
+  [0,1,2].forEach(function(pos){
+    if(top3coins[pos]===undefined||top3coins[pos]===0){
+      podiumRolls[pos]=null;return;
+    }
+    var stu=sorted.find(function(s){return(S.coins[s.r]||0)===top3coins[pos];});
+    podiumRolls[pos]=stu?stu.r:null;
+  });
+  [0,1,2].forEach(function(pos){
+    var roll=podiumRolls[pos];
+    if(!roll){document.getElementById('pod-'+pos).style.display='none';return;}
+    document.getElementById('pod-'+pos).style.display='flex';
+    var s=STU.find(function(x){return x.r===roll;});
+    var p=S.profiles[roll]||{};
+    var av=document.getElementById('pod-av-'+pos);
+    var col=COLORS[roll%COLORS.length];
+    av.style.background=p.pic?'none':col;
+    if(p.pic){av.innerHTML='<img src="'+p.pic+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
+    else{av.innerHTML=ini(s.n);}
+    document.getElementById('pod-name-'+pos).textContent=s.n;
+    document.getElementById('pod-adm-'+pos).textContent=p.admNo||'Adm: —';
+    document.getElementById('pod-coins-'+pos).textContent=(S.coins[roll]||0)+' coins';
+  });
+}
+function openPodiumProfile(pos){
+  if(podiumRolls[pos])openProfile(podiumRolls[pos]);
+}
+
+// ── WEEKLY REPORT ──
+function generateWeeklyReport(){
+  var fromVal=document.getElementById('weekFrom').value;
+  var toVal=document.getElementById('weekTo').value;
+  if(!fromVal||!toVal){showToast('Select both dates!','error');return;}
+  var fromDate=new Date(fromVal);
+  var toDate=new Date(toVal);
+  toDate.setHours(23,59,59);
+  if(fromDate>toDate){showToast('From date must be before To date!','error');return;}
+
+  var fromParts=fromVal.split('-');
+  var toParts=toVal.split('-');
+  var fromStr=parseInt(fromParts[2])+'/'+parseInt(fromParts[1])+'/'+fromParts[0];
+  var toStr=parseInt(toParts[2])+'/'+parseInt(toParts[1])+'/'+toParts[0];
+
+  // Filter history in date range
+  var data=[];
+  STU.forEach(function(s){
+    var hist=S.history.filter(function(h){
+      if(h.r!==s.r)return false;
+      var pts=h.date.split('/');if(pts.length<3)return false;
+      var hd=new Date(parseInt(pts[2]),parseInt(pts[1])-1,parseInt(pts[0]));
+      return hd>=fromDate&&hd<=toDate;
+    });
+    var coins=hist.reduce(function(a,h){return a+h.coins;},0);
+    var cats={};
+    hist.forEach(function(h){if(!cats[h.cat])cats[h.cat]=0;cats[h.cat]+=h.coins;});
+    data.push({roll:s.r,name:s.n,coins:coins,hist:hist,cats:cats});
+  });
+  data.sort(function(a,b){return b.coins-a.coins;});
+  var total=data.reduce(function(a,d){return a+d.coins;},0);
+  var active=data.filter(function(d){return d.coins>0;}).length;
+
+  document.getElementById('weekRepMsg').textContent='Generating...';
+
+  var doc=new jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  var W=210,H=297,y=0;
+
+  doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
+  doc.setFillColor(26,122,74);doc.rect(0,0,W,38,'F');
+  doc.setFillColor(212,175,55);doc.rect(0,0,W,2,'F');
+
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(16);
+  doc.text('VALIYULLAHI THANGAL MEMORIAL',W/2,11,{align:'center'});
+  doc.text('DARUSSALAM ACADEMY (SADAD)',W/2,19,{align:'center'});
+  doc.setFontSize(10);doc.setFont('helvetica','normal');doc.setTextColor(200,235,210);
+  doc.text('Velliyode, Kerala',W/2,25,{align:'center'});
+
+  doc.setFillColor(212,175,55);doc.rect(0,30,W,10,'F');
+  doc.setTextColor(26,60,26);doc.setFont('helvetica','bold');doc.setFontSize(11);
+  doc.text('SECOND BATCH-DSA  \u2014  WEEKLY COIN REPORT',W/2,37,{align:'center'});
+  y=48;
+
+  // Date range info
+  doc.setFillColor(248,250,248);doc.rect(10,y,190,20,'F');
+  doc.setDrawColor(220,220,220);doc.setLineWidth(0.3);doc.rect(10,y,190,20,'S');
+  doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(40,40,40);
+  doc.text('Period:',14,y+7);doc.setFont('helvetica','normal');
+  doc.text(fromStr+' to '+toStr,36,y+7);
+  doc.setFont('helvetica','bold');doc.text('Class Teacher:',14,y+14);doc.setFont('helvetica','normal');
+  doc.text('Usthad Muhammed Arafath Hudawi, Vanimel',52,y+14);
+  doc.setFont('helvetica','bold');doc.text('Generated:',130,y+7);doc.setFont('helvetica','normal');
+  doc.text(new Date().toLocaleDateString('en-IN'),155,y+7);
+  doc.setFont('helvetica','bold');doc.text('Mentor:',130,y+14);doc.setFont('helvetica','normal');
+  doc.text('Usthad Savad Wafy, Kunjom',148,y+14);
+  y+=26;
+
+  // Summary boxes
+  var bw=57,bh=20,bm=8;
+  doc.setFillColor(26,122,74);doc.roundedRect(10,y,bw,bh,2,2,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(18);
+  doc.text(String(total),10+bw/2,y+11,{align:'center'});
+  doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('TOTAL COINS',10+bw/2,y+17,{align:'center'});
+
+  doc.setFillColor(212,175,55);doc.roundedRect(10+bw+bm,y,bw,bh,2,2,'F');
+  doc.setTextColor(40,40,40);doc.setFont('helvetica','bold');doc.setFontSize(18);
+  doc.text(String(active),10+bw+bm+bw/2,y+11,{align:'center'});
+  doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('ACTIVE STUDENTS',10+bw+bm+bw/2,y+17,{align:'center'});
+
+  doc.setFillColor(44,158,107);doc.roundedRect(10+2*(bw+bm),y,bw,bh,2,2,'F');
+  doc.setTextColor(255,255,255);var top=data.find(function(d){return d.coins>0;});
+  doc.setFont('helvetica','bold');doc.setFontSize(11);
+  doc.text(top?top.name.split(' ')[0]+' '+top.name.split(' ')[1]:'-',10+2*(bw+bm)+bw/2,y+11,{align:'center'});
+  doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('TOP STUDENT',10+2*(bw+bm)+bw/2,y+17,{align:'center'});
+  y+=27;
+
+  // Table
+  doc.setFillColor(26,122,74);doc.rect(10,y,190,7,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(9);
+  doc.text('Rank',14,y+5);doc.text('Roll No.',28,y+5);doc.text('Student Name',48,y+5);
+  doc.text('Achievements',130,y+5);doc.text('Coins',193,y+5,{align:'right'});
+  y+=7;
+
+  data.forEach(function(d,i){
+    if(y>265){
+      doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=15;
+      doc.setFillColor(26,122,74);doc.rect(10,y,190,7,'F');
+      doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(9);
+      doc.text('Rank',14,y+5);doc.text('Roll No.',28,y+5);doc.text('Student Name',48,y+5);
+      doc.text('Achievements',130,y+5);doc.text('Coins',193,y+5,{align:'right'});
+      y+=7;
+    }
+    if(i%2===0){doc.setFillColor(252,252,252);}else{doc.setFillColor(255,255,255);}
+    doc.rect(10,y,190,8,'F');
+    doc.setDrawColor(230,235,230);doc.line(10,y+8,200,y+8);
+    doc.setFont('helvetica','bold');doc.setFontSize(8);
+    if(i===0&&d.coins>0){doc.setTextColor(184,142,0);}
+    else if(i===1&&d.coins>0){doc.setTextColor(120,120,120);}
+    else if(i===2&&d.coins>0){doc.setTextColor(160,82,45);}
+    else{doc.setTextColor(100,100,100);}
+    var rankStr=i===0&&d.coins>0?'1st':i===1&&d.coins>0?'2nd':i===2&&d.coins>0?'3rd':String(i+1);
+    doc.text(rankStr,14,y+5.5);
+    doc.setTextColor(60,60,60);doc.setFont('helvetica','normal');
+    doc.text(String(d.roll),28,y+5.5);
+    doc.text(d.name,48,y+5.5);
+    doc.text(String(d.hist.length),130,y+5.5);
+    if(d.coins>0){doc.setFont('helvetica','bold');doc.setTextColor(26,122,74);}
+    else{doc.setTextColor(180,180,180);}
+    doc.text(String(d.coins),193,y+5.5,{align:'right'});
+    y+=8;
+  });
+
+  y+=8;
+  var activeStudents=data.filter(function(d){return d.coins>0;});
+  if(activeStudents.length>0){
+    if(y>240){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=15;}
+    doc.setFillColor(26,122,74);doc.rect(10,y,190,7,'F');
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(9);
+    doc.text('ACHIEVEMENT DETAILS',W/2,y+5,{align:'center'});
+    y+=10;
+    activeStudents.forEach(function(d){
+      if(y>260){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=15;}
+      doc.setFillColor(240,247,242);doc.rect(10,y,190,7,'F');
+      doc.setDrawColor(26,122,74);doc.setLineWidth(0.5);doc.line(10,y,10,y+7);doc.setLineWidth(0.3);
+      doc.setTextColor(26,60,26);doc.setFont('helvetica','bold');doc.setFontSize(8.5);
+      doc.text(d.name+' (Roll: '+d.roll+')',14,y+5);
+      doc.setTextColor(26,122,74);doc.text(d.coins+' coins',193,y+5,{align:'right'});
+      y+=9;
+      // Show individual achievements with dates
+      d.hist.forEach(function(h){
+        if(y>270){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=15;}
+        doc.setTextColor(80,80,80);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+        doc.text('\u2022  '+h.cat,18,y+3.5);
+        doc.setTextColor(100,100,100);doc.text(h.date,140,y+3.5);
+        doc.setTextColor(26,122,74);doc.setFont('helvetica','bold');
+        doc.text('+'+h.coins+' coins',193,y+3.5,{align:'right'});
+        y+=5.5;
+      });
+      y+=4;
+    });
+  }
+
+  y+=10;
+  if(y>240){doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=15;}
+  doc.setDrawColor(150,150,150);doc.setLineWidth(0.3);
+  doc.line(20,y,80,y);doc.line(130,y,190,y);
+  doc.setTextColor(80,80,80);doc.setFont('helvetica','normal');doc.setFontSize(8);
+  doc.text('Class Teacher',50,y+5,{align:'center'});doc.text('Mentor',160,y+5,{align:'center'});
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);
+  doc.text('Usthad Muhammed Arafath Hudawi',50,y+10,{align:'center'});
+  doc.text('Usthad Savad Wafy',160,y+10,{align:'center'});
+
+  var pageCount=doc.internal.getNumberOfPages();
+  for(var i=1;i<=pageCount;i++){
+    doc.setPage(i);
+    doc.setDrawColor(26,122,74);doc.setLineWidth(0.5);doc.line(10,H-14,200,H-14);
+    doc.setTextColor(100,100,100);doc.setFontSize(7);doc.setFont('helvetica','normal');
+    doc.text('SECOND BATCH-DSA, SADAD Velliyode  |  Period: '+fromStr+' to '+toStr,10,H-9);
+    doc.text('Page '+i+' of '+pageCount,200,H-9,{align:'right'});
+  }
+
+  var fname='SADAD_Weekly_'+fromVal+'_to_'+toVal+'.pdf';
+  doc.save(fname);
+  document.getElementById('weekRepMsg').textContent='PDF downloaded! \u2713';
+  setTimeout(function(){document.getElementById('weekRepMsg').textContent='';},3000);
+}
 
 // ── REPORT GENERATION ──
 function getMonthData(month, year){
@@ -1459,6 +1741,12 @@ var mm=String(todayDate.getMonth()+1).padStart(2,'0');
 var yyyy=todayDate.getFullYear();
 var todayStr=yyyy+'-'+mm+'-'+dd;
 document.getElementById('coinDate').value=todayStr;
+// Set default week dates
+var weekStart=new Date();weekStart.setDate(weekStart.getDate()-weekStart.getDay());
+var weekEnd=new Date(weekStart);weekEnd.setDate(weekStart.getDate()+6);
+function fmtDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+document.getElementById('weekFrom').value=fmtDate(weekStart);
+document.getElementById('weekTo').value=fmtDate(weekEnd);
 
 </script>
 
