@@ -1589,8 +1589,12 @@ function renderPodium(){
 function openPodiumProfile(pos){if(podiumRolls[pos])openProfile(podiumRolls[pos]);}
 
 
-loadFaculty();
-loadFromFirebase();
+// Init after DOM ready
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',function(){loadFaculty();loadFromFirebase();});
+}else{
+  loadFaculty();loadFromFirebase();
+}
 showTab('rankings');
 // Set default dates
 var now2=new Date();
