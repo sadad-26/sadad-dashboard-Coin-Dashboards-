@@ -3,349 +3,311 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SADAD Coin Dashboard</title>
+<title>🌟 SECOND BATCH - DSA, SADAD DASHBOARD 🌟</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
+:root{--bg:#08111f;--panel:rgba(15,23,42,.74);--line:rgba(255,255,255,.08);--txt:#e2e8f0;--muted:#8ea0b6;--green:#22c55e;--blue:#38bdf8;--amber:#f59e0b;--red:#ef4444;--pink:#ec4899;--violet:#8b5cf6}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,system-ui,sans-serif;background:#0F172A;color:#E2E8F0;min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 20% 10%,rgba(16,185,129,.06),transparent 40%),radial-gradient(circle at 80% 80%,rgba(59,130,246,.04),transparent 40%);pointer-events:none}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:radial-gradient(circle at top left,#0f172a 0%,#08111f 45%,#050b14 100%);color:var(--txt);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 15% 15%,rgba(56,189,248,.10),transparent 22%),radial-gradient(circle at 85% 25%,rgba(236,72,153,.10),transparent 20%),radial-gradient(circle at 50% 85%,rgba(34,197,94,.08),transparent 25%);pointer-events:none}
 .app{position:relative;z-index:1;min-height:100vh}
-.container{max-width:1200px;margin:0 auto;padding:0 16px}
-.header{position:sticky;top:0;z-index:50;background:rgba(15,23,42,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.07)}
-.header-top{padding:6px 16px;background:linear-gradient(135deg,rgba(6,78,59,.85),rgba(15,23,42,.85),rgba(6,78,59,.85));border-bottom:1px solid rgba(16,185,129,.12)}
-.topline{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;max-width:1200px;margin:0 auto;font-size:11px;color:#94A3B8}
-.live-dot{width:8px;height:8px;border-radius:50%;background:#34D399;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.35)}50%{box-shadow:0 0 0 5px rgba(52,211,153,0)}}
-.header-main{max-width:1200px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.container{max-width:1280px;margin:0 auto;padding:0 16px}
+.topbar{position:sticky;top:0;z-index:60;background:rgba(7,11,20,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topbar-row{max-width:1280px;margin:0 auto;padding:8px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.pulse{width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 0 0 rgba(52,211,153,.5);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,211,153,.45)}70%{box-shadow:0 0 0 10px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+.header{border-bottom:1px solid rgba(255,255,255,.05);background:linear-gradient(135deg,rgba(8,17,31,.96),rgba(15,23,42,.86),rgba(8,17,31,.96))}
+.header-row{max-width:1280px;margin:0 auto;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:12px}
-.brand-logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#10B981,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
-.brand-text h1{font-size:18px;font-weight:800;color:#fff}
-.brand-text p{font-size:10px;color:#64748B;margin-top:2px}
-.btn{padding:8px 14px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
-.btn-login{background:linear-gradient(135deg,#10B981,#059669);color:#fff}
-.btn-ghost{background:rgba(255,255,255,.06);color:#CBD5E1}
-.nav{border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.06);background:rgba(15,23,42,.8)}
-.nav-inner{max-width:1200px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto}
-.nav-btn{padding:12px 16px;background:transparent;border:none;color:#64748B;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;border-bottom:2px solid transparent}
-.nav-btn.active{color:#10B981;border-bottom-color:#10B981}
+.brand-logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#22c55e,#38bdf8,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:900;color:white;box-shadow:0 12px 35px rgba(56,189,248,.22)}
+.brand-text h1{font-size:20px;font-weight:900;color:#fff;letter-spacing:.2px}
+.brand-text p{font-size:11px;color:var(--muted);margin-top:4px}
+.action-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:none;border-radius:14px;padding:10px 16px;font-weight:800;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.btn-cyan{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#fff}
+.btn-pink{background:linear-gradient(135deg,#f472b6,#ec4899);color:#fff}
+.btn-violet{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff}
+.btn-amber{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a}
+.btn-ghost{background:rgba(255,255,255,.06);color:#e2e8f0;border:1px solid rgba(255,255,255,.08)}
+.nav{position:sticky;top:72px;z-index:55;background:rgba(7,11,20,.9);border-bottom:1px solid rgba(255,255,255,.06);backdrop-filter:blur(10px)}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;padding:0 16px}
+.nav-btn{padding:13px 16px;background:transparent;border:none;color:#8ea0b6;cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap;border-bottom:2px solid transparent}
+.nav-btn.active{color:#22c55e;border-bottom-color:#22c55e}
 .main{padding:18px 0 60px}
-.card{background:rgba(15,23,42,.72);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;backdrop-filter:blur(8px)}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-@media(max-width:900px){.grid-4{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.grid-4,.grid-2{grid-template-columns:1fr}}
-.metric-val{font-size:28px;font-weight:900;color:#fff;font-family:monospace}
-.metric-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#64748B;margin-top:4px}
-.metric-sub{font-size:11px;color:#94A3B8;margin-top:8px}
-.section{margin-top:16px}
-.section h2{font-size:16px;font-weight:800;color:#fff;margin-bottom:12px}
+@media(max-width:980px){.grid-4,.grid-3,.grid-2{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}.topbar{position:static}.nav{top:auto}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:16px;backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(0,0,0,.18)}
+.card h2{font-size:16px;color:#fff;margin-bottom:12px;font-weight:900}
+.metric-val{font-size:30px;font-weight:900;color:#fff;font-family:ui-monospace,monospace}
+.metric-lbl{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8ea0b6;margin-top:4px;font-weight:800}
+.metric-sub{font-size:11px;color:#aab7c5;margin-top:8px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.hero{background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(56,189,248,.10),rgba(236,72,153,.12));border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.hero h2{font-size:22px;margin:0;color:#fff}
+.hero p{color:#b7c3d1;font-size:12px;margin-top:5px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:800}
+.badge.green{background:rgba(34,197,94,.12);color:#4ade80}
+.badge.blue{background:rgba(56,189,248,.12);color:#7dd3fc}
+.badge.amber{background:rgba(245,158,11,.12);color:#fcd34d}
+.badge.red{background:rgba(239,68,68,.12);color:#fca5a5}
+.badge.pink{background:rgba(236,72,153,.12);color:#f9a8d4}
+.badge.violet{background:rgba(139,92,246,.12);color:#c4b5fd}
+.input,.select,.textarea{width:100%;background:rgba(8,17,31,.86);border:1px solid rgba(255,255,255,.1);color:#e2e8f0;border-radius:14px;padding:11px 12px;font-size:13px;outline:none}
+.textarea{min-height:90px;resize:vertical}
 .search-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
-.input,.select{background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);color:#E2E8F0;border-radius:10px;padding:9px 12px;font-size:13px;outline:none}
-.input{flex:1;min-width:220px}
-.view-toggle{display:flex;background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:3px;gap:2px}
-.view-btn{padding:6px 12px;border:none;border-radius:7px;background:transparent;color:#64748B;font-weight:700;cursor:pointer;font-size:11px}
-.view-btn.active{background:#10B981;color:#fff}
-.stu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-.stu-card{position:relative;cursor:pointer;overflow:hidden}
-.stu-card:hover{transform:translateY(-2px);border-color:rgba(16,185,129,.25)}
+.search-row .input{flex:1;min-width:210px}
+.view-toggle{display:flex;background:rgba(8,17,31,.86);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:4px;gap:4px}
+.view-btn{padding:8px 12px;border:none;border-radius:10px;background:transparent;color:#8ea0b6;font-weight:800;cursor:pointer;font-size:11px}
+.view-btn.active{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.stu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.stu-card{cursor:pointer;overflow:hidden;position:relative}
+.stu-card:hover{border-color:rgba(34,197,94,.4);transform:translateY(-2px)}
 .stu-top{display:flex;align-items:center;gap:10px}
-.av{width:54px;height:54px;border-radius:14px;background:#334155;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#fff;font-weight:800}
+.av{width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,#334155,#1e293b);display:flex;align-items:center;justify-content:center;overflow:hidden;color:#fff;font-weight:900;flex-shrink:0}
 .av img{width:100%;height:100%;object-fit:cover}
-.name{font-size:14px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.meta{font-size:11px;color:#94A3B8;margin-top:2px}
-.coin{margin-top:10px;font-size:24px;font-weight:900;font-family:monospace;color:#F59E0B}
-.tier{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
-.podium-wrap{display:flex;gap:10px;align-items:flex-end;justify-content:center;padding:8px 0 16px}
-.pod-card{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;cursor:pointer}
-.pod-av{border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;border:3px solid rgba(255,255,255,.15);font-weight:800;color:#fff}
+.name{font-size:15px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{font-size:11px;color:#8ea0b6;margin-top:2px}
+.coin{margin-top:12px;font-size:26px;font-weight:900;font-family:ui-monospace,monospace;color:#fbbf24}
+.tier{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:800}
+.podium-wrap{display:flex;gap:12px;align-items:flex-end;justify-content:center;padding:8px 0 14px;flex-wrap:wrap}
+.pod-card{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;cursor:pointer;min-width:100px}
+.pod-av{border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;border:3px solid rgba(255,255,255,.18);font-weight:900;color:#fff;background:linear-gradient(135deg,#475569,#0f172a)}
 .pod-av img{width:100%;height:100%;object-fit:cover}
-.pod-name{font-size:11px;font-weight:800;color:#fff;max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pod-coins{font-size:13px;font-weight:900;color:#F59E0B;font-family:monospace}
-.table{width:100%;border-collapse:collapse}
+.pod-name{font-size:11px;font-weight:900;color:#fff;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pod-coins{font-size:13px;font-weight:900;color:#fbbf24;font-family:ui-monospace,monospace}
+.table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:16px}
 .table th,.table td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;text-align:left}
-.table th{color:#94A3B8;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
-.badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:700}
-.badge.green{background:rgba(16,185,129,.12);color:#34D399}
-.badge.blue{background:rgba(59,130,246,.12);color:#60A5FA}
-.badge.amber{background:rgba(245,158,11,.12);color:#FBBF24}
-.badge.red{background:rgba(239,68,68,.12);color:#F87171}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1E293B;border:1px solid rgba(255,255,255,.1);color:#fff;padding:10px 16px;border-radius:12px;opacity:0;transition:.25s;z-index:9999}
+.table th{color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.table tr:hover{background:rgba(255,255,255,.03)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#0f172a;border:1px solid rgba(255,255,255,.12);color:#fff;padding:12px 16px;border-radius:14px;opacity:0;transition:.25s;z-index:9999;box-shadow:0 18px 45px rgba(0,0,0,.3)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:16px}
 .modal-ov.open{display:flex}
-.modal-box{background:#0F172A;border:1px solid rgba(255,255,255,.1);border-radius:18px;width:90%;max-width:760px;max-height:90vh;overflow:auto}
-.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
+.modal-box{background:linear-gradient(180deg,#0b1220,#09111d);border:1px solid rgba(255,255,255,.1);border-radius:22px;width:100%;max-width:920px;max-height:92vh;overflow:auto;box-shadow:0 26px 80px rgba(0,0,0,.45)}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
 .modal-body{padding:18px}
-.close{width:30px;height:30px;border:none;border-radius:8px;background:rgba(255,255,255,.07);color:#fff;cursor:pointer}
-.prof-top{display:flex;gap:16px;align-items:center;background:linear-gradient(135deg,rgba(6,78,59,.45),rgba(15,23,42,.8));padding:18px;border-radius:16px}
-.prof-av{width:86px;height:86px;border-radius:22px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#334155;color:#fff;font-size:28px;font-weight:900}
+.close{width:34px;height:34px;border:none;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
+.prof-top{display:flex;gap:16px;align-items:center;background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(56,189,248,.12),rgba(139,92,246,.10));padding:18px;border-radius:20px;border:1px solid rgba(255,255,255,.08)}
+.prof-av{width:92px;height:92px;border-radius:24px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#334155,#1e293b);color:#fff;font-size:30px;font-weight:900;flex-shrink:0}
 .prof-av img{width:100%;height:100%;object-fit:cover}
-.prof-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
-.prof-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:12px;text-align:center}
-.prof-stat-val{font-size:20px;font-weight:900;font-family:monospace;color:#fff}
-.prof-stat-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#64748B;margin-top:4px}
-.sec-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#64748B;margin:16px 0 8px;font-weight:700}
-.footer{padding:16px 0 30px;text-align:center;color:#64748B;font-size:11px;border-top:1px solid rgba(255,255,255,.05)}
+.prof-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.prof-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:12px;text-align:center}
+.prof-stat-val{font-size:20px;font-weight:900;font-family:ui-monospace,monospace;color:#fff}
+.prof-stat-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#8ea0b6;margin-top:4px}
+.sec-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#8ea0b6;margin:16px 0 8px;font-weight:800}
+.list-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.footer{padding:18px 0 32px;text-align:center;color:#7b8ca0;font-size:11px;border-top:1px solid rgba(255,255,255,.05);margin-top:16px}
 </style>
 </head>
 <body>
 <div class="app">
   <div id="toast" class="toast"></div>
+
   <div class="modal-ov" id="pwOv">
-    <div class="modal-box" style="max-width:360px">
-      <div class="modal-hdr"><h3>Admin Login</h3><button class="close" onclick="closeModal('pwOv')">✕</button></div>
+    <div class="modal-box" style="max-width:420px">
+      <div class="modal-hdr"><h3>🔐 Admin Login</h3><button class="close" onclick="closeModal('pwOv')">✕</button></div>
       <div class="modal-body">
-        <div style="font-size:11px;color:#94A3B8;margin-bottom:10px">Usthad Arafath Hudawi • Usthad Savad Wafy • Usthad Sharafuddeen Hudawi</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:10px">Usthad Arafath Hudawi • Usthad Savad Wafy • Usthad Sharafuddeen Hudawi</div>
         <input type="password" id="pwIn" class="input" placeholder="Enter password">
-        <div id="pwErr" style="color:#F87171;font-size:12px;margin-top:5px"></div>
+        <div id="pwErr" style="color:#f87171;font-size:12px;margin-top:5px"></div>
         <div style="display:flex;gap:8px;margin-top:12px">
-          <button class="btn btn-login" style="flex:1" onclick="checkPw()">Login</button>
+          <button class="btn btn-primary" style="flex:1" onclick="checkPw()">Login</button>
           <button class="btn btn-ghost" onclick="closeModal('pwOv')">Cancel</button>
         </div>
       </div>
     </div>
   </div>
+
   <div class="modal-ov" id="profOv">
     <div class="modal-box">
-      <div class="modal-hdr"><h3 id="profNameHead">Profile</h3><button class="close" onclick="closeModal('profOv')">✕</button></div>
+      <div class="modal-hdr"><h3 id="profNameHead">👤 Profile</h3><button class="close" onclick="closeModal('profOv')">✕</button></div>
       <div class="modal-body">
         <div class="prof-top">
           <div class="prof-av" id="profAvatar">-</div>
-          <div style="flex:1">
-            <div id="profName" style="font-size:20px;font-weight:900;color:#fff">-</div>
-            <div id="profMeta" style="font-size:11px;color:#94A3B8;margin-top:4px">-</div>
+          <div style="flex:1;min-width:0">
+            <div id="profName" style="font-size:22px;font-weight:900;color:#fff">-</div>
+            <div id="profMeta" style="font-size:11px;color:#94a3b8;margin-top:4px">-</div>
             <div id="profTier" style="margin-top:8px"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+              <button class="btn btn-cyan" onclick="enableEditProfile()">✏️ Edit Profile</button>
+              <button class="btn btn-violet" onclick="scrollToProfileTools()">⚙️ Tools</button>
+            </div>
           </div>
         </div>
+
         <div class="prof-stats">
           <div class="prof-stat"><div class="prof-stat-val" id="profCoins">0</div><div class="prof-stat-lbl">Coins</div></div>
           <div class="prof-stat"><div class="prof-stat-val" id="profRank">-</div><div class="prof-stat-lbl">Rank</div></div>
           <div class="prof-stat"><div class="prof-stat-val" id="profAch">0</div><div class="prof-stat-lbl">Achievements</div></div>
+          <div class="prof-stat"><div class="prof-stat-val" id="profMonthCoins">0</div><div class="prof-stat-lbl">This Month</div></div>
         </div>
-        <div class="sec-label">Activity Log</div>
-        <div id="profHistList"></div>
+
+        <div id="profileTools">
+          <div class="sec-label">👀 Personal Details</div>
+          <div class="grid-2">
+            <div><input id="editName" class="input" placeholder="Student/Admin name"></div>
+            <div><input id="editRoll" class="input" placeholder="Roll / ID"></div>
+            <div><input id="editClass" class="input" placeholder="Class / Role"></div>
+            <div><input id="editPhone" class="input" placeholder="Phone / Contact"></div>
+          </div>
+          <div style="margin-top:10px"><textarea id="editNote" class="textarea" placeholder="Notes / description"></textarea></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+            <button class="btn btn-primary" onclick="saveProfileDetails()">💾 Save Details</button>
+            <button class="btn btn-amber" onclick="triggerPhotoUpload()">📷 Upload Photo</button>
+            <button class="btn btn-pink" onclick="deleteCurrentProfilePhoto()">🗑️ Remove Photo</button>
+          </div>
+          <input type="file" id="profPhotoFile" accept="image/*" style="display:none">
+
+          <div class="sec-label">📈 Monthly Profile Graph</div>
+          <canvas id="profileMonthlyGraph" height="110"></canvas>
+
+          <div class="sec-label">🧾 Activity Log</div>
+          <div id="profHistList"></div>
+        </div>
       </div>
     </div>
   </div>
+
   <div class="header">
-    <div class="header-top"><div class="topline"><div style="display:flex;align-items:center;gap:8px"><div class="live-dot"></div><span>Valiyullahi Thangal Memorial Darussalam Academy</span></div><div style="display:flex;align-items:center;gap:10px"><span>SECOND BATCH-DSA</span><span id="syncStatus">Live</span></div></div></div>
-    <div class="header-main">
-      <div class="brand"><div class="brand-logo">SD</div><div class="brand-text"><h1>SECOND BATCH-DSA, SADAD</h1><p>33 Scholars Firebase Cloud Sync • Academic Year 2025-2026</p></div></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-ghost" onclick="exportData()">Export JSON</button><button class="btn btn-login" onclick="openModal('pwOv')">Admin Login</button></div>
+    <div class="topbar-row"><div style="display:flex;align-items:center;gap:8px"><div class="pulse"></div><span>Valiyullahi Thangal Memorial Darussalam Academy</span></div><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span>SECOND BATCH-DSA • LIVE</span><span id="syncStatus">Live</span></div></div>
+    <div class="header-row">
+      <div class="brand">
+        <div class="brand-logo">🌟</div>
+        <div class="brand-text">
+          <h1>🌟 SECOND BATCH - DSA, SADAD DASHBOARD 🌟</h1>
+          <p>33 Scholars • Firebase Cloud Sync • Attractive, colorful, editable, celebratory 🎉</p>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn btn-ghost" onclick="exportData()">⬇️ Export JSON</button>
+        <button class="btn btn-cyan" onclick="openModal('pwOv')">🔐 Admin Login</button>
+      </div>
     </div>
-    <div class="nav"><div class="nav-inner">
-      <button class="nav-btn active" data-tab="rankings" onclick="showTab('rankings')">Rankings</button>
-      <button class="nav-btn" data-tab="award" onclick="showTab('award')">Award Coins</button>
-      <button class="nav-btn" data-tab="history" onclick="showTab('history')">History</button>
-      <button class="nav-btn" data-tab="analytics" onclick="showTab('analytics')">Analytics</button>
-      <button class="nav-btn" data-tab="reports" onclick="showTab('reports')">Reports</button>
-      <button class="nav-btn" data-tab="faculty" onclick="showTab('faculty')">Faculty</button>
-    </div></div>
+    <div class="nav">
+      <div class="nav-inner">
+        <button class="nav-btn active" data-tab="rankings" onclick="showTab('rankings')">🏆 Rankings</button>
+        <button class="nav-btn" data-tab="award" onclick="showTab('award')">➕ Award / Deduct</button>
+        <button class="nav-btn" data-tab="history" onclick="showTab('history')">🕒 History</button>
+        <button class="nav-btn" data-tab="analytics" onclick="showTab('analytics')">📊 Analytics</button>
+        <button class="nav-btn" data-tab="reports" onclick="showTab('reports')">🗓️ Reports</button>
+        <button class="nav-btn" data-tab="categories" onclick="showTab('categories')">🏷️ Categories</button>
+        <button class="nav-btn" data-tab="faculty" onclick="showTab('faculty')">👨‍🏫 Admins</button>
+      </div>
+    </div>
   </div>
-  <div class="main"><div class="container">
-    <div class="grid-4">
-      <div class="card"><div class="metric-val" id="totalCoins">0</div><div class="metric-lbl">Total Coins</div><div class="metric-sub"><span>Across students</span><span id="avgCoins">0 avg</span></div></div>
-      <div class="card"><div class="metric-val" id="studentCount">33</div><div class="metric-lbl">Batch Size</div><div class="metric-sub">Scholars</div></div>
-      <div class="card"><div class="metric-val" id="topStudent">-</div><div class="metric-lbl">Top Student</div><div class="metric-sub">1st place</div></div>
-      <div class="card"><div class="metric-val" id="adminCount">3</div><div class="metric-lbl">Admins</div><div class="metric-sub">Verified</div></div>
+
+  <div class="main">
+    <div class="container">
+      <div class="hero">
+        <div>
+          <h2>🌈 Welcome to the Power Dashboard</h2>
+          <p>Edit profiles, upload photos, manage categories, award/deduct coins, and celebrate every achievement with sound + icons.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="badge green">🎉 Celebration Ready</span>
+          <span class="badge blue">🔊 Sound On</span>
+          <span class="badge violet">📷 Photo Upload</span>
+          <span class="badge pink">🏷️ Categories</span>
+        </div>
+      </div>
+
+      <div class="grid-4">
+        <div class="card"><div class="metric-val" id="totalCoins">0</div><div class="metric-lbl">Total Coins</div><div class="metric-sub"><span>Across students</span><span id="avgCoins">0 avg</span></div></div>
+        <div class="card"><div class="metric-val" id="studentCount">33</div><div class="metric-lbl">Batch Size</div><div class="metric-sub">Scholars</div></div>
+        <div class="card"><div class="metric-val" id="topStudent">-</div><div class="metric-lbl">Top Student</div><div class="metric-sub">1st place</div></div>
+        <div class="card"><div class="metric-val" id="adminCount">3</div><div class="metric-lbl">Admins</div><div class="metric-sub">Verified</div></div>
+      </div>
+
+      <div class="section card"><h2>🏅 Top Rankers</h2><div class="podium-wrap" id="podium"></div></div>
+
+      <div class="section card" id="tab-rankings">
+        <h2>🏆 All Rankings</h2>
+        <div class="search-row">
+          <input class="input" id="rankSearch" placeholder="Search by name or roll number..." oninput="renderRankings()">
+          <select class="select" id="tierFilter" onchange="renderRankings()"><option value="all">All Tiers</option><option value="Diamond">Diamond</option><option value="Gold">Gold</option><option value="Silver">Silver</option><option value="Bronze">Bronze</option></select>
+          <div class="view-toggle"><button class="view-btn active" id="viewCardBtn" onclick="setView('card')">Card</button><button class="view-btn" id="viewTableBtn" onclick="setView('table')">Table</button></div>
+        </div>
+        <div id="rankList"></div>
+      </div>
+
+      <div class="section card" id="tab-award" style="display:none">
+        <h2>➕ Award / Deduct Coins</h2>
+        <div class="grid-2">
+          <div><label style="font-size:11px;color:#94a3b8">Student</label><input class="input" id="awardStudent" placeholder="Roll no / name"></div>
+          <div><label style="font-size:11px;color:#94a3b8">Coins</label><input class="input" id="awardCoins" type="number" placeholder="Coins (+ or -)"></div>
+          <div><label style="font-size:11px;color:#94a3b8">Category</label><select class="select" id="awardCategory"></select></div>
+          <div><label style="font-size:11px;color:#94a3b8">Note</label><input class="input" id="awardNote" placeholder="Optional note"></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <button class="btn btn-primary" onclick="awardCoins()">🎉 Award</button>
+          <button class="btn btn-pink" onclick="deductCoins()">⚠️ Deduct</button>
+        </div>
+      </div>
+
+      <div class="section card" id="tab-history" style="display:none">
+        <h2>🕒 Coin History</h2>
+        <input class="input" id="histSearch" placeholder="Search student..." oninput="renderHistory()">
+        <div id="histList" style="margin-top:10px"></div>
+      </div>
+
+      <div class="section card" id="tab-analytics" style="display:none">
+        <h2>📊 Analytics</h2>
+        <div class="grid-2">
+          <div class="card" style="background:rgba(255,255,255,.03)"><h2 style="margin-bottom:8px">Monthly Graph</h2><canvas id="analyticsChart" height="110"></canvas></div>
+          <div class="card" style="background:rgba(255,255,255,.03)"><h2 style="margin-bottom:8px">Rewards vs Deductions</h2><canvas id="donutChart" height="110"></canvas></div>
+        </div>
+      </div>
+
+      <div class="section card" id="tab-reports" style="display:none">
+        <h2>🗓️ Reports</h2>
+        <div class="grid-2">
+          <div><label style="font-size:11px;color:#94a3b8">Month</label><select id="repMonth" class="select" style="width:100%"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6" selected>July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select></div>
+          <div><label style="font-size:11px;color:#94a3b8">Year</label><select id="repYear" class="select" style="width:100%"><option value="2025">2025</option><option value="2026" selected>2026</option></select></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px">
+          <button class="btn btn-primary" onclick="generateMonthlyReport()">📄 Monthly PDF</button>
+          <button class="btn btn-cyan" onclick="showThisMonthSummary()">🗓️ This Month</button>
+          <button class="btn btn-violet" onclick="showJuneSummary()">🌸 June</button>
+        </div>
+        <div class="card" style="margin-top:16px;background:rgba(255,255,255,.03)"><h2>📈 Monthly Graph</h2><canvas id="monthlyGraph" height="120"></canvas></div>
+        <div id="reportOutput" style="margin-top:16px"></div>
+      </div>
+
+      <div class="section card" id="tab-categories" style="display:none">
+        <h2>🏷️ Category Manager</h2>
+        <div class="grid-2">
+          <div><input class="input" id="catName" placeholder="New category name"></div>
+          <div><input class="input" id="catEmoji" placeholder="Emoji e.g. 🎯"></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button class="btn btn-primary" onclick="addCategory()">➕ Add Category</button>
+          <button class="btn btn-ghost" onclick="loadCategoryList()">🔄 Refresh</button>
+        </div>
+        <div id="categoryList" style="margin-top:14px"></div>
+      </div>
+
+      <div class="section card" id="tab-faculty" style="display:none">
+        <h2>👨‍🏫 Admins & Settings</h2>
+        <div id="facultyList"></div>
+        <div class="card" style="margin-top:14px;background:rgba(255,255,255,.03)">
+          <h2 style="margin-bottom:10px">🔑 Change Admin Password</h2>
+          <div class="grid-2">
+            <div><input class="input" id="adminSelectName" placeholder="Admin name"></div>
+            <div><input class="input" id="newAdminPass" placeholder="New password"></div>
+          </div>
+          <div style="margin-top:10px"><button class="btn btn-cyan" onclick="changeAdminPassword()">Update Password</button></div>
+        </div>
+      </div>
+
+      <div class="footer">Firebase-connected colorful dashboard • edit • upload • deduct • celebrate • manage categories</div>
     </div>
-    <div class="section card"><h2>Top Rankers</h2><div class="podium-wrap" id="podium"></div></div>
-    <div class="section card" id="tab-rankings"><h2>All Rankings</h2><div class="search-row"><input class="input" id="rankSearch" placeholder="Search by name or roll number..." oninput="renderRankings()"><select class="select" id="tierFilter" onchange="renderRankings()"><option value="all">All Tiers</option><option value="Diamond">Diamond</option><option value="Gold">Gold</option><option value="Silver">Silver</option><option value="Bronze">Bronze</option></select><div class="view-toggle"><button class="view-btn active" id="viewCardBtn" onclick="setView('card')">Card</button><button class="view-btn" id="viewTableBtn" onclick="setView('table')">Table</button></div></div><div id="rankList"></div></div>
-    <div class="section card" id="tab-award" style="display:none"><h2>Award Coins</h2><div class="grid-2"><div><label style="font-size:11px;color:#94A3B8">Student</label><input class="input" id="awardStudent" placeholder="Roll no / name"></div><div><label style="font-size:11px;color:#94A3B8">Coins</label><input class="input" id="awardCoins" type="number" placeholder="Coins"></div></div><div style="margin-top:10px"><button class="btn btn-login" onclick="awardCoins()">Submit</button></div></div>
-    <div class="section card" id="tab-history" style="display:none"><h2>Coin History</h2><input class="input" id="histSearch" placeholder="Search student..." oninput="renderHistory()"><div id="histList" style="margin-top:10px"></div></div>
-    <div class="section card" id="tab-analytics" style="display:none"><h2>Analytics</h2><canvas id="analyticsChart" height="100"></canvas></div>
-    <div class="section card" id="tab-reports" style="display:none"><h2>Reports</h2><div class="grid-2"><div><label style="font-size:11px;color:#94A3B8">Month</label><select id="repMonth" class="select" style="width:100%"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6" selected>July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select></div><div><label style="font-size:11px;color:#94A3B8">Year</label><select id="repYear" class="select" style="width:100%"><option value="2025">2025</option><option value="2026" selected>2026</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px"><button class="btn btn-login" onclick="generateMonthlyReport()">Monthly PDF</button><button class="btn btn-login" onclick="showThisMonthSummary()">This Month</button><button class="btn btn-login" onclick="showJuneSummary()">June</button></div><div id="reportOutput" style="margin-top:16px"></div></div>
-    <div class="section card" id="tab-faculty" style="display:none"><h2>Faculty</h2><div id="facultyList"></div></div>
-    <div class="footer">Firebase connected dashboard • original-like rebuild</div>
-  </div></div>
+  </div>
 </div>
-<script>
-const firebaseConfig={apiKey:"YOUR_API_KEY",authDomain:"YOUR_PROJECT.firebaseapp.com",projectId:"YOUR_PROJECT_ID",storageBucket:"YOUR_BUCKET",messagingSenderId:"YOUR_SENDER_ID",appId:"YOUR_APP_ID"};
-firebase.initializeApp(firebaseConfig);
-const db=firebase.firestore();const storage=firebase.storage();const {jsPDF}=window.jspdf;
-const ADMINS=[{name:"Usthad Arafath Hudawi",pw:"pwarafa",level:"Teacher Admin"},{name:"Usthad Savad Wafy",pw:"pwsadad",level:"Mentor Admin"},{name:"Usthad Sharafuddeen Hudawi",pw:"pwsadad",level:"Principal Admin"}];
-const STU=[{r:"r16",n:"Aslam Hammadi"},{r:"r18",n:"Abdul Adhilu"},{r:"r33",n:"Muhammad Abdullah Hazim"},{r:"r35",n:"Muhammad Hamid VK"},{r:"r36",n:"Muhammed Aban VP"},{r:"r37",n:"Bilal Ibnu Muhammad Rafeek"},{r:"r38",n:"Muhammed Ali"},{r:"r39",n:"Muhammed Rabeeh"},{r:"r40",n:"Muhammed Mizhab"},{r:"r41",n:"Hanan Abdulla"},{r:"r42",n:"Ali Insaf K"},{r:"r43",n:"Muhammed MK"},{r:"r44",n:"Muhammed Nafih K"},{r:"r45",n:"Muhammed Nadeem NP"},{r:"r46",n:"Ahammed Zayid"},{r:"r47",n:"Muhammed Bin Navas"},{r:"r48",n:"Hamdan Sooppy Moossa"},{r:"r49",n:"Mohammed Nabhan P"},{r:"r50",n:"Muhammed Rizwan AP"},{r:"r51",n:"Rayan Izaz"},{r:"r52",n:"Muhammed Razeen T"},{r:"r53",n:"Muhammed Sahal MK"},{r:"r54",n:"Ashmil Sha M"},{r:"r55",n:"Muhammed Nahiyan MM"},{r:"r56",n:"Alfid NK"},{r:"r57",n:"Muhammad Safvan KTK"},{r:"r58",n:"Muhammad Raseel"},{r:"r59",n:"Amaan Muhammed BK"},{r:"r60",n:"Muhammed Rabeeh PP"},{r:"r61",n:"Muhammed Anun Raazi"},{r:"r62",n:"Zamil Abdullah"},{r:"r64",n:"Mizhab MK"},{r:"r98",n:"Muhammed C"}];
-const history=[
-{addedBy:"Usthad Arafath Hudawi",cat:"Class teacher program — 1st",coins:5,date:"18/6/2026",name:"Muhammad Abdullah Hazim",note:"Muhammadiyya",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Class teacher program — 3rd",coins:2,date:"18/6/2026",name:"Muhammad Abdullah Hazim",note:"Geo-talent",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Weekly GK quiz — 2nd",coins:3,date:"18/6/2026",name:"Muhammad Abdullah Hazim",note:"",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Class teacher program — 1st",coins:5,date:"18/6/2026",name:"Muhammed Aban VP",note:"Muhammadiyya",r:"r36"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Weekly GK quiz — 3rd",coins:1,date:"18/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Class teacher program — 1st",coins:5,date:"18/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"Muhammadiyya",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Publication — picture/photo",coins:5,date:"18/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"Kurunnukal",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Publication — picture/photo",coins:5,date:"18/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"Childrens magazine",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Class teacher program — 2nd",coins:4,date:"18/6/2026",name:"Muhammed Rabeeh",note:"Geo-talent",r:"r39"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Class teacher program — 1st",coins:5,date:"18/6/2026",name:"Muhammed Mizhab",note:"Muhammadiyya",r:"r40"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 1st",coins:7,date:"18/6/2026",name:"Ali Insaf K",note:"Bakreed Quiz",r:"r42"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Class teacher program — 1st",coins:5,date:"18/6/2026",name:"Muhammed MK",note:"Muahammadiyya",r:"r43"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Publication — picture/photo",coins:5,date:"18/6/2026",name:"Muhammed Nadeem NP",note:"kurunnukal",r:"r45"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Publication — picture/photo",coins:5,date:"18/6/2026",name:"Muhammed Nadeem NP",note:"Childrens magazine",r:"r45"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Class teacher program — 1st",coins:5,date:"18/6/2026",name:"Muhammed Bin Navas",note:"Muhammadiyya",r:"r47"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Class teacher program — 1st",coins:5,date:"18/6/2026",name:"Muhammed Rizwan AP",note:"Muhammadiyya",r:"r50"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Publication — picture/photo",coins:5,date:"18/6/2026",name:"Mohammed Nabhan P",note:"Kurunnukal",r:"r49"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"20/6/2026",name:"Muhammad Abdullah Hazim",note:"Makhdoom Kudumbam",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"20/6/2026",name:"Muhammed Bin Navas",note:"Mahdi Imam",r:"r47"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 3rd",coins:3,date:"21/6/2026",name:"Muhammad Abdullah Hazim",note:"calligraphy",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Muhammad Abdullah Hazim",note:"",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Muhammad Abdullah Hazim",note:"",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 1st",coins:7,date:"21/6/2026",name:"Abdul Adhilu",note:"calligraphy",r:"r18"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"21/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"Uvaisul Qarni",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Muhammed Mizhab",note:"",r:"r40"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Ali Insaf K",note:"",r:"r42"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Ali Insaf K",note:"",r:"r42"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Muhammed MK",note:"",r:"r43"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Muhammed Nafih K",note:"",r:"r44"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Hamdan Sooppy Moossa",note:"",r:"r48"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Rayan Izaz",note:"",r:"r51"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Rayan Izaz",note:"",r:"r51"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Muhammed Razeen T",note:"",r:"r52"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Ashmil Sha M",note:"",r:"r54"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Muhammed Nahiyan MM",note:"",r:"r55"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Muhammed Nahiyan MM",note:"",r:"r55"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Alfid NK",note:"",r:"r56"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Alfid NK",note:"",r:"r56"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Weekly GK quiz — 1st",coins:5,date:"21/6/2026",name:"Muhammad Safvan KTK",note:"",r:"r57"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Class teacher program — 1st",coins:5,date:"21/6/2026",name:"Muhammad Safvan KTK",note:"Muhammadiyya",r:"r57"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Class teacher program — 1st",coins:5,date:"21/6/2026",name:"Muhammad Safvan KTK",note:"Geo-talent",r:"r57"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Muhammad Safvan KTK",note:"",r:"r57"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Muhammad Safvan KTK",note:"",r:"r57"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Amaan Muhammed BK",note:"",r:"r59"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Balarama/Digest GK quiz winner",coins:2,date:"21/6/2026",name:"Muhammed Anun Raazi",note:"",r:"r61"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Best speech performance",coins:5,date:"21/6/2026",name:"Muhammed C",note:"",r:"r98"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 3rd",coins:3,date:"21/6/2026",name:"Muhammed C",note:"Bakreed essay contest",r:"r98"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"21/6/2026",name:"Mohammed Nabhan P",note:"Vakwak",r:"r49"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Publication — story/poem/essay",coins:10,date:"6/7/2026",name:"Muhammed Mizhab",note:"Young world- poem",r:"r40"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Abdul Adhilu",note:"",r:"r18"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Abdul Adhilu",note:"",r:"r18"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Hanan Abdulla",note:"",r:"r41"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Hanan Abdulla",note:"",r:"r41"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"15/6/2026",name:"Hamdan Sooppy Moossa",note:"vayankkaran",r:"r48"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 2nd",coins:5,date:"22/6/2026",name:"Hamdan Sooppy Moossa",note:"Greeting card",r:"r48"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Alfid NK",note:"",r:"r56"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Alfid NK",note:"",r:"r56"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Speech Review",coins:3,date:"30/6/2026",name:"Alfid NK",note:"",r:"r56"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Muhammed Rabeeh PP",note:"",r:"r60"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Muhammed Rabeeh PP",note:"",r:"r60"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Al- Imam",coins:3,date:"22/6/2026",name:"Muhammed Rabeeh PP",note:"asar",r:"r60"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 3rd",coins:3,date:"22/6/2026",name:"Muhammed Rabeeh PP",note:"Greeting card",r:"r60"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 1st",coins:7,date:"18/6/2026",name:"Muhammed Mizhab",note:"Spelling Bee",r:"r40"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 2nd",coins:5,date:"22/6/2026",name:"Muhammed Mizhab",note:"Book talk",r:"r40"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 2nd",coins:3,date:"6/7/2026",name:"Muhammed Mizhab",note:"food fest",r:"r40"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Muhammed Mizhab",note:"",r:"r40"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Muhammed Mizhab",note:"",r:"r40"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Muhammed Nafih K",note:"",r:"r44"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Muhammed Nafih K",note:"",r:"r44"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 2nd",coins:3,date:"5/7/2026",name:"Muhammed Sahal MK",note:"food fest",r:"r53"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Al- Imam",coins:3,date:"15/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Language Speech",coins:3,date:"19/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"Arabic",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 2nd",coins:5,date:"19/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"Spelling Bee",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"22/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"Zamzaminte Kanavukal",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"18/6/2026",name:"Muhammed C",note:"Beerbal Kadhakal",r:"r98"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Rayan Izaz",note:"",r:"r51"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Rayan Izaz",note:"",r:"r51"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Muhammad Raseel",note:"",r:"r58"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Muhammad Raseel",note:"",r:"r58"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:2,date:"30/6/2026",name:"Muhammad Abdullah Hazim",note:"",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Muhammad Abdullah Hazim",note:"",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"18/6/2026",name:"Muhammad Abdullah Hazim",note:"Seed Bin Zaid",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Al- Imam",coins:3,date:"15/6/2026",name:"Muhammad Abdullah Hazim",note:"",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Best speech performance",coins:5,date:"15/6/2026",name:"Muhammad Abdullah Hazim",note:"",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Ahammed Zayid",note:"",r:"r46"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Ahammed Zayid",note:"",r:"r46"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 1st",coins:7,date:"19/6/2026",name:"Muhammed Aban VP",note:"Book talk",r:"r36"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 3rd",coins:3,date:"22/6/2026",name:"Muhammed Aban VP",note:"Arabic story writing",r:"r36"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Muhammed Aban VP",note:"",r:"r36"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"6/6/2026",name:"Muhammed Aban VP",note:"",r:"r36"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Ziyarath Dua",coins:3,date:"15/6/2026",name:"Muhammed Aban VP",note:"",r:"r36"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Language Speech",coins:3,date:"25/6/2026",name:"Muhammed Aban VP",note:"urdu",r:"r36"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Muhammed Rabeeh",note:"",r:"r39"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Muhammed Rabeeh",note:"",r:"r39"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 2nd",coins:3,date:"6/7/2026",name:"Muhammed Rabeeh",note:"food fest",r:"r39"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"18/6/2026",name:"Muhammed Rizwan AP",note:"Shaikh Jeelani",r:"r50"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Haddad Leading",coins:3,date:"24/6/2026",name:"Muhammed Rizwan AP",note:"",r:"r50"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Ali Insaf K",note:"",r:"r42"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:2,date:"30/6/2026",name:"Ali Insaf K",note:"",r:"r42"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 1st",coins:7,date:"22/6/2026",name:"Ali Insaf K",note:"Greeting card",r:"r42"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 3rd",coins:3,date:"19/6/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"Kettezhutth",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Ziyarath Dua",coins:3,date:"26/6/2026",name:"Muhammad Safvan KTK",note:"",r:"r57"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 2nd",coins:3,date:"6/7/2026",name:"Muhammad Safvan KTK",note:"",r:"r57"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 3rd",coins:3,date:"26/6/2026",name:"Muhammad Safvan KTK",note:"Spelling Bee",r:"r57"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Best speech performance",coins:5,date:"24/6/2026",name:"Muhammad Safvan KTK",note:"",r:"r57"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"18/6/2026",name:"Muhammad Safvan KTK",note:"Rabiyathul Adaviyya",r:"r57"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:2,date:"18/6/2026",name:"Muhammed MK",note:"Ajmeerile Sulthan",r:"r43"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"19/6/2026",name:"Muhammed Bin Navas",note:"Zamzaminte Kanavukal",r:"r47"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 2nd",coins:5,date:"6/6/2026",name:"Muhammed Bin Navas",note:"Push Up",r:"r47"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Best speech performance",coins:5,date:"25/6/2026",name:"Muhammed Bin Navas",note:"",r:"r47"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Muhammed Bin Navas",note:"",r:"r47"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Muhammed Bin Navas",note:"",r:"r47"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 3rd",coins:3,date:"19/6/2026",name:"Muhammed Ali",note:"Book talk",r:"r38"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Al- Imam",coins:3,date:"20/6/2026",name:"Ahammed Zayid",note:"",r:"r46"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"6/7/2026",name:"Mohammed Nabhan P",note:"Khandaq",r:"r49"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Magazine Making",coins:3,date:"30/6/2026",name:"Muhammed Razeen T",note:"",r:"r52"},
-{addedBy:"Usthad Arafath Hudawi",cat:"News Paper making",coins:2,date:"6/6/2026",name:"Muhammed Razeen T",note:"",r:"r52"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 3rd",coins:3,date:"19/6/2026",name:"Muhammad Hamid VK",note:"Kettezhutth",r:"r35"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Haddad Leading",coins:3,date:"8/7/2026",name:"Muhammad Abdullah Hazim",note:"",r:"r33"},
-{addedBy:"Usthad Savad Wafy",cat:"Selected book review",coins:2,date:"12/7/2026",name:"Muhammad Safvan KTK",note:"അജ്മീറിലെ സുൽത്താൻ ",r:"r57"},
-{addedBy:"Usthad Savad Wafy",cat:"Selected book review",coins:1,date:"12/7/2026",name:"Mohammed Nabhan P",note:"ത്വൽഹത് bin Ubaidillah",r:"r49"},
-{addedBy:"Usthad Savad Wafy",cat:"Selected book review",coins:1,date:"12/7/2026",name:"Muhammed C",note:"Beerbal",r:"r98"},
-{addedBy:"Usthad Savad Wafy",cat:"Selected book review",coins:2,date:"12/7/2026",name:"Muhammed Rizwan AP",note:"അജ്മീറിലെ സുൽത്താൻ ",r:"r50"},
-{addedBy:"Usthad Savad Wafy",cat:"Selected book review",coins:1,date:"12/7/2026",name:"Muhammed Sahal MK",note:"അജ്മീറിലെ സുൽത്താൻ ",r:"r53"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"12/7/2026",name:"Muhammad Abdullah Hazim",note:"Ajmeerile Sulthan",r:"r33"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"12/7/2026",name:"Muhammed Aban VP",note:"Ali bin abee thalib",r:"r36"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"12/7/2026",name:"Bilal Ibnu Muhammad Rafeek",note:"Ali bin abee thalib",r:"r37"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"12/7/2026",name:"Muhammed Mizhab",note:"Rotten Romans",r:"r40"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"12/7/2026",name:"Hanan Abdulla",note:"Usman bin affan",r:"r41"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"12/7/2026",name:"Ali Insaf K",note:"Ajmeerile Sulthan",r:"r42"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"12/7/2026",name:"Muhammed Bin Navas",note:"swargathile ottakam",r:"r47"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"12/7/2026",name:"Alfid NK",note:"Urangan vaikiya rathri",r:"r56"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 1st",coins:7,date:"12/7/2026",name:"Muhammed Rabeeh PP",note:"Sarigama",r:"r60"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Selected book review",coins:3,date:"12/7/2026",name:"Muhammed Rabeeh PP",note:"Allahuvinte val",r:"r60"},
-{addedBy:"Usthad Arafath Hudawi",cat:"Inner campus contest — 3rd",coins:3,date:"12/7/2026",name:"Muhammed C",note:"Sarigama",r:"r98"},
-{addedBy:"Usthad Arafath Hudawi",cat:"MTP Scholarship Exam",coins:10,date:"13/7/2026",name:"Muhammed Aban VP",note:"",r:"r36"},
-{addedBy:"Usthad Arafath Hudawi",cat:"MTP Scholarship Exam",coins:10,date:"13/7/2026",name:"Muhammed Mizhab",note:"",r:"r40"},
-{addedBy:"Usthad Arafath Hudawi",cat:"MTP Scholarship Exam",coins:10,date:"13/7/2026",name:"Muhammed Rabeeh",note:"",r:"r39"},
-{addedBy:"Usthad Arafath Hudawi",cat:"MTP Scholarship Exam",coins:10,date:"13/7/2026",name:"Muhammad Safvan KTK",note:"",r:"r57"}
-];
-const S={coins:{},cats:[],history:[],profiles:{}};let viewMode='card',chart=null,admin=null;
-function openModal(id){document.getElementById(id).classList.add('open')}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show';setTimeout(()=>t.className='toast',2500)}
-function showSync(msg){document.getElementById('syncStatus').textContent=msg;setTimeout(()=>document.getElementById('syncStatus').textContent='Live',2000)}
-function tier(c){c=Number(c||0);if(c>=150)return {name:'Diamond',cls:'blue'};if(c>=100)return {name:'Gold',cls:'amber'};if(c>=50)return {name:'Silver',cls:'green'};return {name:'Bronze',cls:'red'}}
-function initials(name){return (name||'').split(' ').slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'?'}
-function sortedStudents(){return STU.slice().sort((a,b)=>(S.coins[b.r]||0)-(S.coins[a.r]||0))}
-function studentDisplay(r){return S.profiles[r]?.n||STU.find(x=>x.r===r)?.n||r}
-function setView(mode){viewMode=mode;document.getElementById('viewCardBtn').classList.toggle('active',mode==='card');document.getElementById('viewTableBtn').classList.toggle('active',mode==='table');renderRankings()}
-function showTab(tab){document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.querySelector('.nav-btn[data-tab="'+tab+'"]').classList.add('active');['rankings','award','history','analytics','reports','faculty'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===tab?'block':'none'});if(tab==='analytics')renderAnalytics();if(tab==='history')renderHistory();if(tab==='faculty')renderFaculty()}
-function checkPw(){const v=document.getElementById('pwIn').value.trim();const a=ADMINS.find(x=>x.pw===v);if(a){admin=a;closeModal('pwOv');document.getElementById('pwErr').textContent='';toast('Welcome '+a.name);renderAll()}else document.getElementById('pwErr').textContent='Incorrect password.'}
-function renderStats(){const total=Object.values(S.coins).reduce((a,b)=>a+(Number(b)||0),0);document.getElementById('totalCoins').textContent=total.toLocaleString();document.getElementById('avgCoins').textContent=Math.round(total/STU.length)+' avg';document.getElementById('studentCount').textContent=STU.length;const top=sortedStudents()[0];document.getElementById('topStudent').textContent=top?studentDisplay(top.r).split(' ')[0]:'-';document.getElementById('adminCount').textContent=ADMINS.length}
-function renderPodium(){const top3=sortedStudents().slice(0,3);document.getElementById('podium').innerHTML=top3.map((s,idx)=>{const c=S.coins[s.r]||0,p=S.profiles[s.r]||{},bar=[72,54,42][idx],medals=['🥇','🥈','🥉'];return `<div class="pod-card" onclick="openProfile('${s.r}')"><div style="font-size:${idx===0?20:16}px;margin-bottom:2px">${medals[idx]}</div><div class="pod-av" style="width:${[78,64,54][idx]}px;height:${[78,64,54][idx]}px;background:#6C63FF">${p.pic?`<img src="${p.pic}">`:initials(studentDisplay(s.r))}</div><div class="pod-name">${studentDisplay(s.r)}</div><div class="pod-coins">${c}</div><div style="height:${bar}px;width:100%;margin-top:6px;border-radius:8px 8px 0 0;background:${idx===0?'rgba(245,158,11,.2)':idx===1?'rgba(192,192,192,.18)':'rgba(205,127,50,.18)'}"></div></div>`}).join('')}
-function renderRankings(){const q=document.getElementById('rankSearch').value.toLowerCase();const tf=document.getElementById('tierFilter').value;const list=sortedStudents().filter(s=>{const name=studentDisplay(s.r).toLowerCase();const okQ=name.includes(q)||s.r.toLowerCase().includes(q);const okT=tf==='all'||tier(S.coins[s.r]).name===tf;return okQ&&okT});if(viewMode==='card'){document.getElementById('rankList').innerHTML=`<div class="stu-grid">${list.map((s)=>{const c=S.coins[s.r]||0,p=S.profiles[s.r]||{},t=tier(c);return `<div class="card stu-card" onclick="openProfile('${s.r}')"><div class="stu-top"><div class="av">${p.pic?`<img src="${p.pic}">`:initials(studentDisplay(s.r))}</div><div style="min-width:0;flex:1"><div class="name">${studentDisplay(s.r)}</div><div class="meta">${s.r}</div></div></div><div class="coin">${c}</div><div class="tier badge ${t.cls}">${t.name}</div></div>`}).join('')}</div>`}else{document.getElementById('rankList').innerHTML=`<table class="table"><thead><tr><th>#</th><th>Student</th><th>Roll</th><th>Coins</th><th>Tier</th></tr></thead><tbody>${list.map((s,i)=>{const c=S.coins[s.r]||0,t=tier(c);return `<tr onclick="openProfile('${s.r}')"><td>${i+1}</td><td>${studentDisplay(s.r)}</td><td>${s.r}</td><td>${c}</td><td><span class="badge ${t.cls}">${t.name}</span></td></tr>`}).join('')}</tbody></table>`}}
-function renderHistory(){const q=document.getElementById('histSearch').value.toLowerCase();const rows=S.history.filter(h=>JSON.stringify(h).toLowerCase().includes(q)).slice().reverse();document.getElementById('histList').innerHTML=rows.length?rows.map(h=>`<div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)"><div style="display:flex;justify-content:space-between;gap:10px"><div><b style="color:#fff">${h.name||h.roll||'-'}</b> <span style="color:#94A3B8">(${h.cat||'-'})</span></div><div style="color:${(h.coins||0)>=0?'#34D399':'#F87171'};font-weight:800">${h.coins||0}</div></div><div style="font-size:11px;color:#64748B;margin-top:3px">${h.note||''}</div></div>`).join(''):'<div style="color:#94A3B8">No history</div>'}
-function renderAnalytics(){const ctx=document.getElementById('analyticsChart').getContext('2d');if(chart)chart.destroy();const labels=sortedStudents().slice(0,10).map(s=>studentDisplay(s.r).split(' ')[0]);const data=sortedStudents().slice(0,10).map(s=>S.coins[s.r]||0);chart=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'Coins',data,backgroundColor:'#10B981'}]},options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94A3B8'}},y:{ticks:{color:'#94A3B8'}}}}})}
-function renderFaculty(){document.getElementById('facultyList').innerHTML=`<div style="display:grid;gap:10px">${ADMINS.map(a=>`<div class="card" style="padding:12px"><div style="font-weight:800;color:#fff">${a.name}</div><div style="font-size:11px;color:#94A3B8">${a.level}</div></div>`).join('')}</div>`}
-function openProfile(r){const p=S.profiles[r]||{},c=S.coins[r]||0,t=tier(c),rank=sortedStudents().findIndex(x=>x.r===r)+1;document.getElementById('profNameHead').textContent=studentDisplay(r);document.getElementById('profAvatar').innerHTML=p.pic?`<img src="${p.pic}">`:initials(studentDisplay(r));document.getElementById('profName').textContent=studentDisplay(r);document.getElementById('profMeta').textContent=r;document.getElementById('profTier').innerHTML=`<span class="badge ${t.cls}">${t.name}</span>`;document.getElementById('profCoins').textContent=c;document.getElementById('profRank').textContent=rank>0?rank:'-';document.getElementById('profAch').textContent=S.history.filter(h=>(h.roll===r||h.name===studentDisplay(r))).length;document.getElementById('profHistList').innerHTML=S.history.filter(h=>(h.roll===r||h.name===studentDisplay(r))).slice().reverse().map(h=>`<div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)"><div style="display:flex;justify-content:space-between"><div>${h.cat||'-'}</div><div style="font-weight:800;color:${(h.coins||0)>=0?'#34D399':'#F87171'}">${h.coins||0}</div></div><div style="font-size:11px;color:#64748B">${h.note||''}</div></div>`).join('')||'<div style="color:#94A3B8">No activity</div>';openModal('profOv')}
-function awardCoins(){const q=document.getElementById('awardStudent').value.trim().toLowerCase();const amt=Number(document.getElementById('awardCoins').value||0);const st=STU.find(s=>s.r.toLowerCase()===q||s.n.toLowerCase().includes(q));if(!st)return toast('Student not found');S.coins[st.r]=(S.coins[st.r]||0)+amt;S.history.push({roll:st.r,name:st.n,cat:'Manual Award',coins:amt,note:'Awarded via dashboard',date:new Date().toISOString()});saveToFirebase();renderAll();toast('Coins updated')}
-function safeDate(v){const d=new Date(v||0);return isNaN(d.getTime())?null:d}
-function filterHistoryByMonth(m,y){return S.history.filter(h=>{const d=safeDate(h.date||h.ts||h.time);return d&&d.getFullYear()===Number(y)&&d.getMonth()===Number(m)})}
-function buildMonthlySummary(m,y){const rows=filterHistoryByMonth(m,y),s={};rows.forEach(h=>{const r=h.roll||h.r;if(!r)return;s[r]=s[r]||{roll:r,name:h.name||studentDisplay(r),coins:0,count:0};s[r].coins+=Number(h.coins||0);s[r].count+=1});return Object.values(s).sort((a,b)=>b.coins-a.coins)}
-function renderReportTable(list,title){const total=list.reduce((a,b)=>a+b.coins,0);document.getElementById('reportOutput').innerHTML=`<div class="card" style="margin-top:16px"><h3 style="color:#fff;margin-bottom:10px">${title}</h3><div style="color:#94A3B8;font-size:12px;margin-bottom:12px">Total coins: ${total}</div><table class="table"><thead><tr><th>Rank</th><th>Student</th><th>Coins</th><th>Activities</th></tr></thead><tbody>${list.map((x,i)=>`<tr><td>${i+1}</td><td>${x.name}</td><td>${x.coins}</td><td>${x.count}</td></tr>`).join('')}</tbody></table></div>`}
-function showThisMonthSummary(){const n=new Date();renderReportTable(buildMonthlySummary(n.getMonth(),n.getFullYear()),'This Month Report')}
-function showJuneSummary(){const y=new Date().getFullYear();renderReportTable(buildMonthlySummary(5,y),'June Report')}
-function generateMonthlyReport(){const m=Number(document.getElementById('repMonth').value),y=Number(document.getElementById('repYear').value);const list=buildMonthlySummary(m,y);renderReportTable(list,'Monthly Report: '+y+'-'+String(m+1).padStart(2,'0'));const doc=new jsPDF();doc.text('Monthly Report: '+y+'-'+String(m+1).padStart(2,'0'),14,16);let yy=30;list.slice(0,35).forEach((x,i)=>{doc.text(`${i+1}. ${x.name} - ${x.coins} coins (${x.count})`,14,yy);yy+=8;if(yy>280){doc.addPage();yy=20}});doc.save('monthly_report.pdf')}
-function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='sadad-dashboard.json';a.click()}
-function saveToFirebase(){showSync('Saving...');const batch=db.batch();batch.set(db.collection('sadad').doc('main'),{coins:S.coins,cats:S.cats,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});batch.set(db.collection('sadad').doc('history'),{data:S.history.slice(0,200)});batch.set(db.collection('sadad').doc('history2'),{data:S.history.slice(200,400)});const profNoPic={};Object.keys(S.profiles).forEach(k=>{const p=Object.assign({},S.profiles[k]);delete p.pic;profNoPic[k]=p});batch.set(db.collection('sadad').doc('profiles'),{data:profNoPic});batch.commit().then(()=>{const pics={};Object.keys(S.profiles).forEach(k=>{if(S.profiles[k].pic)pics[k]=S.profiles[k].pic});return db.collection('sadad').doc('photos').set({pics})}).then(()=>{showSync('Live');toast('Saved')}).catch(e=>{console.error(e);showSync('Error');toast('Save failed')})}
-function loadFromFirebase(){showSync('Loading...');Promise.all([db.collection('sadad').doc('main').get(),db.collection('sadad').doc('history').get(),db.collection('sadad').doc('history2').get(),db.collection('sadad').doc('profiles').get(),db.collection('sadad').doc('photos').get()]).then(([main,h1,h2,profiles,photos])=>{if(main.exists){const d=main.data()||{};S.coins=d.coins||{};S.cats=d.cats||[]}const a1=(h1.exists&&h1.data())?(h1.data().data||[]):[];const a2=(h2.exists&&h2.data())?(h2.data().data||[]):[];S.history=a1.concat(a2);if(profiles.exists)S.profiles=(profiles.data()||{}).data||{};if(photos.exists){const pics=(photos.data()||{}).pics||{};Object.keys(pics).forEach(k=>{S.profiles[k]=S.profiles[k]||{};S.profiles[k].pic=pics[k]})}STU.forEach(s=>{if(S.coins[s.r]===undefined)S.coins[s.r]=0;if(!S.profiles[s.r])S.profiles[s.r]={n:s.n}});showSync('Live');renderAll()}).catch(e=>{console.error(e);showSync('Offline');STU.forEach(s=>{if(S.coins[s.r]===undefined)S.coins[s.r]=0;if(!S.profiles[s.r])S.profiles[s.r]={n:s.n}});renderAll()})}
-function renderAll(){renderStats();renderPodium();renderRankings();renderHistory();renderAnalytics();renderFaculty()}
-function boot(){S.history=history;STU.forEach(s=>{if(S.coins[s.r]===undefined)S.coins[s.r]=0;if(!S.profiles[s.r])S.profiles[s.r]={n:s.n}});S.history.forEach(h=>{const r=h.r||h.roll;if(!r)return;S.coins[r]=(S.coins[r]||0)+Number(h.coins||0);if(!S.profiles[r])S.profiles[r]={n:h.name||studentDisplay(r)};else if(h.name)S.profiles[r].n=h.name});showTab('rankings');renderAll();loadFromFirebase()}
-document.addEventListener('DOMContentLoaded',boot);
-</script>
-</body>
-</html>
