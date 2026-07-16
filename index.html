@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>🌟 SECOND BATCH - DSA, SADAD DASHBOARD 🌟</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-:root{--bg:#08111f;--panel:rgba(15,23,42,.74);--line:rgba(255,255,255,.08);--txt:#e2e8f0;--muted:#8ea0b6;--green:#22c55e;--blue:#38bdf8;--amber:#f59e0b;--red:#ef4444;--pink:#ec4899;--violet:#8b5cf6}
+:root{--bg:#08111f;--panel:rgba(15,23,42,.76);--line:rgba(255,255,255,.08);--txt:#e2e8f0;--muted:#8ea0b6;--green:#22c55e;--blue:#38bdf8;--amber:#f59e0b;--red:#ef4444;--pink:#ec4899;--violet:#8b5cf6}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:radial-gradient(circle at top left,#0f172a 0%,#08111f 45%,#050b14 100%);color:var(--txt);overflow-x:hidden}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:radial-gradient(circle at top left,#0f172a 0%,#08111f 45%,#050b14 100%);color:var(--txt)}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 15% 15%,rgba(56,189,248,.10),transparent 22%),radial-gradient(circle at 85% 25%,rgba(236,72,153,.10),transparent 20%),radial-gradient(circle at 50% 85%,rgba(34,197,94,.08),transparent 25%);pointer-events:none}
 .app{position:relative;z-index:1;min-height:100vh}
 .container{max-width:1280px;margin:0 auto;padding:0 16px}
@@ -23,11 +22,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .header{border-bottom:1px solid rgba(255,255,255,.05);background:linear-gradient(135deg,rgba(8,17,31,.96),rgba(15,23,42,.86),rgba(8,17,31,.96))}
 .header-row{max-width:1280px;margin:0 auto;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:12px}
-.brand-logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#22c55e,#38bdf8,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:900;color:white;box-shadow:0 12px 35px rgba(56,189,248,.22)}
-.brand-text h1{font-size:20px;font-weight:900;color:#fff;letter-spacing:.2px}
+.brand-logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#22c55e,#38bdf8,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:900;color:white}
+.brand-text h1{font-size:20px;font-weight:900;color:#fff}
 .brand-text p{font-size:11px;color:var(--muted);margin-top:4px}
 .action-row{display:flex;gap:10px;flex-wrap:wrap}
-.btn{border:none;border-radius:14px;padding:10px 16px;font-weight:800;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.btn{border:none;border-radius:14px;padding:10px 16px;font-weight:800;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:8px}
 .btn:hover{transform:translateY(-1px)}
 .btn-primary{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
 .btn-cyan{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#fff}
@@ -41,11 +40,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .nav-btn.active{color:#22c55e;border-bottom-color:#22c55e}
 .main{padding:18px 0 60px}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-@media(max-width:980px){.grid-4,.grid-3,.grid-2{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:620px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}.topbar{position:static}.nav{top:auto}}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:16px;backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(0,0,0,.18)}
+@media(max-width:980px){.grid-4,.grid-2{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.grid-4,.grid-2{grid-template-columns:1fr}.topbar{position:static}.nav{top:auto}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:16px;backdrop-filter:blur(10px)}
 .card h2{font-size:16px;color:#fff;margin-bottom:12px;font-weight:900}
 .metric-val{font-size:30px;font-weight:900;color:#fff;font-family:ui-monospace,monospace}
 .metric-lbl{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8ea0b6;margin-top:4px;font-weight:800}
@@ -54,19 +52,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .hero h2{font-size:22px;margin:0;color:#fff}
 .hero p{color:#b7c3d1;font-size:12px;margin-top:5px}
 .badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:800}
-.badge.green{background:rgba(34,197,94,.12);color:#4ade80}
-.badge.blue{background:rgba(56,189,248,.12);color:#7dd3fc}
-.badge.amber{background:rgba(245,158,11,.12);color:#fcd34d}
-.badge.red{background:rgba(239,68,68,.12);color:#fca5a5}
-.badge.pink{background:rgba(236,72,153,.12);color:#f9a8d4}
-.badge.violet{background:rgba(139,92,246,.12);color:#c4b5fd}
+.badge.green{background:rgba(34,197,94,.12);color:#4ade80}.badge.blue{background:rgba(56,189,248,.12);color:#7dd3fc}.badge.pink{background:rgba(236,72,153,.12);color:#f9a8d4}.badge.violet{background:rgba(139,92,246,.12);color:#c4b5fd}
 .input,.select,.textarea{width:100%;background:rgba(8,17,31,.86);border:1px solid rgba(255,255,255,.1);color:#e2e8f0;border-radius:14px;padding:11px 12px;font-size:13px;outline:none}
 .textarea{min-height:90px;resize:vertical}
 .search-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 .search-row .input{flex:1;min-width:210px}
-.view-toggle{display:flex;background:rgba(8,17,31,.86);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:4px;gap:4px}
-.view-btn{padding:8px 12px;border:none;border-radius:10px;background:transparent;color:#8ea0b6;font-weight:800;cursor:pointer;font-size:11px}
-.view-btn.active{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
 .stu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 .stu-card{cursor:pointer;overflow:hidden;position:relative}
 .stu-card:hover{border-color:rgba(34,197,94,.4);transform:translateY(-2px)}
@@ -77,25 +67,18 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .meta{font-size:11px;color:#8ea0b6;margin-top:2px}
 .coin{margin-top:12px;font-size:26px;font-weight:900;font-family:ui-monospace,monospace;color:#fbbf24}
 .tier{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:800}
-.podium-wrap{display:flex;gap:12px;align-items:flex-end;justify-content:center;padding:8px 0 14px;flex-wrap:wrap}
-.pod-card{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;cursor:pointer;min-width:100px}
-.pod-av{border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;border:3px solid rgba(255,255,255,.18);font-weight:900;color:#fff;background:linear-gradient(135deg,#475569,#0f172a)}
-.pod-av img{width:100%;height:100%;object-fit:cover}
-.pod-name{font-size:11px;font-weight:900;color:#fff;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pod-coins{font-size:13px;font-weight:900;color:#fbbf24;font-family:ui-monospace,monospace}
 .table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:16px}
 .table th,.table td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;text-align:left}
 .table th{color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
-.table tr:hover{background:rgba(255,255,255,.03)}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#0f172a;border:1px solid rgba(255,255,255,.12);color:#fff;padding:12px 16px;border-radius:14px;opacity:0;transition:.25s;z-index:9999;box-shadow:0 18px 45px rgba(0,0,0,.3)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#0f172a;border:1px solid rgba(255,255,255,.12);color:#fff;padding:12px 16px;border-radius:14px;opacity:0;transition:.25s;z-index:9999}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:16px}
 .modal-ov.open{display:flex}
-.modal-box{background:linear-gradient(180deg,#0b1220,#09111d);border:1px solid rgba(255,255,255,.1);border-radius:22px;width:100%;max-width:920px;max-height:92vh;overflow:auto;box-shadow:0 26px 80px rgba(0,0,0,.45)}
+.modal-box{background:linear-gradient(180deg,#0b1220,#09111d);border:1px solid rgba(255,255,255,.1);border-radius:22px;width:100%;max-width:920px;max-height:92vh;overflow:auto}
 .modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
 .modal-body{padding:18px}
 .close{width:34px;height:34px;border:none;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
-.prof-top{display:flex;gap:16px;align-items:center;background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(56,189,248,.12),rgba(139,92,246,.10));padding:18px;border-radius:20px;border:1px solid rgba(255,255,255,.08)}
+.prof-top{display:flex;gap:16px;align-items:center;background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(56,189,248,.12),rgba(139,92,246,.10));padding:18px;border-radius:20px}
 .prof-av{width:92px;height:92px;border-radius:24px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#334155,#1e293b);color:#fff;font-size:30px;font-weight:900;flex-shrink:0}
 .prof-av img{width:100%;height:100%;object-fit:cover}
 .prof-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
@@ -103,211 +86,180 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .prof-stat-val{font-size:20px;font-weight:900;font-family:ui-monospace,monospace;color:#fff}
 .prof-stat-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#8ea0b6;margin-top:4px}
 .sec-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#8ea0b6;margin:16px 0 8px;font-weight:800}
-.list-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
 .footer{padding:18px 0 32px;text-align:center;color:#7b8ca0;font-size:11px;border-top:1px solid rgba(255,255,255,.05);margin-top:16px}
 </style>
 </head>
 <body>
 <div class="app">
-  <div id="toast" class="toast"></div>
+<div id="toast" class="toast"></div>
 
-  <div class="modal-ov" id="pwOv">
-    <div class="modal-box" style="max-width:420px">
-      <div class="modal-hdr"><h3>🔐 Admin Login</h3><button class="close" onclick="closeModal('pwOv')">✕</button></div>
-      <div class="modal-body">
-        <div style="font-size:11px;color:#94a3b8;margin-bottom:10px">Usthad Arafath Hudawi • Usthad Savad Wafy • Usthad Sharafuddeen Hudawi</div>
-        <input type="password" id="pwIn" class="input" placeholder="Enter password">
-        <div id="pwErr" style="color:#f87171;font-size:12px;margin-top:5px"></div>
-        <div style="display:flex;gap:8px;margin-top:12px">
-          <button class="btn btn-primary" style="flex:1" onclick="checkPw()">Login</button>
-          <button class="btn btn-ghost" onclick="closeModal('pwOv')">Cancel</button>
-        </div>
+<div class="modal-ov" id="pwOv">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-hdr"><h3>🔐 Admin Login</h3><button class="close" onclick="closeModal('pwOv')">✕</button></div>
+    <div class="modal-body">
+      <input type="password" id="pwIn" class="input" placeholder="Enter password">
+      <div id="pwErr" style="color:#f87171;font-size:12px;margin-top:5px"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-primary" style="flex:1" onclick="checkPw()">Login</button>
+        <button class="btn btn-ghost" onclick="closeModal('pwOv')">Cancel</button>
       </div>
-    </div>
-  </div>
-
-  <div class="modal-ov" id="profOv">
-    <div class="modal-box">
-      <div class="modal-hdr"><h3 id="profNameHead">👤 Profile</h3><button class="close" onclick="closeModal('profOv')">✕</button></div>
-      <div class="modal-body">
-        <div class="prof-top">
-          <div class="prof-av" id="profAvatar">-</div>
-          <div style="flex:1;min-width:0">
-            <div id="profName" style="font-size:22px;font-weight:900;color:#fff">-</div>
-            <div id="profMeta" style="font-size:11px;color:#94a3b8;margin-top:4px">-</div>
-            <div id="profTier" style="margin-top:8px"></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-              <button class="btn btn-cyan" onclick="enableEditProfile()">✏️ Edit Profile</button>
-              <button class="btn btn-violet" onclick="scrollToProfileTools()">⚙️ Tools</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="prof-stats">
-          <div class="prof-stat"><div class="prof-stat-val" id="profCoins">0</div><div class="prof-stat-lbl">Coins</div></div>
-          <div class="prof-stat"><div class="prof-stat-val" id="profRank">-</div><div class="prof-stat-lbl">Rank</div></div>
-          <div class="prof-stat"><div class="prof-stat-val" id="profAch">0</div><div class="prof-stat-lbl">Achievements</div></div>
-          <div class="prof-stat"><div class="prof-stat-val" id="profMonthCoins">0</div><div class="prof-stat-lbl">This Month</div></div>
-        </div>
-
-        <div id="profileTools">
-          <div class="sec-label">👀 Personal Details</div>
-          <div class="grid-2">
-            <div><input id="editName" class="input" placeholder="Student/Admin name"></div>
-            <div><input id="editRoll" class="input" placeholder="Roll / ID"></div>
-            <div><input id="editClass" class="input" placeholder="Class / Role"></div>
-            <div><input id="editPhone" class="input" placeholder="Phone / Contact"></div>
-          </div>
-          <div style="margin-top:10px"><textarea id="editNote" class="textarea" placeholder="Notes / description"></textarea></div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-            <button class="btn btn-primary" onclick="saveProfileDetails()">💾 Save Details</button>
-            <button class="btn btn-amber" onclick="triggerPhotoUpload()">📷 Upload Photo</button>
-            <button class="btn btn-pink" onclick="deleteCurrentProfilePhoto()">🗑️ Remove Photo</button>
-          </div>
-          <input type="file" id="profPhotoFile" accept="image/*" style="display:none">
-
-          <div class="sec-label">📈 Monthly Profile Graph</div>
-          <canvas id="profileMonthlyGraph" height="110"></canvas>
-
-          <div class="sec-label">🧾 Activity Log</div>
-          <div id="profHistList"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="header">
-    <div class="topbar-row"><div style="display:flex;align-items:center;gap:8px"><div class="pulse"></div><span>Valiyullahi Thangal Memorial Darussalam Academy</span></div><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span>SECOND BATCH-DSA • LIVE</span><span id="syncStatus">Live</span></div></div>
-    <div class="header-row">
-      <div class="brand">
-        <div class="brand-logo">🌟</div>
-        <div class="brand-text">
-          <h1>🌟 SECOND BATCH - DSA, SADAD DASHBOARD 🌟</h1>
-          <p>33 Scholars • Firebase Cloud Sync • Attractive, colorful, editable, celebratory 🎉</p>
-        </div>
-      </div>
-      <div class="action-row">
-        <button class="btn btn-ghost" onclick="exportData()">⬇️ Export JSON</button>
-        <button class="btn btn-cyan" onclick="openModal('pwOv')">🔐 Admin Login</button>
-      </div>
-    </div>
-    <div class="nav">
-      <div class="nav-inner">
-        <button class="nav-btn active" data-tab="rankings" onclick="showTab('rankings')">🏆 Rankings</button>
-        <button class="nav-btn" data-tab="award" onclick="showTab('award')">➕ Award / Deduct</button>
-        <button class="nav-btn" data-tab="history" onclick="showTab('history')">🕒 History</button>
-        <button class="nav-btn" data-tab="analytics" onclick="showTab('analytics')">📊 Analytics</button>
-        <button class="nav-btn" data-tab="reports" onclick="showTab('reports')">🗓️ Reports</button>
-        <button class="nav-btn" data-tab="categories" onclick="showTab('categories')">🏷️ Categories</button>
-        <button class="nav-btn" data-tab="faculty" onclick="showTab('faculty')">👨‍🏫 Admins</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="main">
-    <div class="container">
-      <div class="hero">
-        <div>
-          <h2>🌈 Welcome to the Power Dashboard</h2>
-          <p>Edit profiles, upload photos, manage categories, award/deduct coins, and celebrate every achievement with sound + icons.</p>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <span class="badge green">🎉 Celebration Ready</span>
-          <span class="badge blue">🔊 Sound On</span>
-          <span class="badge violet">📷 Photo Upload</span>
-          <span class="badge pink">🏷️ Categories</span>
-        </div>
-      </div>
-
-      <div class="grid-4">
-        <div class="card"><div class="metric-val" id="totalCoins">0</div><div class="metric-lbl">Total Coins</div><div class="metric-sub"><span>Across students</span><span id="avgCoins">0 avg</span></div></div>
-        <div class="card"><div class="metric-val" id="studentCount">33</div><div class="metric-lbl">Batch Size</div><div class="metric-sub">Scholars</div></div>
-        <div class="card"><div class="metric-val" id="topStudent">-</div><div class="metric-lbl">Top Student</div><div class="metric-sub">1st place</div></div>
-        <div class="card"><div class="metric-val" id="adminCount">3</div><div class="metric-lbl">Admins</div><div class="metric-sub">Verified</div></div>
-      </div>
-
-      <div class="section card"><h2>🏅 Top Rankers</h2><div class="podium-wrap" id="podium"></div></div>
-
-      <div class="section card" id="tab-rankings">
-        <h2>🏆 All Rankings</h2>
-        <div class="search-row">
-          <input class="input" id="rankSearch" placeholder="Search by name or roll number..." oninput="renderRankings()">
-          <select class="select" id="tierFilter" onchange="renderRankings()"><option value="all">All Tiers</option><option value="Diamond">Diamond</option><option value="Gold">Gold</option><option value="Silver">Silver</option><option value="Bronze">Bronze</option></select>
-          <div class="view-toggle"><button class="view-btn active" id="viewCardBtn" onclick="setView('card')">Card</button><button class="view-btn" id="viewTableBtn" onclick="setView('table')">Table</button></div>
-        </div>
-        <div id="rankList"></div>
-      </div>
-
-      <div class="section card" id="tab-award" style="display:none">
-        <h2>➕ Award / Deduct Coins</h2>
-        <div class="grid-2">
-          <div><label style="font-size:11px;color:#94a3b8">Student</label><input class="input" id="awardStudent" placeholder="Roll no / name"></div>
-          <div><label style="font-size:11px;color:#94a3b8">Coins</label><input class="input" id="awardCoins" type="number" placeholder="Coins (+ or -)"></div>
-          <div><label style="font-size:11px;color:#94a3b8">Category</label><select class="select" id="awardCategory"></select></div>
-          <div><label style="font-size:11px;color:#94a3b8">Note</label><input class="input" id="awardNote" placeholder="Optional note"></div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-          <button class="btn btn-primary" onclick="awardCoins()">🎉 Award</button>
-          <button class="btn btn-pink" onclick="deductCoins()">⚠️ Deduct</button>
-        </div>
-      </div>
-
-      <div class="section card" id="tab-history" style="display:none">
-        <h2>🕒 Coin History</h2>
-        <input class="input" id="histSearch" placeholder="Search student..." oninput="renderHistory()">
-        <div id="histList" style="margin-top:10px"></div>
-      </div>
-
-      <div class="section card" id="tab-analytics" style="display:none">
-        <h2>📊 Analytics</h2>
-        <div class="grid-2">
-          <div class="card" style="background:rgba(255,255,255,.03)"><h2 style="margin-bottom:8px">Monthly Graph</h2><canvas id="analyticsChart" height="110"></canvas></div>
-          <div class="card" style="background:rgba(255,255,255,.03)"><h2 style="margin-bottom:8px">Rewards vs Deductions</h2><canvas id="donutChart" height="110"></canvas></div>
-        </div>
-      </div>
-
-      <div class="section card" id="tab-reports" style="display:none">
-        <h2>🗓️ Reports</h2>
-        <div class="grid-2">
-          <div><label style="font-size:11px;color:#94a3b8">Month</label><select id="repMonth" class="select" style="width:100%"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6" selected>July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select></div>
-          <div><label style="font-size:11px;color:#94a3b8">Year</label><select id="repYear" class="select" style="width:100%"><option value="2025">2025</option><option value="2026" selected>2026</option></select></div>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px">
-          <button class="btn btn-primary" onclick="generateMonthlyReport()">📄 Monthly PDF</button>
-          <button class="btn btn-cyan" onclick="showThisMonthSummary()">🗓️ This Month</button>
-          <button class="btn btn-violet" onclick="showJuneSummary()">🌸 June</button>
-        </div>
-        <div class="card" style="margin-top:16px;background:rgba(255,255,255,.03)"><h2>📈 Monthly Graph</h2><canvas id="monthlyGraph" height="120"></canvas></div>
-        <div id="reportOutput" style="margin-top:16px"></div>
-      </div>
-
-      <div class="section card" id="tab-categories" style="display:none">
-        <h2>🏷️ Category Manager</h2>
-        <div class="grid-2">
-          <div><input class="input" id="catName" placeholder="New category name"></div>
-          <div><input class="input" id="catEmoji" placeholder="Emoji e.g. 🎯"></div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-          <button class="btn btn-primary" onclick="addCategory()">➕ Add Category</button>
-          <button class="btn btn-ghost" onclick="loadCategoryList()">🔄 Refresh</button>
-        </div>
-        <div id="categoryList" style="margin-top:14px"></div>
-      </div>
-
-      <div class="section card" id="tab-faculty" style="display:none">
-        <h2>👨‍🏫 Admins & Settings</h2>
-        <div id="facultyList"></div>
-        <div class="card" style="margin-top:14px;background:rgba(255,255,255,.03)">
-          <h2 style="margin-bottom:10px">🔑 Change Admin Password</h2>
-          <div class="grid-2">
-            <div><input class="input" id="adminSelectName" placeholder="Admin name"></div>
-            <div><input class="input" id="newAdminPass" placeholder="New password"></div>
-          </div>
-          <div style="margin-top:10px"><button class="btn btn-cyan" onclick="changeAdminPassword()">Update Password</button></div>
-        </div>
-      </div>
-
-      <div class="footer">Firebase-connected colorful dashboard • edit • upload • deduct • celebrate • manage categories</div>
     </div>
   </div>
 </div>
+
+<div class="modal-ov" id="profOv">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3 id="profNameHead">👤 Profile</h3><button class="close" onclick="closeModal('profOv')">✕</button></div>
+    <div class="modal-body">
+      <div class="prof-top">
+        <div class="prof-av" id="profAvatar">-</div>
+        <div style="flex:1">
+          <div id="profName" style="font-size:22px;font-weight:900;color:#fff">-</div>
+          <div id="profMeta" style="font-size:11px;color:#94a3b8;margin-top:4px">-</div>
+          <div id="profTier" style="margin-top:8px"></div>
+        </div>
+      </div>
+      <div class="prof-stats">
+        <div class="prof-stat"><div class="prof-stat-val" id="profCoins">0</div><div class="prof-stat-lbl">Coins</div></div>
+        <div class="prof-stat"><div class="prof-stat-val" id="profRank">-</div><div class="prof-stat-lbl">Rank</div></div>
+        <div class="prof-stat"><div class="prof-stat-val" id="profAch">0</div><div class="prof-stat-lbl">Achievements</div></div>
+        <div class="prof-stat"><div class="prof-stat-val" id="profMonthCoins">0</div><div class="prof-stat-lbl">This Month</div></div>
+      </div>
+      <div class="sec-label">👀 Personal Details</div>
+      <div class="grid-2">
+        <div><input id="editName" class="input" placeholder="Name"></div>
+        <div><input id="editRoll" class="input" placeholder="Roll / ID"></div>
+        <div><input id="editClass" class="input" placeholder="Class / Role"></div>
+        <div><input id="editPhone" class="input" placeholder="Phone / Contact"></div>
+      </div>
+      <div style="margin-top:10px"><textarea id="editNote" class="textarea" placeholder="Notes"></textarea></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button class="btn btn-primary" onclick="saveProfileDetails()">💾 Save Details</button>
+        <button class="btn btn-amber" onclick="triggerPhotoUpload()">📷 Upload Photo</button>
+        <button class="btn btn-pink" onclick="deleteCurrentProfilePhoto()">🗑️ Remove Photo</button>
+      </div>
+      <input type="file" id="profPhotoFile" accept="image/*" style="display:none">
+      <div class="sec-label">📈 Monthly Profile Graph</div>
+      <canvas id="profileMonthlyGraph" height="110"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <div class="topbar-row"><div style="display:flex;align-items:center;gap:8px"><div class="pulse"></div><span>Valiyullahi Thangal Memorial Darussalam Academy</span></div><div>SECOND BATCH-DSA • LIVE</div></div>
+  <div class="header-row">
+    <div class="brand">
+      <div class="brand-logo">🌟</div>
+      <div class="brand-text">
+        <h1>🌟 SECOND BATCH - DSA, SADAD DASHBOARD 🌟</h1>
+        <p>Editable, colorful, celebratory dashboard</p>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-ghost" onclick="exportData()">⬇️ Export JSON</button>
+      <button class="btn btn-cyan" onclick="openModal('pwOv')">🔐 Admin Login</button>
+    </div>
+  </div>
+  <div class="nav"><div class="nav-inner">
+    <button class="nav-btn active" onclick="showTab('rankings')">🏆 Rankings</button>
+    <button class="nav-btn" onclick="showTab('award')">➕ Award / Deduct</button>
+    <button class="nav-btn" onclick="showTab('history')">🕒 History</button>
+    <button class="nav-btn" onclick="showTab('analytics')">📊 Analytics</button>
+    <button class="nav-btn" onclick="showTab('reports')">🗓️ Reports</button>
+    <button class="nav-btn" onclick="showTab('categories')">🏷️ Categories</button>
+    <button class="nav-btn" onclick="showTab('faculty')">👨‍🏫 Admins</button>
+  </div></div>
+</div>
+
+<div class="main"><div class="container">
+  <div class="hero">
+    <div><h2>🌈 Welcome to the Power Dashboard</h2><p>Edit profiles, upload photos, manage categories, award/deduct coins, and celebrate achievements.</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="badge green">🎉 Celebration Ready</span>
+      <span class="badge blue">🔊 Sound On</span>
+      <span class="badge violet">📷 Photo Upload</span>
+      <span class="badge pink">🏷️ Categories</span>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="card"><div class="metric-val" id="totalCoins">0</div><div class="metric-lbl">Total Coins</div><div class="metric-sub"><span>Across students</span><span id="avgCoins">0 avg</span></div></div>
+    <div class="card"><div class="metric-val" id="studentCount">33</div><div class="metric-lbl">Batch Size</div><div class="metric-sub">Scholars</div></div>
+    <div class="card"><div class="metric-val" id="topStudent">-</div><div class="metric-lbl">Top Student</div><div class="metric-sub">1st place</div></div>
+    <div class="card"><div class="metric-val" id="adminCount">3</div><div class="metric-lbl">Admins</div><div class="metric-sub">Verified</div></div>
+  </div>
+
+  <div class="card"><h2>🏅 Top Rankers</h2><div id="podium"></div></div>
+
+  <div class="card" id="tab-rankings">
+    <h2>🏆 All Rankings</h2>
+    <div class="search-row">
+      <input class="input" id="rankSearch" placeholder="Search by name or roll number..." oninput="renderRankings()">
+      <select class="select" id="tierFilter" onchange="renderRankings()"><option value="all">All Tiers</option><option value="Diamond">Diamond</option><option value="Gold">Gold</option><option value="Silver">Silver</option><option value="Bronze">Bronze</option></select>
+    </div>
+    <div id="rankList"></div>
+  </div>
+
+  <div class="card" id="tab-award" style="display:none">
+    <h2>➕ Award / Deduct Coins</h2>
+    <div class="grid-2">
+      <div><input class="input" id="awardStudent" placeholder="Roll no / name"></div>
+      <div><input class="input" id="awardCoins" type="number" placeholder="Coins (+ or -)"></div>
+      <div><input class="input" id="awardCategory" placeholder="Category"></div>
+      <div><input class="input" id="awardNote" placeholder="Optional note"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-primary" onclick="awardCoins()">🎉 Award</button>
+      <button class="btn btn-pink" onclick="deductCoins()">⚠️ Deduct</button>
+    </div>
+  </div>
+
+  <div class="card" id="tab-history" style="display:none"><h2>🕒 Coin History</h2><div id="histList"></div></div>
+  <div class="card" id="tab-analytics" style="display:none"><h2>📊 Analytics</h2><canvas id="analyticsChart" height="110"></canvas></div>
+  <div class="card" id="tab-reports" style="display:none"><h2>🗓️ Reports</h2><canvas id="monthlyGraph" height="120"></canvas></div>
+  <div class="card" id="tab-categories" style="display:none"><h2>🏷️ Category Manager</h2><div id="categoryList"></div></div>
+  <div class="card" id="tab-faculty" style="display:none"><h2>👨‍🏫 Admins & Settings</h2><div id="facultyList"></div></div>
+
+  <div class="footer">Firebase-connected colorful dashboard</div>
+</div></div>
+</div>
+
+<script>
+let currentStudent=null, viewMode='card', students=[
+  {name:'Student 1', roll:'001', cls:'Batch', coins:120, photo:'', note:'', history:[]},
+  {name:'Student 2', roll:'002', cls:'Batch', coins:95, photo:'', note:'', history:[]},
+  {name:'Student 3', roll:'003', cls:'Batch', coins:75, photo:'', note:'', history:[]},
+  {name:'Student 4', roll:'004', cls:'Batch', coins:60, photo:'', note:'', history:[]}
+], categories=[{name:'Attendance', emoji:'✅'},{name:'Homework', emoji:'📘'},{name:'Behavior', emoji:'⭐'}], admins=[{name:'Usthad', password:'1234'}], hist=[];
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function showTab(tab){document.querySelectorAll('[id^="tab-"]').forEach(x=>x.style.display='none');document.getElementById('tab-'+tab).style.display='block';document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));event?.target?.classList.add('active')}
+function tier(c){return c>=150?'Diamond':c>=100?'Gold':c>=50?'Silver':'Bronze'}
+function renderAll(){renderRankings();renderPodium();renderHistory();renderCategories();renderAdmins();renderMetrics();renderCharts()}
+function renderMetrics(){const total=students.reduce((a,s)=>a+s.coins,0);document.getElementById('totalCoins').textContent=total;document.getElementById('avgCoins').textContent=Math.round(total/students.length||0)+' avg';document.getElementById('topStudent').textContent=(students.slice().sort((a,b)=>b.coins-a.coins)[0]||{}).name||'-'}
+function renderPodium(){const top=students.slice().sort((a,b)=>b.coins-a.coins).slice(0,3);document.getElementById('podium').innerHTML=top.map(s=>`<div class="card stu-card" onclick="openProfile('${s.roll}')"><div class="stu-top"><div class="av">${s.photo?`<img src="${s.photo}">`:s.name[0]}</div><div><div class="name">${s.name}</div><div class="meta">${s.roll} • ${s.cls}</div></div></div><div class="coin">🪙 ${s.coins}</div><div class="tier">${tier(s.coins)}</div></div>`).join('')}
+function renderRankings(){const q=(document.getElementById('rankSearch').value||'').toLowerCase();const tf=document.getElementById('tierFilter').value;let arr=students.filter(s=>(s.name+s.roll).toLowerCase().includes(q));if(tf!=='all')arr=arr.filter(s=>tier(s.coins)===tf);arr=arr.sort((a,b)=>b.coins-a.coins);if(viewMode==='table'){document.getElementById('rankList').innerHTML=`<table class="table"><tr><th>Rank</th><th>Name</th><th>Roll</th><th>Coins</th><th>Tier</th></tr>`+arr.map((s,i)=>`<tr onclick="openProfile('${s.roll}')"><td>${i+1}</td><td>${s.name}</td><td>${s.roll}</td><td>🪙 ${s.coins}</td><td>${tier(s.coins)}</td></tr>`).join('')+`</table>`;return}
+document.getElementById('rankList').innerHTML='<div class="stu-grid">'+arr.map((s,i)=>`<div class="card stu-card" onclick="openProfile('${s.roll}')"><div class="stu-top"><div class="av">${s.photo?`<img src="${s.photo}">`:s.name[0]}</div><div><div class="name">${i+1}. ${s.name}</div><div class="meta">${s.roll} • ${s.cls}</div></div></div><div class="coin">🪙 ${s.coins}</div><div class="tier">${tier(s.coins)}</div></div>`).join('')+'</div>'}
+function renderHistory(){document.getElementById('histList').innerHTML=hist.slice().reverse().map(h=>`<div class="card" style="margin-bottom:8px"><b>${h.type}</b> • ${h.name} • ${h.coins} • ${h.note||''}</div>`).join('')||'<div style="color:#94a3b8">No history yet</div>'}
+function renderCategories(){document.getElementById('categoryList').innerHTML=categories.map((c,i)=>`<div class="card" style="margin-bottom:8px;display:flex;justify-content:space-between;gap:10px;align-items:center"><div>${c.emoji} ${c.name}</div><div><button class="btn btn-ghost" onclick="editCategory(${i})">Edit</button><button class="btn btn-pink" onclick="deleteCategory(${i})">Delete</button></div></div>`).join('')}
+function renderAdmins(){document.getElementById('facultyList').innerHTML=admins.map(a=>`<div class="card" style="margin-bottom:8px">${a.name} — 🔑 password set</div>`).join('')}
+function renderCharts(){const ctx=document.getElementById('analyticsChart');if(ctx){new Chart(ctx,{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul'],datasets:[{label:'Coins',data:[10,30,20,45,60,80,100],borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.2)',tension:.35,fill:true}]},options:{responsive:true,plugins:{legend:{labels:{color:'#fff'}}},scales:{x:{ticks:{color:'#cbd5e1'}},y:{ticks:{color:'#cbd5e1'}}}}})}}
+function openProfile(roll){currentStudent=students.find(s=>s.roll===roll);if(!currentStudent)return;document.getElementById('profNameHead').textContent='👤 '+currentStudent.name;document.getElementById('profName').textContent=currentStudent.name;document.getElementById('profMeta').textContent=currentStudent.roll+' • '+currentStudent.cls;document.getElementById('profAvatar').innerHTML=currentStudent.photo?`<img src="${currentStudent.photo}">`:currentStudent.name[0];document.getElementById('profCoins').textContent=currentStudent.coins;document.getElementById('profRank').textContent=students.slice().sort((a,b)=>b.coins-a.coins).findIndex(s=>s.roll===roll)+1;document.getElementById('profTier').innerHTML=`<span class="tier">${tier(currentStudent.coins)}</span>`;document.getElementById('editName').value=currentStudent.name;document.getElementById('editRoll').value=currentStudent.roll;document.getElementById('editClass').value=currentStudent.cls;document.getElementById('editPhone').value=currentStudent.phone||'';document.getElementById('editNote').value=currentStudent.note||'';openModal('profOv')}
+function saveProfileDetails(){if(!currentStudent)return;currentStudent.name=document.getElementById('editName').value||currentStudent.name;currentStudent.roll=document.getElementById('editRoll').value||currentStudent.roll;currentStudent.cls=document.getElementById('editClass').value||currentStudent.cls;currentStudent.phone=document.getElementById('editPhone').value||'';currentStudent.note=document.getElementById('editNote').value||'';showToast('Profile saved');renderAll();openProfile(currentStudent.roll)}
+function triggerPhotoUpload(){document.getElementById('profPhotoFile').click()}
+document.getElementById('profPhotoFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f||!currentStudent)return;const r=new FileReader();r.onload=()=>{currentStudent.photo=r.result;showToast('Photo updated');renderAll();openProfile(currentStudent.roll)};r.readAsDataURL(f)})
+function deleteCurrentProfilePhoto(){if(!currentStudent)return;currentStudent.photo='';showToast('Photo removed');renderAll();openProfile(currentStudent.roll)}
+function awardCoins(){const q=document.getElementById('awardStudent').value.toLowerCase();const amt=parseInt(document.getElementById('awardCoins').value||0);const cat=document.getElementById('awardCategory').value||'General';const note=document.getElementById('awardNote').value||'';const s=students.find(x=>x.name.toLowerCase().includes(q)||x.roll.toLowerCase().includes(q));if(!s)return showToast('Student not found');s.coins+=Math.abs(amt);hist.push({type:'Award',name:s.name,coins:Math.abs(amt),note:cat+' '+note});showToast('🎉 Awarded');renderAll()}
+function deductCoins(){const q=document.getElementById('awardStudent').value.toLowerCase();const amt=parseInt(document.getElementById('awardCoins').value||0);const cat=document.getElementById('awardCategory').value||'General';const note=document.getElementById('awardNote').value||'';const s=students.find(x=>x.name.toLowerCase().includes(q)||x.roll.toLowerCase().includes(q));if(!s)return showToast('Student not found');s.coins-=Math.abs(amt);hist.push({type:'Deduct',name:s.name,coins:-Math.abs(amt),note:cat+' '+note});showToast('⚠️ Deducted');renderAll()}
+function addCategory(){const n=document.getElementById('catName')?.value||'';const e=document.getElementById('catEmoji')?.value||'🏷️';if(!n)return showToast('Enter category');categories.push({name:n,emoji:e});renderCategories();showToast('Category added')}
+function editCategory(i){const n=prompt('Category name',categories[i].name);if(!n)return;const e=prompt('Emoji',categories[i].emoji||'🏷️');categories[i]={name:n,emoji:e||'🏷️'};renderCategories()}
+function deleteCategory(i){categories.splice(i,1);renderCategories()}
+function changeAdminPassword(){const n=document.getElementById('adminSelectName').value;const p=document.getElementById('newAdminPass').value;const a=admins.find(x=>x.name===n);if(!a)return showToast('Admin not found');a.password=p;showToast('Password updated')}
+function checkPw(){const p=document.getElementById('pwIn').value;document.getElementById('pwErr').textContent=admins.some(a=>a.password===p)?(closeModal('pwOv'),showToast('Login success'),''):'Wrong password'}
+function exportData(){const data={students,categories,admins,hist};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='dashboard-data.json';a.click()}
+function setView(v){viewMode=v;renderRankings()}
+renderAll();
+</script>
+</body>
+</html>
