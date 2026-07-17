@@ -255,6 +255,7 @@ canvas{display:block;width:100%!important}
   <button class="tab-btn active" onclick="showTab('lb',this)">&#127942; Leaderboard</button>
   <button class="tab-btn" onclick="showTab('students',this)">&#128101; Students</button>
   <button class="tab-btn" onclick="showTab('teachers',this)">&#128114; Faculty</button>
+  <button class="tab-btn" onclick="showTab('reports',this)">&#128202; Reports</button>
   <button class="tab-btn" onclick="showTab('admin',this)">&#9881; Admin</button>
 </div>
 
@@ -296,6 +297,34 @@ canvas{display:block;width:100%!important}
         <span class="hbadge green" style="display:inline-block;margin-top:4px">Admin</span>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- REPORTS -->
+<div class="section" id="tab-reports">
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap">
+      <select id="repType" onchange="repOffset=0;renderReports()" style="margin-bottom:0;flex:1;min-width:110px">
+        <option value="week">Weekly</option>
+        <option value="month" selected>Monthly</option>
+        <option value="year">Annually</option>
+        <option value="all">All-time</option>
+      </select>
+      <button class="btn btn-sm" onclick="repOffset--;renderReports()">&#8592;</button>
+      <button class="btn btn-sm" onclick="repOffset=0;renderReports()">Today</button>
+      <button class="btn btn-sm" onclick="repOffset++;renderReports()">&#8594;</button>
+      <button class="btn btn-sm" onclick="printReport()">&#128424; Print</button>
+    </div>
+    <div id="repLabel" style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:.5rem"></div>
+    <canvas id="repChart" height="180"></canvas>
+  </div>
+  <div class="card">
+    <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem">Student totals for this period</div>
+    <div id="repStuList"></div>
+  </div>
+  <div class="card">
+    <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem">Category breakdown</div>
+    <div id="repCatList"></div>
   </div>
 </div>
 
@@ -380,6 +409,8 @@ canvas{display:block;width:100%!important}
 </div><!-- end wrap -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 
 const ADMINS=[{name:"Usthad Arafath Hudawi",pw:"sadad"},{name:"Usthad Savad Wafy",pw:"sadad"}];
@@ -580,20 +611,58 @@ const SEED_HISTORY=[
 let S={coins:{},history:[],cats:JSON.parse(JSON.stringify(DCATS)),profiles:{}};
 STU.forEach(function(s){S.coins[s.r]=0;});
 
+// ── FIREBASE (real-time cloud sync) ──
+const firebaseConfig={
+  apiKey:"AIzaSyB3i-t7qKgiFCPTBF9oMBGdyxeADyJUByc",
+  authDomain:"second-batch-dsa-sadad.firebaseapp.com",
+  projectId:"second-batch-dsa-sadad",
+  storageBucket:"second-batch-dsa-sadad.firebasestorage.app",
+  messagingSenderId:"628256626216",
+  appId:"1:628256626216:web:56bbd3a78a242e1291871d"
+};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+const docRef=db.collection('sadad').doc('second_batch_dsa');
+let fbReady=false,fbSaving=false;
+
 function save(){
   try{localStorage.setItem('sadad_v12',JSON.stringify(S));}catch(e){}
+  fbSaving=true;
+  docRef.set(S).catch(function(e){console.error('Firestore save failed',e);})
+    .finally(function(){fbSaving=false;});
 }
 function load(){
-  try{
-    var raw=localStorage.getItem('sadad_v12')||localStorage.getItem('sadad_v11')||localStorage.getItem('sadad_v10')||localStorage.getItem('sadad_v9');
-    if(raw){
-      var p=JSON.parse(raw);S.coins=p.coins||{};S.history=p.history||[];S.cats=p.cats||DCATS;S.profiles=p.profiles||{};
+  docRef.onSnapshot(function(snap){
+    if(snap.exists){
+      var d=snap.data();
+      S.coins=d.coins||{};S.history=d.history||[];S.cats=d.cats||JSON.parse(JSON.stringify(DCATS));S.profiles=d.profiles||{};
     }else{
       S.history=SEED_HISTORY.slice();
+      recompute();
+      docRef.set(S).catch(function(e){console.error('Firestore init failed',e);});
     }
     recompute();
     STU.forEach(function(s){if(S.coins[s.r]===undefined)S.coins[s.r]=0;});
-  }catch(e){}
+    fbReady=true;
+    refreshCurrentView();
+  },function(err){
+    console.error('Firestore sync error',err);
+    try{
+      var raw=localStorage.getItem('sadad_v12');
+      if(raw){var p=JSON.parse(raw);S.coins=p.coins||{};S.history=p.history||[];S.cats=p.cats||DCATS;S.profiles=p.profiles||{};}
+      else S.history=SEED_HISTORY.slice();
+      recompute();fbReady=true;refreshCurrentView();
+    }catch(e){}
+  });
+}
+function refreshCurrentView(){
+  fillSelects();
+  if(document.getElementById('tab-lb').classList.contains('active'))renderLB();
+  if(document.getElementById('tab-students').classList.contains('active'))renderGrid();
+  if(document.getElementById('tab-reports').classList.contains('active'))renderReports();
+  if(document.getElementById('tab-admin').classList.contains('active')){renderCatList();renderHist();}
+  var pOv=document.getElementById('profOv');
+  if(pOv&&pOv.classList.contains('open')&&profRoll>0)openProfile(profRoll);
 }
 function recompute(){
   STU.forEach(function(s){S.coins[s.r]=0;});
@@ -652,6 +721,7 @@ function showTab(t,btn){
   btn&&btn.classList.add('active');
   if(t==='lb')renderLB();
   if(t==='students')renderGrid();
+  if(t==='reports')renderReports();
   if(t==='admin'){fillSelects();renderCatList();renderHist();}
 }
 function showSub(t,btn){
@@ -939,6 +1009,64 @@ function openEditH(idx){
 function delH(idx){
   if(!confirm('Delete?'))return;S.history.splice(idx,1);recompute();save();renderHist();renderLB();renderGrid();
 }
+// ── REPORTS ──
+let repOffset=0,repChartObj=null;
+function parseDMY(s){var p=s.split('/');return new Date(+p[2],+p[1]-1,+p[0]);}
+function repRange(){
+  var type=(document.getElementById('repType')||{value:'month'}).value;
+  var now=new Date();
+  if(type==='all')return{start:null,end:null,label:'All-time'};
+  if(type==='week'){
+    var d=new Date(now);var day=(d.getDay()+6)%7;d.setDate(d.getDate()-day+repOffset*7);
+    var start=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+    var end=new Date(start);end.setDate(end.getDate()+7);
+    var label='Week of '+start.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    return{start:start,end:end,label:label};
+  }
+  if(type==='month'){
+    var m=now.getMonth()+repOffset;var y=now.getFullYear();
+    var start=new Date(y,m,1);var end=new Date(y,m+1,1);
+    var label=start.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+    return{start:start,end:end,label:label};
+  }
+  if(type==='year'){
+    var y=now.getFullYear()+repOffset;
+    var start=new Date(y,0,1);var end=new Date(y+1,0,1);
+    return{start:start,end:end,label:String(y)};
+  }
+}
+function renderReports(){
+  var r=repRange();
+  document.getElementById('repLabel').textContent=r.label;
+  var hist=S.history.filter(function(h){
+    if(!r.start)return true;
+    var d=parseDMY(h.date);return d>=r.start&&d<r.end;
+  });
+  // per-student totals
+  var byStu={};
+  hist.forEach(function(h){byStu[h.r]=(byStu[h.r]||0)+h.coins;});
+  var stuRows=STU.map(function(s){return{n:s.n,r:s.r,c:byStu[s.r]||0};})
+    .filter(function(x){return x.c>0;}).sort(function(a,b){return b.c-a.c;});
+  document.getElementById('repStuList').innerHTML=stuRows.length?stuRows.map(function(x,i){
+    return '<div class="hist-row"><span class="hbadge gold">#'+(i+1)+'</span><span class="hcat">'+x.n+'</span><span class="hbadge green">+'+x.c+'</span></div>';
+  }).join(''):'<div class="empty-state">No coins recorded in this period</div>';
+  // per-category totals
+  var byCat={};
+  hist.forEach(function(h){if(!byCat[h.cat])byCat[h.cat]={count:0,coins:0};byCat[h.cat].count++;byCat[h.cat].coins+=h.coins;});
+  var catRows=Object.keys(byCat).map(function(k){return{cat:k,count:byCat[k].count,coins:byCat[k].coins};}).sort(function(a,b){return b.coins-a.coins;});
+  document.getElementById('repCatList').innerHTML=catRows.length?catRows.map(function(x){
+    return '<div class="hist-row"><span class="hcat" style="flex:1">'+x.cat+'</span><span class="hbadge blue">x'+x.count+'</span><span class="hbadge gold">+'+x.coins+'</span></div>';
+  }).join(''):'<div class="empty-state">No activity in this period</div>';
+  // chart: top 10 students
+  var top=stuRows.slice(0,10);
+  var ctx=document.getElementById('repChart').getContext('2d');
+  if(repChartObj)repChartObj.destroy();
+  repChartObj=new Chart(ctx,{type:'bar',data:{labels:top.map(function(x){return x.n.split(' ')[0];}),
+    datasets:[{label:'Coins',data:top.map(function(x){return x.c;}),backgroundColor:'#f5b942'}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
+}
+function printReport(){window.print();}
+
 load();renderLB();renderGrid();
 
 </script>
