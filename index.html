@@ -157,7 +157,7 @@ canvas{display:block;width:100%!important}
 .podium-av{position:relative;border-radius:50%;border:3px solid;box-shadow:0 4px 14px rgba(0,0,0,.35);margin-bottom:6px}
 .podium-crown{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:22px;animation:crownFloat 2.2s ease-in-out infinite}
 @keyframes crownFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
-.podium-name{font-size:12px;font-weight:700;color:var(--text);text-align:center;max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.podium-name{font-size:11px;font-weight:700;color:var(--text);text-align:center;max-width:104px;line-height:1.2;word-break:break-word}
 .podium-adno{font-size:10px;color:var(--text3);margin-top:1px}
 .podium-coins{font-size:13px;font-weight:800;color:#f5b942;margin:3px 0}
 .podium-block{width:100%;border-radius:10px 10px 4px 4px;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-size:20px;box-shadow:inset 0 2px 6px rgba(255,255,255,.25),0 4px 10px rgba(0,0,0,.3)}
@@ -166,34 +166,35 @@ canvas{display:block;width:100%!important}
 @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(115vh) rotate(560deg);opacity:0}}
 
 /* ── PRINT REPORT ── */
-#printArea{display:none}
+#printArea{display:none;color:#1a1a2e;background:#fff;font-family:'Inter',sans-serif}
+#printArea *{color:inherit}
 .pr-header{text-align:center;border-bottom:3px double #1a1a3e;padding-bottom:10px;margin-bottom:14px}
-.pr-acad{font-size:19px;font-weight:800;letter-spacing:.03em;color:#1a1a3e}
-.pr-sub{font-size:11px;color:#555;margin-top:2px}
-.pr-title{font-size:15px;font-weight:800;margin-top:10px;color:#8B5CF6;letter-spacing:.04em}
-.pr-staffrow{display:flex;justify-content:center;gap:22px;font-size:10.5px;color:#333;margin-top:8px;flex-wrap:wrap}
+.pr-acad{font-size:19px;font-weight:800;letter-spacing:.03em;color:#1a1a3e!important}
+.pr-sub{font-size:11px;color:#555!important;margin-top:2px}
+.pr-title{font-size:15px;font-weight:800;margin-top:10px;color:#5b3fd6!important;letter-spacing:.04em}
+.pr-staffrow{display:flex;justify-content:center;gap:22px;font-size:10.5px;color:#333!important;margin-top:8px;flex-wrap:wrap}
 .pr-stats{display:flex;gap:10px;margin:14px 0}
-.pr-stat{flex:1;border-radius:10px;padding:10px;text-align:center;color:#fff;print-color-adjust:exact;-webkit-print-color-adjust:exact}
-.pr-stat .v{font-size:20px;font-weight:800}
-.pr-stat .l{font-size:9px;text-transform:uppercase;letter-spacing:.06em;opacity:.9}
+.pr-stat{flex:1;border-radius:10px;padding:10px;text-align:center;background:#fafaff;border:2px solid;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-stat .v{font-size:21px;font-weight:800;color:#1a1a3e!important}
+.pr-stat .l{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#666!important;font-weight:700}
 .pr-podium{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin:14px 0 18px}
 .pr-pcol{text-align:center;width:100px}
 .pr-pav{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #1a1a3e;margin:0 auto 4px}
-.pr-pblock{border-radius:6px 6px 0 0;color:#fff;font-weight:800;padding-top:4px;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-pblock{border-radius:6px 6px 0 0;color:#1a1a2e!important;font-weight:800;padding-top:4px;border:2px solid #1a1a3e;border-bottom:none;print-color-adjust:exact;-webkit-print-color-adjust:exact}
 .pr-table{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:6px}
-.pr-table th{background:#1a1a3e;color:#fff;padding:6px 5px;text-align:left;print-color-adjust:exact;-webkit-print-color-adjust:exact}
-.pr-table td{padding:5px;border-bottom:1px solid #ddd}
+.pr-table th{background:#eef0ff;color:#1a1a3e!important;padding:6px 5px;text-align:left;border-bottom:2px solid #1a1a3e;font-weight:800;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-table td{padding:5px;border-bottom:1px solid #ddd;color:#1a1a2e!important}
 .pr-table tr:nth-child(even) td{background:#f5f5fa;print-color-adjust:exact;-webkit-print-color-adjust:exact}
 .pr-table tr.pr-top1 td{background:#fff6d9;font-weight:700;print-color-adjust:exact;-webkit-print-color-adjust:exact}
 .pr-table tr.pr-top2 td{background:#f2f2f2;font-weight:700;print-color-adjust:exact;-webkit-print-color-adjust:exact}
 .pr-table tr.pr-top3 td{background:#fbe9dd;font-weight:700;print-color-adjust:exact;-webkit-print-color-adjust:exact}
-.pr-ach{border:1px solid #ddd;border-radius:8px;padding:9px 11px;margin-bottom:8px;break-inside:avoid}
-.pr-ach h4{margin:0 0 5px;font-size:11.5px;color:#1a1a3e}
-.pr-chip{display:inline-block;font-size:9.5px;background:#eef0ff;border:1px solid #dcdff9;border-radius:20px;padding:2px 8px;margin:2px 3px 0 0;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-ach{border:1px solid #ccc;border-radius:8px;padding:9px 11px;margin-bottom:8px;break-inside:avoid}
+.pr-ach h4{margin:0 0 5px;font-size:11.5px;color:#1a1a3e!important}
+.pr-chip{display:inline-block;font-size:9.5px;background:#eef0ff;border:1px solid #c7cdf5;border-radius:20px;padding:2px 8px;margin:2px 3px 0 0;color:#333!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
 .pr-sig{display:flex;justify-content:space-around;margin-top:28px;text-align:center}
-.pr-sig div{font-size:10.5px}
-.pr-sig .line{border-top:1px solid #333;padding-top:4px;margin-top:26px;font-weight:600}
-.pr-foot{text-align:center;font-size:9px;color:#888;margin-top:16px;border-top:1px solid #ddd;padding-top:6px}
+.pr-sig div{font-size:10.5px;color:#333!important}
+.pr-sig .line{border-top:1px solid #333;padding-top:4px;margin-top:26px;font-weight:600;color:#1a1a3e!important}
+.pr-foot{text-align:center;font-size:9px;color:#888!important;margin-top:16px;border-top:1px solid #ddd;padding-top:6px}
 @media print{
   body *{visibility:hidden}
   #printArea,#printArea *{visibility:visible}
@@ -323,7 +324,7 @@ canvas{display:block;width:100%!important}
 <div class="section active slide-in" id="tab-lb">
   <div class="grid2">
     <div class="metric-card"><div class="metric-val" id="totCoins">0</div><div class="metric-lbl">Total coins awarded</div></div>
-    <div class="metric-card" style="background:linear-gradient(135deg,var(--card),#1a1a3e)"><div class="metric-val" id="topName" style="font-size:20px">-</div><div class="metric-lbl">Top student</div></div>
+    <div class="metric-card" style="background:linear-gradient(135deg,var(--card),#1a1a3e)"><div class="metric-val" id="topName" style="font-size:15px;line-height:1.25;word-break:break-word">-</div><div class="metric-lbl">Top student</div></div>
   </div>
   <div class="podium" id="podium"></div>
   <div class="card">
@@ -1006,7 +1007,7 @@ function confetti(count){
 function renderLB(){
   var sorted=sortedSTU();
   document.getElementById('totCoins').textContent=Object.values(S.coins).reduce(function(a,b){return a+b;},0);
-  document.getElementById('topName').textContent=sorted[0]?sorted[0].n.split(' ')[0]:'-';
+  document.getElementById('topName').textContent=sorted[0]?sorted[0].n:'-';
   var uc=uniqueCoins();var html='';
   sorted.forEach(function(st,i){
     var c=S.coins[st.r]||0;var medal=getMedal(c,uc);
@@ -1390,6 +1391,7 @@ function buildPrintHTML(d){
   var typeLabel=typeVal==='week'?'WEEKLY':typeVal==='month'?'MONTHLY':typeVal==='year'?'ANNUAL':'ALL-TIME';
   var today=new Date();
   var genDate=today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+  var hasAdmNo=d.rows.some(function(x){return x.admNo;});
   var html='';
   html+='<div class="pr-header">';
   html+='<div class="pr-acad">VALIYULLAHI THANGAL MEMORIAL DARUSSALAM ACADEMY (SADAD)</div>';
@@ -1405,32 +1407,32 @@ function buildPrintHTML(d){
   html+='</div>';
 
   html+='<div class="pr-stats">';
-  html+='<div class="pr-stat" style="background:linear-gradient(135deg,#6C63FF,#8B5CF6)"><div class="v">'+d.totalCoins+'</div><div class="l">Total Coins</div></div>';
-  html+='<div class="pr-stat" style="background:linear-gradient(135deg,#43B89C,#2d9e6b)"><div class="v">'+d.active+'</div><div class="l">Active Students</div></div>';
-  html+='<div class="pr-stat" style="background:linear-gradient(135deg,#f5b942,#e08e2d)"><div class="v" style="font-size:13px">'+(d.top&&d.top.coins>0?d.top.name.split(' ').slice(0,2).join(' '):'&mdash;')+'</div><div class="l">Top Student</div></div>';
+  html+='<div class="pr-stat" style="border-color:#8B5CF6"><div class="v">'+d.totalCoins+'</div><div class="l">Total Coins</div></div>';
+  html+='<div class="pr-stat" style="border-color:#2d9e6b"><div class="v">'+d.active+'</div><div class="l">Active Students</div></div>';
+  html+='<div class="pr-stat" style="border-color:#e0a800"><div class="v" style="font-size:12px;line-height:1.2">'+(d.top&&d.top.coins>0?d.top.name:'&mdash;')+'</div><div class="l">Top Student</div></div>';
   html+='</div>';
 
   var top3=d.rows.slice(0,3).filter(function(x){return x.coins>0;});
   if(top3.length){
-    var pconf=[{i:1,h:56,bg:'linear-gradient(180deg,#e2e2e2,#a8a8a8)'},{i:0,h:76,bg:'linear-gradient(180deg,#ffe066,#e0a800)'},{i:2,h:40,bg:'linear-gradient(180deg,#e0995a,#a8672a)'}];
+    var pconf=[{i:1,h:52,bg:'#e2e2e2'},{i:0,h:70,bg:'#ffe066'},{i:2,h:36,bg:'#e0995a'}];
     html+='<div class="pr-podium">';
     pconf.forEach(function(c){
       var item=top3[c.i];
       if(!item)return;
       var av=item.pic?'<img class="pr-pav" src="'+item.pic+'">':'<div class="pr-pav" style="background:#ddd;display:flex;align-items:center;justify-content:center;font-weight:800;color:#555;font-size:13px">'+ini(item.name)+'</div>';
-      html+='<div class="pr-pcol">'+av+'<div style="font-size:10.5px;font-weight:700">'+item.name+'</div>'
+      html+='<div class="pr-pcol">'+av+'<div style="font-size:10px;font-weight:700;line-height:1.2">'+item.name+'</div>'
         +'<div style="font-size:9px;color:#777">'+(item.admNo||'Roll '+item.roll)+'</div>'
-        +'<div style="font-size:11px;font-weight:800;color:#e0a800;margin:2px 0">'+item.coins+' coins</div>'
+        +'<div style="font-size:11px;font-weight:800;color:#a87400;margin:2px 0">'+item.coins+' coins</div>'
         +'<div class="pr-pblock" style="height:'+c.h+'px;background:'+c.bg+'">#'+(c.i+1)+'</div></div>';
     });
     html+='</div>';
   }
 
-  html+='<table class="pr-table"><thead><tr><th>Rank</th><th>Roll No.</th><th>Adm No.</th><th>Student Name</th><th>Achievements</th><th>Coins</th></tr></thead><tbody>';
+  html+='<table class="pr-table"><thead><tr><th>Rank</th><th>Roll No.</th>'+(hasAdmNo?'<th>Adm No.</th>':'')+'<th>Student Name</th><th>Achievements</th><th>Coins</th></tr></thead><tbody>';
   d.rows.forEach(function(x,i){
     var cls=i===0?'pr-top1':i===1?'pr-top2':i===2?'pr-top3':'';
     var rankLabel=i===0?'&#129351;':i===1?'&#129352;':i===2?'&#129353;':(i+1);
-    html+='<tr class="'+cls+'"><td>'+rankLabel+'</td><td>'+x.roll+'</td><td>'+(x.admNo||'&mdash;')+'</td><td>'+x.name+'</td><td>'+x.count+'</td><td>'+x.coins+'</td></tr>';
+    html+='<tr class="'+cls+'"><td>'+rankLabel+'</td><td>'+x.roll+'</td>'+(hasAdmNo?'<td>'+(x.admNo||'&mdash;')+'</td>':'')+'<td>'+x.name+'</td><td>'+x.count+'</td><td>'+x.coins+'</td></tr>';
   });
   html+='</tbody></table>';
 
