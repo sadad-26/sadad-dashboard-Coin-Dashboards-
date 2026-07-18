@@ -227,6 +227,7 @@ canvas{display:block;width:100%!important}
       <span>Usthad Muhammed Arafath Hudawi</span>
       <span>Usthad Savad Wafy</span>
       <span>33 students</span>
+      <span id="syncBadge" style="font-weight:700">&#128993; Connecting&hellip;</span>
     </div>
   </div>
 </div>
@@ -632,7 +633,7 @@ function save(){
     .finally(function(){fbSaving=false;});
 }
 function load(){
-  docRef.onSnapshot(function(snap){
+  docRef.onSnapshot({includeMetadataChanges:true},function(snap){
     if(snap.exists){
       var d=snap.data();
       S.coins=d.coins||{};S.history=d.history||[];S.cats=d.cats||JSON.parse(JSON.stringify(DCATS));S.profiles=d.profiles||{};
@@ -644,9 +645,11 @@ function load(){
     recompute();
     STU.forEach(function(s){if(S.coins[s.r]===undefined)S.coins[s.r]=0;});
     fbReady=true;
+    updateSyncBadge(snap.metadata.fromCache,snap.metadata.hasPendingWrites);
     refreshCurrentView();
   },function(err){
     console.error('Firestore sync error',err);
+    updateSyncBadge(true,false,true);
     try{
       var raw=localStorage.getItem('sadad_v12');
       if(raw){var p=JSON.parse(raw);S.coins=p.coins||{};S.history=p.history||[];S.cats=p.cats||DCATS;S.profiles=p.profiles||{};}
@@ -654,6 +657,14 @@ function load(){
       recompute();fbReady=true;refreshCurrentView();
     }catch(e){}
   });
+}
+function updateSyncBadge(fromCache,pending,isError){
+  var b=document.getElementById('syncBadge');
+  if(!b)return;
+  if(isError){b.innerHTML='&#128308; Offline (no connection)';b.style.color='#e53935';return;}
+  if(pending){b.innerHTML='&#128993; Saving&hellip;';b.style.color='#f5b942';return;}
+  if(fromCache){b.innerHTML='&#128993; Cached (reconnecting)';b.style.color='#f5b942';return;}
+  b.innerHTML='&#128994; Synced live';b.style.color='#43a047';
 }
 function refreshCurrentView(){
   fillSelects();
