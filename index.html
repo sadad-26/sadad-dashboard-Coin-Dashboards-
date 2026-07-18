@@ -631,12 +631,65 @@ const firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
 const docRef=db.collection('sadad').doc('second_batch_dsa');
-let fbReady=false,fbSaving=false;
+const picsRef=db.collection('sadad_pics_second_batch_dsa');
+let fbReady=false,fbSaving=false,PICS={};
+function mergePics(){
+  Object.keys(PICS).forEach(function(r){
+    var roll=parseInt(r);
+    if(PICS[r]){if(!S.profiles[roll])S.profiles[roll]={};S.profiles[roll].pic=PICS[r];}
+  });
+}
+function initPicsListener(){
+  picsRef.onSnapshot(function(snap){
+    snap.docChanges().forEach(function(ch){
+      var roll=parseInt(ch.doc.id);
+      if(ch.type==='removed'){PICS[ch.doc.id]=null;if(S.profiles[roll])delete S.profiles[roll].pic;}
+      else{PICS[ch.doc.id]=ch.doc.data().pic;if(!S.profiles[roll])S.profiles[roll]={};S.profiles[roll].pic=ch.doc.data().pic;}
+    });
+    refreshCurrentView();
+  },function(err){console.error('Pics sync error',err);});
+}
+function compressImage(file,cb){
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var maxDim=420,w=img.width,h=img.height;
+      if(w>h){if(w>maxDim){h=Math.round(h*maxDim/w);w=maxDim;}}
+      else{if(h>maxDim){w=Math.round(w*maxDim/h);h=maxDim;}}
+      var canvas=document.createElement('canvas');
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      cb(canvas.toDataURL('image/jpeg',0.72));
+    };
+    img.onerror=function(){cb(e.target.result);};
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function savePic(roll,dataURL){
+  if(!S.profiles[roll])S.profiles[roll]={};
+  S.profiles[roll].pic=dataURL;
+  PICS[String(roll)]=dataURL;
+  picsRef.doc(String(roll)).set({pic:dataURL}).catch(function(e){
+    console.error('Pic save failed',e);showToast('Photo upload failed (too large or offline)','error');
+  });
+}
+function deletePicRemote(roll){
+  if(S.profiles[roll])delete S.profiles[roll].pic;
+  PICS[String(roll)]=null;
+  picsRef.doc(String(roll)).delete().catch(function(e){console.error('Pic delete failed',e);});
+}
 
+function stateForSync(){
+  var copy=JSON.parse(JSON.stringify(S));
+  Object.keys(copy.profiles||{}).forEach(function(r){if(copy.profiles[r])delete copy.profiles[r].pic;});
+  return copy;
+}
 function save(){
   try{localStorage.setItem('sadad_v12',JSON.stringify(S));}catch(e){}
   fbSaving=true;
-  docRef.set(S).catch(function(e){console.error('Firestore save failed',e);})
+  docRef.set(stateForSync()).catch(function(e){console.error('Firestore save failed',e);})
     .finally(function(){fbSaving=false;});
 }
 function load(){
@@ -650,6 +703,7 @@ function load(){
       docRef.set(S).catch(function(e){console.error('Firestore init failed',e);});
     }
     recompute();
+    mergePics();
     STU.forEach(function(s){if(S.coins[s.r]===undefined)S.coins[s.r]=0;});
     fbReady=true;
     updateSyncBadge(snap.metadata.fromCache,snap.metadata.hasPendingWrites);
@@ -862,13 +916,10 @@ function openProfile(roll){
 }
 function handleProfPhoto(input){
   if(!input.files[0]||profRoll<0)return;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    if(!S.profiles[profRoll])S.profiles[profRoll]={};
-    S.profiles[profRoll].pic=e.target.result;
-    save();openProfile(profRoll);renderGrid();renderLB();input.value='';
-  };
-  reader.readAsDataURL(input.files[0]);
+  compressImage(input.files[0],function(dataURL){
+    savePic(profRoll,dataURL);
+    openProfile(profRoll);renderGrid();renderLB();input.value='';
+  });
 }
 function renderProfHist(roll){
   var hist=[];
@@ -960,17 +1011,16 @@ function loadEP(){
 }
 function uploadEpPic(input){
   var roll=parseInt(document.getElementById('epStu').value);if(!roll||!input.files[0])return;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    if(!S.profiles[roll])S.profiles[roll]={};S.profiles[roll].pic=e.target.result;
-    save();loadEP();renderGrid();renderLB();input.value='';showToast('Photo uploaded!','success');
-  };reader.readAsDataURL(input.files[0]);
+  compressImage(input.files[0],function(dataURL){
+    savePic(roll,dataURL);
+    loadEP();renderGrid();renderLB();input.value='';showToast('Photo uploaded!','success');
+  });
 }
 function removePhoto(){
   var roll=parseInt(document.getElementById('epStu').value);if(!roll)return;
   if(!confirm('Remove photo?'))return;
-  if(S.profiles[roll])delete S.profiles[roll].pic;
-  save();loadEP();renderGrid();renderLB();showToast('Photo removed.','error');
+  deletePicRemote(roll);
+  loadEP();renderGrid();renderLB();showToast('Photo removed.','error');
 }
 function saveProfile(){
   var roll=parseInt(document.getElementById('epStu').value);if(!roll)return;
@@ -1085,7 +1135,7 @@ function renderReports(){
 }
 function printReport(){window.print();}
 
-load();renderLB();renderGrid();
+load();initPicsListener();renderLB();renderGrid();
 
 </script>
 </body>
