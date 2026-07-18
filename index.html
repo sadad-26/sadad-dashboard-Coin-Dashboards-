@@ -1129,9 +1129,10 @@ function renderReports(){
   var top=stuRows.slice(0,10);
   var ctx=document.getElementById('repChart').getContext('2d');
   if(repChartObj)repChartObj.destroy();
-  repChartObj=new Chart(ctx,{type:'bar',data:{labels:top.map(function(x){return x.n.split(' ')[0];}),
+  function shortLabel(n){var p=n.trim().split(' ');return p.length>1?p[0]+' '+p[1][0]+'.':p[0];}
+  repChartObj=new Chart(ctx,{type:'bar',data:{labels:top.map(function(x){return shortLabel(x.n);}),
     datasets:[{label:'Coins',data:top.map(function(x){return x.c;}),backgroundColor:'#f5b942'}]},
-    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
+    options:{plugins:{legend:{display:false},tooltip:{callbacks:{title:function(items){return top[items[0].dataIndex].n;}}}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
 }
 function printReport(){window.print();}
 
