@@ -114,6 +114,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .hbadge.gold{background:rgba(255,215,0,.13);color:var(--gold);border:1px solid rgba(255,215,0,.25)}
 .hbadge.green{background:rgba(34,197,94,.1);color:#4ade80;border:1px solid rgba(34,197,94,.2)}
 .hbadge.blue{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.2)}
+.hbadge.red{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.25)}
 .empty-state{font-size:12px;color:var(--text3);text-align:center;padding:1rem 0}
 .quick-add-box{background:var(--card);border:1px solid rgba(108,99,255,.2);border-radius:12px;padding:.75rem;margin-top:.75rem}
 .qa-label{font-size:11px;color:var(--text3);margin-bottom:.4rem}
@@ -135,7 +136,8 @@ option{background:var(--card2);color:var(--text)}
 .btn-del-sm{background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.18);border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif}
 
 /* SUB TABS */
-.sub-tabs{display:flex;gap:4px;margin-bottom:.75rem;background:var(--surface2);padding:4px;border-radius:12px;border:1px solid var(--border)}
+.sub-tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:.75rem;background:var(--surface2);padding:4px;border-radius:12px;border:1px solid var(--border)}
+.sub-tab{min-width:31%}
 .sub-tab{flex:1;padding:6px 4px;border-radius:9px;border:none;font-size:11.5px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;background:transparent;color:var(--text3);transition:all .2s;text-align:center}
 .sub-tab.active{background:var(--card);color:#a78bfa;box-shadow:0 2px 8px rgba(0,0,0,.3);font-weight:600}
 
@@ -149,6 +151,55 @@ option{background:var(--card2);color:var(--text)}
 .faculty-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;flex-shrink:0}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--surface2)}::-webkit-scrollbar-thumb{background:rgba(108,99,255,.35);border-radius:3px}
 canvas{display:block;width:100%!important}
+/* ── PODIUM ── */
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;padding:1.25rem .5rem .5rem;margin-bottom:.9rem}
+.podium-col{display:flex;flex-direction:column;align-items:center;flex:1;max-width:110px}
+.podium-av{position:relative;border-radius:50%;border:3px solid;box-shadow:0 4px 14px rgba(0,0,0,.35);margin-bottom:6px}
+.podium-crown{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:22px;animation:crownFloat 2.2s ease-in-out infinite}
+@keyframes crownFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
+.podium-name{font-size:12px;font-weight:700;color:var(--text);text-align:center;max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.podium-adno{font-size:10px;color:var(--text3);margin-top:1px}
+.podium-coins{font-size:13px;font-weight:800;color:#f5b942;margin:3px 0}
+.podium-block{width:100%;border-radius:10px 10px 4px 4px;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-size:20px;box-shadow:inset 0 2px 6px rgba(255,255,255,.25),0 4px 10px rgba(0,0,0,.3)}
+
+/* ── CONFETTI ── */
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(115vh) rotate(560deg);opacity:0}}
+
+/* ── PRINT REPORT ── */
+#printArea{display:none}
+.pr-header{text-align:center;border-bottom:3px double #1a1a3e;padding-bottom:10px;margin-bottom:14px}
+.pr-acad{font-size:19px;font-weight:800;letter-spacing:.03em;color:#1a1a3e}
+.pr-sub{font-size:11px;color:#555;margin-top:2px}
+.pr-title{font-size:15px;font-weight:800;margin-top:10px;color:#8B5CF6;letter-spacing:.04em}
+.pr-staffrow{display:flex;justify-content:center;gap:22px;font-size:10.5px;color:#333;margin-top:8px;flex-wrap:wrap}
+.pr-stats{display:flex;gap:10px;margin:14px 0}
+.pr-stat{flex:1;border-radius:10px;padding:10px;text-align:center;color:#fff;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-stat .v{font-size:20px;font-weight:800}
+.pr-stat .l{font-size:9px;text-transform:uppercase;letter-spacing:.06em;opacity:.9}
+.pr-podium{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin:14px 0 18px}
+.pr-pcol{text-align:center;width:100px}
+.pr-pav{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #1a1a3e;margin:0 auto 4px}
+.pr-pblock{border-radius:6px 6px 0 0;color:#fff;font-weight:800;padding-top:4px;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-table{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:6px}
+.pr-table th{background:#1a1a3e;color:#fff;padding:6px 5px;text-align:left;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-table td{padding:5px;border-bottom:1px solid #ddd}
+.pr-table tr:nth-child(even) td{background:#f5f5fa;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-table tr.pr-top1 td{background:#fff6d9;font-weight:700;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-table tr.pr-top2 td{background:#f2f2f2;font-weight:700;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-table tr.pr-top3 td{background:#fbe9dd;font-weight:700;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-ach{border:1px solid #ddd;border-radius:8px;padding:9px 11px;margin-bottom:8px;break-inside:avoid}
+.pr-ach h4{margin:0 0 5px;font-size:11.5px;color:#1a1a3e}
+.pr-chip{display:inline-block;font-size:9.5px;background:#eef0ff;border:1px solid #dcdff9;border-radius:20px;padding:2px 8px;margin:2px 3px 0 0;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.pr-sig{display:flex;justify-content:space-around;margin-top:28px;text-align:center}
+.pr-sig div{font-size:10.5px}
+.pr-sig .line{border-top:1px solid #333;padding-top:4px;margin-top:26px;font-weight:600}
+.pr-foot{text-align:center;font-size:9px;color:#888;margin-top:16px;border-top:1px solid #ddd;padding-top:6px}
+@media print{
+  body *{visibility:hidden}
+  #printArea,#printArea *{visibility:visible}
+  #printArea{display:block;position:absolute;top:0;left:0;width:100%;padding:14px}
+  @page{margin:12mm}
+}
 </style>
 </head>
 <body>
@@ -159,7 +210,7 @@ canvas{display:block;width:100%!important}
 <div class="pw-overlay" id="pwOv">
   <div class="pw-box">
     <h2>&#128274; Admin Login</h2>
-    <p>Usthad Arafath Hudawi &bull; Usthad Savad Wafy</p>
+    <p>Usthad Arafath Hudawi &bull; Usthad Savad Wafy &bull; Usthad Sharafudheen Hudawi</p>
     <input type="password" id="pwIn" placeholder="Enter password">
     <div class="err" id="pwErr"></div>
     <div style="display:flex;gap:.5rem;margin-top:.75rem">
@@ -233,6 +284,7 @@ canvas{display:block;width:100%!important}
     <div class="meta">
       <span>Usthad Muhammed Arafath Hudawi</span>
       <span>Usthad Savad Wafy</span>
+      <span>Usthad Sharafudheen Hudawi</span>
       <span>33 students</span>
       <span class="sync-pill" id="syncBadge"><i class="led amber"></i> Connecting&hellip;</span>
     </div>
@@ -273,6 +325,7 @@ canvas{display:block;width:100%!important}
     <div class="metric-card"><div class="metric-val" id="totCoins">0</div><div class="metric-lbl">Total coins awarded</div></div>
     <div class="metric-card" style="background:linear-gradient(135deg,var(--card),#1a1a3e)"><div class="metric-val" id="topName" style="font-size:20px">-</div><div class="metric-lbl">Top student</div></div>
   </div>
+  <div class="podium" id="podium"></div>
   <div class="card">
     <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.6rem">Rankings &mdash; tap to view profile</div>
     <div id="lbList"></div>
@@ -288,23 +341,8 @@ canvas{display:block;width:100%!important}
 <!-- FACULTY -->
 <div class="section" id="tab-teachers">
   <div class="card">
-    <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem">Class Teacher &amp; Mentors</div>
-    <div class="faculty-card">
-      <div class="faculty-av" style="background:linear-gradient(135deg,#6C63FF,#8B5CF6)">MA</div>
-      <div>
-        <div style="font-size:14px;font-weight:600;color:var(--text)">Usthad Muhammed Arafath Hudawi</div>
-        <div style="font-size:12px;color:var(--text3)">Vanimel &bull; Class teacher</div>
-        <span class="hbadge green" style="display:inline-block;margin-top:4px">Admin</span>
-      </div>
-    </div>
-    <div class="faculty-card">
-      <div class="faculty-av" style="background:linear-gradient(135deg,#43B89C,#2d9e6b)">SW</div>
-      <div>
-        <div style="font-size:14px;font-weight:600;color:var(--text)">Usthad Savad Wafy</div>
-        <div style="font-size:12px;color:var(--text3)">Kunjom &bull; Mentor</div>
-        <span class="hbadge green" style="display:inline-block;margin-top:4px">Admin</span>
-      </div>
-    </div>
+    <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem">Class Teacher, Mentor &amp; Principal</div>
+    <div id="facultyList"></div>
   </div>
 </div>
 
@@ -340,7 +378,9 @@ canvas{display:block;width:100%!important}
 <div class="section" id="tab-admin">
   <div class="sub-tabs">
     <button class="sub-tab active" onclick="showSub('addCoins',this)">Add Coins</button>
-    <button class="sub-tab" onclick="showSub('editProf',this)">Profile</button>
+    <button class="sub-tab" onclick="showSub('deductCoins',this)">Deduct Coins</button>
+    <button class="sub-tab" onclick="showSub('myProfile',this)">My Profile</button>
+    <button class="sub-tab" onclick="showSub('editProf',this)">Students</button>
     <button class="sub-tab" onclick="showSub('cats',this)">Categories</button>
     <button class="sub-tab" onclick="showSub('hist',this)">History</button>
   </div>
@@ -357,6 +397,46 @@ canvas{display:block;width:100%!important}
       <input type="text" id="coinNote" placeholder="e.g. Balarama magazine">
       <button class="btn btn-primary" onclick="addCoins()" style="width:100%;margin-top:.25rem;padding:10px">Add Coins</button>
       <div id="addMsg" style="font-size:12px;margin-top:.4rem"></div>
+    </div>
+  </div>
+
+  <div id="subtab-deductCoins" style="display:none">
+    <div class="card">
+      <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Student</label>
+      <select id="dedStu"><option value="">-- Select student --</option></select>
+      <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Reason for deduction</label>
+      <input type="text" id="dedReason" placeholder="e.g. Late to class, Uniform violation">
+      <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Coins to deduct</label>
+      <input type="number" id="dedAmt" min="1" placeholder="e.g. 2">
+      <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Note (optional)</label>
+      <input type="text" id="dedNote" placeholder="Additional detail">
+      <button class="btn btn-danger" onclick="deductCoins()" style="width:100%;margin-top:.25rem;padding:10px">&#10134; Deduct Coins</button>
+      <div id="dedMsg" style="font-size:12px;margin-top:.4rem"></div>
+    </div>
+  </div>
+
+  <div id="subtab-myProfile" style="display:none">
+    <div class="card">
+      <div class="photo-row">
+        <div class="ep-av" id="apAvEl"></div>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <label style="cursor:pointer">
+            <span class="btn btn-primary btn-sm">&#128247; Upload photo</span>
+            <input type="file" id="apPhotoIn" accept="image/*" style="display:none" onchange="uploadApPic(this)">
+          </label>
+          <button class="btn btn-danger btn-sm" id="apRemovePhotoBtn" onclick="removeApPhoto()" style="display:none">&#128465; Remove photo</button>
+        </div>
+      </div>
+      <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Name</label>
+      <input type="text" id="apName" disabled>
+      <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Role / Designation</label>
+      <input type="text" id="apRole">
+      <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Place</label>
+      <input type="text" id="apPlace">
+      <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Phone</label>
+      <input type="text" id="apPhone">
+      <button class="btn btn-primary" onclick="saveAdminProfile()" style="width:100%;margin-top:.75rem">Save my profile</button>
+      <div id="apMsg" style="font-size:12px;margin-top:.4rem"></div>
     </div>
   </div>
 
@@ -421,7 +501,11 @@ canvas{display:block;width:100%!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 
-const ADMINS=[{name:"Usthad Arafath Hudawi",pw:"sadad"},{name:"Usthad Savad Wafy",pw:"sadad"}];
+const ADMINS=[
+  {name:"Usthad Arafath Hudawi",pw:"6068",role:"Class Teacher",place:"Vanimel"},
+  {name:"Usthad Savad Wafy",pw:"4835",role:"Mentor",place:"Kunjom"},
+  {name:"Usthad Sharafudheen Hudawi",pw:"sadad",role:"College Principal",place:"Kondotty"}
+];
 let admin=null,chart=null,editIdx=-1,editRoll=-1,profRoll=-1;
 const STU=[
   {r:16,n:"Aslam Hammadi"},{r:18,n:"Abdul Adhilu"},{r:33,n:"Muhammad Abdullah Hazim"},
@@ -616,7 +700,7 @@ const SEED_HISTORY=[
 {r:39,name:"Muhammed Rabeeh",cat:"MTP Scholarship Exam",coins:10,addedBy:"Usthad Arafath Hudawi",date:"13/7/2026"},
 {r:57,name:"Muhammad Safvan KTK",cat:"MTP Scholarship Exam",coins:10,addedBy:"Usthad Arafath Hudawi",date:"13/7/2026"}
 ];
-let S={coins:{},history:[],cats:JSON.parse(JSON.stringify(DCATS)),profiles:{}};
+let S={coins:{},history:[],cats:JSON.parse(JSON.stringify(DCATS)),profiles:{},adminProfiles:{}};
 STU.forEach(function(s){S.coins[s.r]=0;});
 
 // ── FIREBASE (real-time cloud sync) ──
@@ -632,6 +716,8 @@ firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
 const docRef=db.collection('sadad').doc('second_batch_dsa');
 const picsRef=db.collection('sadad_pics_second_batch_dsa');
+const adminPicsRef=db.collection('sadad_admin_pics_second_batch_dsa');
+function slugName(n){return n.trim().toLowerCase().replace(/[^a-z0-9]+/g,'_');}
 let fbReady=false,fbSaving=false,PICS={};
 function mergePics(){
   Object.keys(PICS).forEach(function(r){
@@ -648,6 +734,27 @@ function initPicsListener(){
     });
     refreshCurrentView();
   },function(err){console.error('Pics sync error',err);});
+  adminPicsRef.onSnapshot(function(snap){
+    snap.docChanges().forEach(function(ch){
+      var a=ADMINS.find(function(x){return slugName(x.name)===ch.doc.id;});
+      if(!a)return;
+      if(!S.adminProfiles[a.name])S.adminProfiles[a.name]={};
+      S.adminProfiles[a.name].pic=ch.type==='removed'?null:ch.doc.data().pic;
+    });
+    renderFaculty();
+    if(admin)loadAdminProfile();
+  },function(err){console.error('Admin pics sync error',err);});
+}
+function saveAdminPic(name,dataURL){
+  if(!S.adminProfiles[name])S.adminProfiles[name]={};
+  S.adminProfiles[name].pic=dataURL;
+  adminPicsRef.doc(slugName(name)).set({pic:dataURL}).catch(function(e){
+    console.error('Admin pic save failed',e);showToast('Photo upload failed','error');
+  });
+}
+function deleteAdminPic(name){
+  if(S.adminProfiles[name])delete S.adminProfiles[name].pic;
+  adminPicsRef.doc(slugName(name)).delete().catch(function(e){console.error(e);});
 }
 function compressImage(file,cb){
   var reader=new FileReader();
@@ -696,7 +803,7 @@ function load(){
   docRef.onSnapshot({includeMetadataChanges:true},function(snap){
     if(snap.exists){
       var d=snap.data();
-      S.coins=d.coins||{};S.history=d.history||[];S.cats=d.cats||JSON.parse(JSON.stringify(DCATS));S.profiles=d.profiles||{};
+      S.coins=d.coins||{};S.history=d.history||[];S.cats=d.cats||JSON.parse(JSON.stringify(DCATS));S.profiles=d.profiles||{};S.adminProfiles=d.adminProfiles||{};
     }else{
       S.history=SEED_HISTORY.slice();
       recompute();
@@ -713,7 +820,7 @@ function load(){
     updateSyncBadge(true,false,true);
     try{
       var raw=localStorage.getItem('sadad_v12');
-      if(raw){var p=JSON.parse(raw);S.coins=p.coins||{};S.history=p.history||[];S.cats=p.cats||DCATS;S.profiles=p.profiles||{};}
+      if(raw){var p=JSON.parse(raw);S.coins=p.coins||{};S.history=p.history||[];S.cats=p.cats||DCATS;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};}
       else S.history=SEED_HISTORY.slice();
       recompute();fbReady=true;refreshCurrentView();
     }catch(e){}
@@ -731,6 +838,7 @@ function refreshCurrentView(){
   fillSelects();
   if(document.getElementById('tab-lb').classList.contains('active'))renderLB();
   if(document.getElementById('tab-students').classList.contains('active'))renderGrid();
+  if(document.getElementById('tab-teachers').classList.contains('active'))renderFaculty();
   if(document.getElementById('tab-reports').classList.contains('active'))renderReports();
   if(document.getElementById('tab-admin').classList.contains('active')){renderCatList();renderHist();}
   var pOv=document.getElementById('profOv');
@@ -761,7 +869,7 @@ function importData(input){
     try{
       var p=JSON.parse(e.target.result);
       if(!p.history||!p.coins){showToast('Invalid file format!','error');return;}
-      S.coins=p.coins||{};S.history=p.history||[];S.cats=p.cats||DCATS;S.profiles=p.profiles||{};
+      S.coins=p.coins||{};S.history=p.history||[];S.cats=p.cats||DCATS;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};
       STU.forEach(function(s){if(S.coins[s.r]===undefined)S.coins[s.r]=0;});
       save();renderLB();renderGrid();
       showToast('Data imported successfully! '+S.history.length+' records loaded.','success');
@@ -793,6 +901,7 @@ function showTab(t,btn){
   btn&&btn.classList.add('active');
   if(t==='lb')renderLB();
   if(t==='students')renderGrid();
+  if(t==='teachers')renderFaculty();
   if(t==='reports')renderReports();
   if(t==='admin'){fillSelects();renderCatList();renderHist();}
 }
@@ -801,6 +910,7 @@ function showSub(t,btn){
   document.querySelectorAll('.sub-tab').forEach(function(b){b.classList.remove('active');});
   document.getElementById('subtab-'+t).style.display='block';
   btn&&btn.classList.add('active');
+  if(t==='myProfile')loadAdminProfile();
 }
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -818,8 +928,8 @@ function checkPw(){
     document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
     var el=document.getElementById('tab-admin');el.classList.add('active');
     setTimeout(function(){el.classList.add('slide-in');},10);
-    document.querySelectorAll('.tab-btn')[3].classList.add('active');
-    fillSelects();renderCatList();renderHist();
+    document.querySelectorAll('.tab-btn')[4].classList.add('active');
+    fillSelects();renderCatList();renderHist();renderFaculty();loadAdminProfile();
   }else{document.getElementById('pwErr').textContent='Incorrect password.';}
 }
 document.getElementById('pwIn').addEventListener('keydown',function(e){if(e.key==='Enter')checkPw();});
@@ -844,6 +954,55 @@ function avatarHTML(roll,size,fs){
   return '<div style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+col+';display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:'+fs+'px;flex-shrink:0">'+ini(s.n)+'</div>';
 }
 
+function renderPodium(){
+  var el=document.getElementById('podium');
+  if(!el)return;
+  var top=sortedSTU().slice(0,3).map(function(s){return{s:s,c:S.coins[s.r]||0};}).filter(function(x){return x.c>0;});
+  if(!top.length){el.innerHTML='';return;}
+  var conf=[
+    {rank:2,h:58,bc:'#c0c0c0',grad:'linear-gradient(180deg,#e2e2e2,#a8a8a8)',medal:'&#129352;',av:50},
+    {rank:1,h:86,bc:'#ffd700',grad:'linear-gradient(180deg,#ffe066,#e0a800)',medal:'&#129351;',av:66},
+    {rank:3,h:44,bc:'#cd7f32',grad:'linear-gradient(180deg,#e0995a,#a8672a)',medal:'&#129353;',av:50}
+  ];
+  var html='';
+  conf.forEach(function(c){
+    var item=top[c.rank-1];
+    if(!item){html+='<div class="podium-col" style="visibility:hidden"></div>';return;}
+    var p=S.profiles[item.s.r]||{};
+    var adno=p.admNo?p.admNo:('Roll '+item.s.r);
+    html+='<div class="podium-col">'
+      +'<div class="podium-av" style="width:'+c.av+'px;height:'+c.av+'px;border-color:'+c.bc+'">'
+      +(c.rank===1?'<div class="podium-crown">&#128081;</div>':'')
+      +avatarHTML(item.s.r,c.av,c.rank===1?22:17)
+      +'</div>'
+      +'<div class="podium-name">'+item.s.n+'</div>'
+      +'<div class="podium-adno">'+adno+'</div>'
+      +'<div class="podium-coins">'+c.medal+' '+item.c+'</div>'
+      +'<div class="podium-block" style="height:'+c.h+'px;background:'+c.grad+'"></div>'
+      +'</div>';
+  });
+  el.innerHTML=html;
+}
+function confetti(count){
+  count=count||40;
+  var colors=['#f5b942','#6C63FF','#43B89C','#e53935','#2ecc71','#ff69b4','#ffd700'];
+  var box=document.createElement('div');
+  box.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden';
+  document.body.appendChild(box);
+  for(var i=0;i<count;i++){
+    var p=document.createElement('div');
+    var size=Math.random()*8+6;
+    var startX=Math.random()*100;
+    var dur=(Math.random()*1.2+1.4).toFixed(2);
+    var delay=(Math.random()*.3).toFixed(2);
+    var rot=Math.round(Math.random()*360);
+    var color=colors[Math.floor(Math.random()*colors.length)];
+    var shape=Math.random()>.5?'50%':'2px';
+    p.style.cssText='position:absolute;left:'+startX+'%;top:-12px;width:'+size+'px;height:'+size+'px;background:'+color+';border-radius:'+shape+';opacity:.95;transform:rotate('+rot+'deg);animation:confettiFall '+dur+'s ease-in '+delay+'s forwards';
+    box.appendChild(p);
+  }
+  setTimeout(function(){box.remove();},2300);
+}
 function renderLB(){
   var sorted=sortedSTU();
   document.getElementById('totCoins').textContent=Object.values(S.coins).reduce(function(a,b){return a+b;},0);
@@ -865,8 +1024,23 @@ function renderLB(){
     el.style.opacity='0';el.style.transform='translateX(-18px)';
     setTimeout(function(){el.style.transition='all .3s cubic-bezier(.4,0,.2,1)';el.style.opacity='1';el.style.transform='none';},i*35+50);
   });
+  renderPodium();
 }
 
+function renderFaculty(){
+  var el=document.getElementById('facultyList');
+  if(!el)return;
+  var grads=['linear-gradient(135deg,#6C63FF,#8B5CF6)','linear-gradient(135deg,#43B89C,#2d9e6b)','linear-gradient(135deg,#f5b942,#e08e2d)'];
+  el.innerHTML=ADMINS.map(function(a,i){
+    var p=S.adminProfiles[a.name]||{};
+    var av=p.pic?'<img src="'+p.pic+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':ini(a.name.replace('Usthad ',''));
+    return '<div class="faculty-card">'
+      +'<div class="faculty-av" style="background:'+grads[i%grads.length]+';overflow:hidden">'+av+'</div>'
+      +'<div><div style="font-size:14px;font-weight:600;color:var(--text)">'+a.name+'</div>'
+      +'<div style="font-size:12px;color:var(--text3)">'+(p.place||a.place)+' &bull; '+(p.role||a.role)+'</div>'
+      +'<span class="hbadge green" style="display:inline-block;margin-top:4px">Admin</span></div></div>';
+  }).join('');
+}
 function renderGrid(){
   var q=(document.getElementById('stuSearch').value||'').toLowerCase();
   var fl=STU.filter(function(s){return s.n.toLowerCase().includes(q)||String(s.r).includes(q);});
@@ -927,15 +1101,17 @@ function renderProfHist(roll){
   hist.reverse();
   document.getElementById('pHistList').innerHTML=hist.length
     ?hist.map(function(h){
-      return '<div class="hist-row"><span class="hbadge gold">+'+h.coins+'</span>'
-        +'<span class="hcat">'+h.cat+'</span><span class="hdate">'+h.date+'</span>'
+      var neg=h.coins<0;
+      var catLine=h.cat+(h.note?' &mdash; <span style="color:var(--text3);font-weight:400">'+h.note+'</span>':'');
+      return '<div class="hist-row"><span class="hbadge '+(neg?'red':'gold')+'">'+(neg?'':'+')+h.coins+'</span>'
+        +'<span class="hcat">'+catLine+'</span><span class="hdate">'+h.date+'</span>'
         +(admin?'<button class="btn-edit-sm" onclick="openEdit('+h.gi+','+roll+')">Edit</button>'
           +'<button class="btn-del-sm" onclick="delEntry('+h.gi+','+roll+')">Del</button>':'')+'</div>';
     }).join(''):'<div class="empty-state">No activity yet</div>';
 }
 function openEdit(idx,roll){
   editIdx=idx;editRoll=roll;var h=S.history[idx];
-  document.getElementById('editTitle').textContent='Edit \u2014 '+h.name.split(' ')[0];
+  document.getElementById('editTitle').textContent='Edit \u2014 '+h.name;
   document.getElementById('editCat').value=h.cat;document.getElementById('editCoins').value=h.coins;document.getElementById('editNote').value=h.note||'';
   openModal('editOv');
 }
@@ -988,7 +1164,7 @@ function quickAdd(roll){
 function closeProfile(){closeModal('profOv');if(chart){chart.destroy();chart=null;}profRoll=-1;}
 
 function fillSelects(){
-  ['selStu','epStu'].forEach(function(id){
+  ['selStu','epStu','dedStu'].forEach(function(id){
     var el=document.getElementById(id);el.innerHTML='<option value="">-- Select --</option>';
     STU.forEach(function(s){var o=document.createElement('option');o.value=s.r;o.textContent='Roll '+s.r+' -- '+s.n;el.appendChild(o);});
   });
@@ -1031,6 +1207,41 @@ function saveProfile(){
   S.profiles[roll].place=document.getElementById('epPlace').value.trim();
   save();renderGrid();renderLB();showToast('Profile saved!','success');
 }
+function loadAdminProfile(){
+  if(!admin)return;
+  var p=S.adminProfiles[admin.name]||{};
+  var av=document.getElementById('apAvEl');
+  if(!av)return;
+  av.style.background=p.pic?'none':'linear-gradient(135deg,#6C63FF,#8B5CF6)';
+  if(p.pic){av.innerHTML='<img src="'+p.pic+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
+  else{av.innerHTML='<span style="color:#fff;font-weight:700;font-size:20px">'+ini(admin.name.replace('Usthad ',''))+'</span>';}
+  document.getElementById('apRemovePhotoBtn').style.display=p.pic?'inline-block':'none';
+  document.getElementById('apName').value=admin.name;
+  document.getElementById('apRole').value=p.role||admin.role;
+  document.getElementById('apPlace').value=p.place||admin.place;
+  document.getElementById('apPhone').value=p.phone||'';
+}
+function uploadApPic(input){
+  if(!admin||!input.files[0])return;
+  compressImage(input.files[0],function(dataURL){
+    saveAdminPic(admin.name,dataURL);
+    loadAdminProfile();input.value='';showToast('Photo uploaded!','success');
+  });
+}
+function removeApPhoto(){
+  if(!admin)return;
+  if(!confirm('Remove photo?'))return;
+  deleteAdminPic(admin.name);
+  loadAdminProfile();showToast('Photo removed.','error');
+}
+function saveAdminProfile(){
+  if(!admin)return;
+  if(!S.adminProfiles[admin.name])S.adminProfiles[admin.name]={};
+  S.adminProfiles[admin.name].role=document.getElementById('apRole').value.trim();
+  S.adminProfiles[admin.name].place=document.getElementById('apPlace').value.trim();
+  S.adminProfiles[admin.name].phone=document.getElementById('apPhone').value.trim();
+  save();renderFaculty();showToast('Profile saved!','success');
+}
 function autofill(){var id=document.getElementById('selCat').value;var cat=S.cats.find(function(c){return c.id===id;});if(cat)document.getElementById('coinAmt').value=cat.coins;}
 function addCoins(){
   var roll=parseInt(document.getElementById('selStu').value);var catId=document.getElementById('selCat').value;
@@ -1040,6 +1251,23 @@ function addCoins(){
   S.coins[roll]=(S.coins[roll]||0)+amt;var now=new Date();
   S.history.push({r:roll,name:stu.n,cat:cat?cat.name:catId,coins:amt,note:note,addedBy:admin?admin.name:'',date:now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear()});
   save();showToast('Added '+amt+' coins to '+stu.n+'!','success');renderHist();
+  confetti(36);
+  var top=sortedSTU()[0];
+  if(top&&top.r===roll){
+    setTimeout(function(){confetti(90);showToast('🏆 '+stu.n+' is now Rank #1!','success');},350);
+  }
+}
+function deductCoins(){
+  var roll=parseInt(document.getElementById('dedStu').value);
+  var reason=document.getElementById('dedReason').value.trim();
+  var amt=parseInt(document.getElementById('dedAmt').value);
+  var note=document.getElementById('dedNote').value.trim();
+  if(!roll||!reason||!amt||amt<1){showToast('Fill all fields!','error');return;}
+  var stu=STU.find(function(s){return s.r===roll;});
+  S.coins[roll]=(S.coins[roll]||0)-amt;var now=new Date();
+  S.history.push({r:roll,name:stu.n,cat:'Deduction: '+reason,coins:-amt,note:note,addedBy:admin?admin.name:'',date:now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear()});
+  save();showToast('Deducted '+amt+' coins from '+stu.n,'error');renderHist();
+  document.getElementById('dedReason').value='';document.getElementById('dedAmt').value='';document.getElementById('dedNote').value='';
 }
 function renderCatList(){
   document.getElementById('catList').innerHTML=S.cats.map(function(c,i){
@@ -1060,8 +1288,10 @@ function renderHist(){
   var fl=q?all.filter(function(h){return h.name.toLowerCase().includes(q);}):all.slice(0,50);
   document.getElementById('histList').innerHTML=fl.length
     ?fl.map(function(h){
-      return '<div class="hist-row"><span class="hbadge green">'+h.name.split(' ')[0]+'</span>'
-        +'<span class="hcat">'+h.cat+'</span><span class="hbadge gold">+'+h.coins+'</span>'
+      var neg=h.coins<0;
+      var catLine=h.cat+(h.note?' &mdash; <span style="color:var(--text3);font-weight:400">'+h.note+'</span>':'');
+      return '<div class="hist-row"><span class="hbadge '+(neg?'red':'green')+'">'+h.name+'</span>'
+        +'<span class="hcat">'+catLine+'</span><span class="hbadge '+(neg?'red':'gold')+'">'+(neg?'':'+')+h.coins+'</span>'
         +(h.addedBy?'<span class="hbadge blue">'+(h.addedBy.split(' ')[1]||h.addedBy.split(' ')[0])+'</span>':'')
         +'<span class="hdate">'+h.date+'</span>'
         +'<button class="btn-edit-sm" onclick="openEditH('+h.gi+')">Edit</button>'
@@ -1070,7 +1300,7 @@ function renderHist(){
 }
 function openEditH(idx){
   editIdx=idx;editRoll=S.history[idx].r;var h=S.history[idx];
-  document.getElementById('editTitle').textContent='Edit: '+h.name.split(' ')[0];
+  document.getElementById('editTitle').textContent='Edit: '+h.name;
   document.getElementById('editCat').value=h.cat;document.getElementById('editCoins').value=h.coins;document.getElementById('editNote').value=h.note||'';
   openModal('editOv');
 }
@@ -1134,10 +1364,104 @@ function renderReports(){
     datasets:[{label:'Coins',data:top.map(function(x){return x.c;}),backgroundColor:'#f5b942'}]},
     options:{plugins:{legend:{display:false},tooltip:{callbacks:{title:function(items){return top[items[0].dataIndex].n;}}}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
 }
-function printReport(){window.print();}
+function buildReportData(){
+  var r=repRange();
+  var hist=S.history.filter(function(h){if(!r.start)return true;var d=parseDMY(h.date);return d>=r.start&&d<r.end;});
+  var byStu={};
+  hist.forEach(function(h){
+    if(!byStu[h.r])byStu[h.r]={count:0,coins:0,cats:[],catIdx:{}};
+    var b=byStu[h.r];
+    b.count++;b.coins+=h.coins;
+    if(b.catIdx[h.cat]===undefined){b.catIdx[h.cat]=b.cats.length;b.cats.push({name:h.cat,coins:h.coins});}
+    else{b.cats[b.catIdx[h.cat]].coins+=h.coins;}
+  });
+  var rows=STU.map(function(s){
+    var b=byStu[s.r]||{count:0,coins:0,cats:[]};
+    var p=S.profiles[s.r]||{};
+    return{roll:s.r,name:s.n,count:b.count,coins:b.coins,cats:b.cats,admNo:p.admNo,pic:p.pic};
+  }).sort(function(a,b){return b.coins-a.coins;});
+  var totalCoins=rows.reduce(function(a,x){return a+x.coins;},0);
+  var active=rows.filter(function(x){return x.coins>0;}).length;
+  return{range:r,rows:rows,totalCoins:totalCoins,active:active,top:rows[0]};
+}
+function buildPrintHTML(d){
+  var r=d.range;
+  var typeVal=(document.getElementById('repType')||{value:'month'}).value;
+  var typeLabel=typeVal==='week'?'WEEKLY':typeVal==='month'?'MONTHLY':typeVal==='year'?'ANNUAL':'ALL-TIME';
+  var today=new Date();
+  var genDate=today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+  var html='';
+  html+='<div class="pr-header">';
+  html+='<div class="pr-acad">VALIYULLAHI THANGAL MEMORIAL DARUSSALAM ACADEMY (SADAD)</div>';
+  html+='<div class="pr-sub">Velliyode, Kerala</div>';
+  html+='<div class="pr-title">SECOND BATCH-DSA &mdash; '+typeLabel+' COIN REPORT &mdash; '+r.label.toUpperCase()+'</div>';
+  html+='<div class="pr-staffrow">';
+  ADMINS.forEach(function(a){
+    var p=S.adminProfiles[a.name]||{};
+    html+='<span><b>'+(p.role||a.role)+':</b> '+a.name+', '+(p.place||a.place)+'</span>';
+  });
+  html+='</div>';
+  html+='<div class="pr-sub" style="margin-top:6px">Generated: '+genDate+' &bull; Total Students: '+STU.length+'</div>';
+  html+='</div>';
+
+  html+='<div class="pr-stats">';
+  html+='<div class="pr-stat" style="background:linear-gradient(135deg,#6C63FF,#8B5CF6)"><div class="v">'+d.totalCoins+'</div><div class="l">Total Coins</div></div>';
+  html+='<div class="pr-stat" style="background:linear-gradient(135deg,#43B89C,#2d9e6b)"><div class="v">'+d.active+'</div><div class="l">Active Students</div></div>';
+  html+='<div class="pr-stat" style="background:linear-gradient(135deg,#f5b942,#e08e2d)"><div class="v" style="font-size:13px">'+(d.top&&d.top.coins>0?d.top.name.split(' ').slice(0,2).join(' '):'&mdash;')+'</div><div class="l">Top Student</div></div>';
+  html+='</div>';
+
+  var top3=d.rows.slice(0,3).filter(function(x){return x.coins>0;});
+  if(top3.length){
+    var pconf=[{i:1,h:56,bg:'linear-gradient(180deg,#e2e2e2,#a8a8a8)'},{i:0,h:76,bg:'linear-gradient(180deg,#ffe066,#e0a800)'},{i:2,h:40,bg:'linear-gradient(180deg,#e0995a,#a8672a)'}];
+    html+='<div class="pr-podium">';
+    pconf.forEach(function(c){
+      var item=top3[c.i];
+      if(!item)return;
+      var av=item.pic?'<img class="pr-pav" src="'+item.pic+'">':'<div class="pr-pav" style="background:#ddd;display:flex;align-items:center;justify-content:center;font-weight:800;color:#555;font-size:13px">'+ini(item.name)+'</div>';
+      html+='<div class="pr-pcol">'+av+'<div style="font-size:10.5px;font-weight:700">'+item.name+'</div>'
+        +'<div style="font-size:9px;color:#777">'+(item.admNo||'Roll '+item.roll)+'</div>'
+        +'<div style="font-size:11px;font-weight:800;color:#e0a800;margin:2px 0">'+item.coins+' coins</div>'
+        +'<div class="pr-pblock" style="height:'+c.h+'px;background:'+c.bg+'">#'+(c.i+1)+'</div></div>';
+    });
+    html+='</div>';
+  }
+
+  html+='<table class="pr-table"><thead><tr><th>Rank</th><th>Roll No.</th><th>Adm No.</th><th>Student Name</th><th>Achievements</th><th>Coins</th></tr></thead><tbody>';
+  d.rows.forEach(function(x,i){
+    var cls=i===0?'pr-top1':i===1?'pr-top2':i===2?'pr-top3':'';
+    var rankLabel=i===0?'&#129351;':i===1?'&#129352;':i===2?'&#129353;':(i+1);
+    html+='<tr class="'+cls+'"><td>'+rankLabel+'</td><td>'+x.roll+'</td><td>'+(x.admNo||'&mdash;')+'</td><td>'+x.name+'</td><td>'+x.count+'</td><td>'+x.coins+'</td></tr>';
+  });
+  html+='</tbody></table>';
+
+  var withAch=d.rows.filter(function(x){return x.coins>0;});
+  if(withAch.length){
+    html+='<div style="margin-top:16px;font-size:13px;font-weight:800;color:#1a1a3e;border-bottom:2px solid #1a1a3e;padding-bottom:4px">ACHIEVEMENT DETAILS</div>';
+    withAch.forEach(function(x){
+      html+='<div class="pr-ach"><h4>'+x.name+' (Roll No: '+x.roll+(x.admNo?', Adm No: '+x.admNo:'')+') &mdash; '+x.coins+' coins</h4>';
+      x.cats.forEach(function(c){html+='<span class="pr-chip">'+c.name+' +'+c.coins+'</span>';});
+      html+='</div>';
+    });
+  }
+
+  html+='<div class="pr-sig">';
+  ADMINS.forEach(function(a){
+    var p=S.adminProfiles[a.name]||{};
+    html+='<div><div class="line">'+a.name+'</div>'+(p.role||a.role)+'</div>';
+  });
+  html+='</div>';
+  html+='<div class="pr-foot">SECOND BATCH-DSA, SADAD Velliyode &bull; Valiyullahi Thangal Memorial Darussalam Academy &bull; Generated via SADAD Coin Dashboard</div>';
+  return html;
+}
+function printReport(){
+  var data=buildReportData();
+  document.getElementById('printArea').innerHTML=buildPrintHTML(data);
+  setTimeout(function(){window.print();},80);
+}
 
 load();initPicsListener();renderLB();renderGrid();
 
 </script>
+<div id="printArea"></div>
 </body>
 </html>
