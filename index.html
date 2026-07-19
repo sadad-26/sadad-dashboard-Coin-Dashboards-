@@ -504,6 +504,7 @@ canvas{display:block;width:100%!important}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
 
 const ADMINS=[
@@ -719,6 +720,9 @@ const firebaseConfig={
 };
 firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
+const auth=firebase.auth();
+const ADMIN_AUTH_EMAIL='admin@sadad-secondbatch-dsa.app';
+const ADMIN_AUTH_PW='Sadad@SecondBatch2026';
 const docRef=db.collection('sadad').doc('second_batch_dsa');
 const picsRef=db.collection('sadad_pics_second_batch_dsa');
 const adminPicsRef=db.collection('sadad_admin_pics_second_batch_dsa');
@@ -926,6 +930,9 @@ function checkPw(){
   var a=ADMINS.find(function(x){return x.pw===v;});
   if(a){
     admin=a;closeModal('pwOv');
+    auth.signInWithEmailAndPassword(ADMIN_AUTH_EMAIL,ADMIN_AUTH_PW).catch(function(e){
+      console.error('Admin auth failed',e);showToast('Signed in, but cloud auth failed \u2014 saves may not sync','error');
+    });
     document.getElementById('pwIn').value='';document.getElementById('pwErr').textContent='';
     document.getElementById('adminBar').style.display='flex';
     document.getElementById('adminName').textContent=a.name;
@@ -939,7 +946,8 @@ function checkPw(){
 }
 document.getElementById('pwIn').addEventListener('keydown',function(e){if(e.key==='Enter')checkPw();});
 function logout(){
-  admin=null;document.getElementById('adminBar').style.display='none';
+  admin=null;auth.signOut().catch(function(e){console.error(e);});
+  document.getElementById('adminBar').style.display='none';
   document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active','slide-in');});
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   var el=document.getElementById('tab-lb');el.classList.add('active');
