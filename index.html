@@ -512,7 +512,7 @@ const ADMINS=[
   {name:"Usthad Savad Wafy",pw:"4835",role:"Mentor",place:"Kunjom"},
   {name:"Usthad Sharafudheen Hudawi",pw:"sadad",role:"College Principal",place:"Kondotty"}
 ];
-let admin=null,chart=null,editIdx=-1,editRoll=-1,profRoll=-1;
+let admin=null,chart=null,editId=null,editRoll=-1,profRoll=-1;
 const STU=[
   {r:16,n:"Aslam Hammadi"},{r:18,n:"Abdul Adhilu"},{r:33,n:"Muhammad Abdullah Hazim"},
   {r:35,n:"Muhammad Hamid VK"},{r:36,n:"Muhammed Aban VP"},{r:37,n:"Bilal Ibnu Muhammad Rafeek"},
@@ -724,6 +724,8 @@ const auth=firebase.auth();
 const ADMIN_AUTH_EMAIL='admin@sadad-secondbatch-dsa.app';
 const ADMIN_AUTH_PW='Sadad@SecondBatch2026';
 const docRef=db.collection('sadad').doc('second_batch_dsa');
+const historyRef=db.collection('sadad_history_second_batch_dsa');
+const migFlagRef=db.collection('sadad_meta').doc('history_migration_second_batch_dsa');
 const picsRef=db.collection('sadad_pics_second_batch_dsa');
 const adminPicsRef=db.collection('sadad_admin_pics_second_batch_dsa');
 function slugName(n){return n.trim().toLowerCase().replace(/[^a-z0-9]+/g,'_');}
@@ -798,29 +800,66 @@ function deletePicRemote(roll){
 }
 
 function stateForSync(){
-  var copy=JSON.parse(JSON.stringify(S));
+  var copy=JSON.parse(JSON.stringify({cats:S.cats,profiles:S.profiles,adminProfiles:S.adminProfiles}));
   Object.keys(copy.profiles||{}).forEach(function(r){if(copy.profiles[r])delete copy.profiles[r].pic;});
+  Object.keys(copy.adminProfiles||{}).forEach(function(k){if(copy.adminProfiles[k])delete copy.adminProfiles[k].pic;});
   return copy;
 }
+function cacheLocal(){
+  try{localStorage.setItem('sadad_v13',JSON.stringify({cats:S.cats,profiles:S.profiles,adminProfiles:S.adminProfiles,history:S.history}));}catch(e){}
+}
 function save(){
-  try{localStorage.setItem('sadad_v12',JSON.stringify(S));}catch(e){}
+  cacheLocal();
   fbSaving=true;
   docRef.set(stateForSync()).catch(function(e){console.error('Firestore save failed',e);})
     .finally(function(){fbSaving=false;});
+}
+// One history entry = one Firestore document. Never rewrite the whole history
+// array as a blob -- that is what caused simultaneous admins to silently
+// overwrite each other's just-added coins. Every add/edit/delete below acts
+// on a single document, so concurrent writes from different devices can
+// never clobber each other.
+function tryMigrateHistory(oldHistoryArray){
+  if(!oldHistoryArray||!oldHistoryArray.length)return;
+  db.runTransaction(function(tx){
+    return tx.get(migFlagRef).then(function(doc){
+      if(doc.exists)return false;
+      tx.set(migFlagRef,{done:true,count:oldHistoryArray.length,at:firebase.firestore.FieldValue.serverTimestamp()});
+      return true;
+    });
+  }).then(function(shouldMigrate){
+    if(!shouldMigrate)return;
+    var batch=db.batch();
+    oldHistoryArray.forEach(function(h,i){
+      var ref=historyRef.doc();
+      batch.set(ref,{r:h.r,name:h.name,cat:h.cat,coins:h.coins,note:h.note||'',addedBy:h.addedBy||'',date:h.date,
+        ts:firebase.firestore.Timestamp.fromMillis(Date.now()-(oldHistoryArray.length-i)*1000)});
+    });
+    return batch.commit();
+  }).catch(function(e){console.error('History migration failed',e);});
+}
+function seedFreshHistory(){
+  historyRef.limit(1).get().then(function(snap){
+    if(!snap.empty)return;
+    var batch=db.batch();
+    SEED_HISTORY.forEach(function(h,i){
+      var ref=historyRef.doc();
+      batch.set(ref,Object.assign({},h,{ts:firebase.firestore.Timestamp.fromMillis(Date.now()-(SEED_HISTORY.length-i)*1000)}));
+    });
+    batch.commit().catch(function(e){console.error('Seed failed',e);});
+  });
 }
 function load(){
   docRef.onSnapshot({includeMetadataChanges:true},function(snap){
     if(snap.exists){
       var d=snap.data();
-      S.coins=d.coins||{};S.history=d.history||[];S.cats=d.cats||JSON.parse(JSON.stringify(DCATS));S.profiles=d.profiles||{};S.adminProfiles=d.adminProfiles||{};
+      S.cats=d.cats||JSON.parse(JSON.stringify(DCATS));S.profiles=d.profiles||{};S.adminProfiles=d.adminProfiles||{};
+      if(d.history&&d.history.length)tryMigrateHistory(d.history);
     }else{
-      S.history=SEED_HISTORY.slice();
-      recompute();
-      docRef.set(S).catch(function(e){console.error('Firestore init failed',e);});
+      docRef.set(stateForSync()).catch(function(e){console.error('Firestore init failed',e);});
+      seedFreshHistory();
     }
-    recompute();
     mergePics();
-    STU.forEach(function(s){if(S.coins[s.r]===undefined)S.coins[s.r]=0;});
     fbReady=true;
     updateSyncBadge(snap.metadata.fromCache,snap.metadata.hasPendingWrites);
     refreshCurrentView();
@@ -828,12 +867,30 @@ function load(){
     console.error('Firestore sync error',err);
     updateSyncBadge(true,false,true);
     try{
-      var raw=localStorage.getItem('sadad_v12');
-      if(raw){var p=JSON.parse(raw);S.coins=p.coins||{};S.history=p.history||[];S.cats=p.cats||DCATS;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};}
-      else S.history=SEED_HISTORY.slice();
-      recompute();fbReady=true;refreshCurrentView();
+      var raw=localStorage.getItem('sadad_v13');
+      if(raw){var p=JSON.parse(raw);S.cats=p.cats||DCATS;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};S.history=p.history||[];recompute();}
+      fbReady=true;refreshCurrentView();
     }catch(e){}
   });
+}
+function loadHistory(){
+  historyRef.onSnapshot({includeMetadataChanges:true},function(snap){
+    var arr=[];
+    snap.forEach(function(doc){
+      var d=doc.data();
+      arr.push({id:doc.id,r:d.r,name:d.name,cat:d.cat,coins:d.coins,note:d.note||'',addedBy:d.addedBy||'',date:d.date,ts:d.ts});
+    });
+    arr.sort(function(a,b){
+      var ta=a.ts&&a.ts.toMillis?a.ts.toMillis():0;var tb=b.ts&&b.ts.toMillis?b.ts.toMillis():0;
+      return ta-tb;
+    });
+    S.history=arr;
+    recompute();
+    STU.forEach(function(s){if(S.coins[s.r]===undefined)S.coins[s.r]=0;});
+    cacheLocal();
+    updateSyncBadge(snap.metadata.fromCache,snap.metadata.hasPendingWrites);
+    refreshCurrentView();
+  },function(err){console.error('History sync error',err);updateSyncBadge(true,false,true);});
 }
 function updateSyncBadge(fromCache,pending,isError){
   var b=document.getElementById('syncBadge');
@@ -877,11 +934,21 @@ function importData(input){
   reader.onload=function(e){
     try{
       var p=JSON.parse(e.target.result);
-      if(!p.history||!p.coins){showToast('Invalid file format!','error');return;}
-      S.coins=p.coins||{};S.history=p.history||[];S.cats=p.cats||DCATS;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};
-      STU.forEach(function(s){if(S.coins[s.r]===undefined)S.coins[s.r]=0;});
-      save();renderLB();renderGrid();
-      showToast('Data imported successfully! '+S.history.length+' records loaded.','success');
+      if(!p.history){showToast('Invalid file format!','error');return;}
+      if(!confirm('This will ADD '+p.history.length+' history records to the live data (existing records are kept). Continue?'))return;
+      S.cats=p.cats||DCATS;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};
+      save();
+      var batch=db.batch();var n=0;
+      p.history.forEach(function(h,i){
+        if(!h||!h.r)return;
+        var ref=historyRef.doc();
+        batch.set(ref,{r:h.r,name:h.name,cat:h.cat,coins:h.coins,note:h.note||'',addedBy:h.addedBy||'',date:h.date,
+          ts:firebase.firestore.Timestamp.fromMillis(Date.now()-(p.history.length-i)*1000)});
+        n++;
+      });
+      batch.commit().then(function(){
+        showToast('Data imported successfully! '+n+' records added.','success');
+      }).catch(function(err){console.error('Import failed',err);showToast('Import failed \u2014 check connection','error');});
     }catch(err){showToast('Error reading file. Make sure it is a valid SADAD data file.','error');}
     input.value='';
   };
@@ -1132,34 +1199,37 @@ function handleProfPhoto(input){
   });
 }
 function renderProfHist(roll){
-  var hist=[];
-  S.history.forEach(function(h,i){if(h.r===roll)hist.push(Object.assign({},h,{gi:i}));});
-  hist.reverse();
+  var hist=S.history.filter(function(h){return h.r===roll;}).slice().reverse();
   document.getElementById('pHistList').innerHTML=hist.length
     ?hist.map(function(h){
       var neg=h.coins<0;
       var catLine=h.cat+(h.note?' &mdash; <span style="color:var(--text3);font-weight:400">'+h.note+'</span>':'');
       return '<div class="hist-row"><span class="hbadge '+(neg?'red':'gold')+'">'+(neg?'':'+')+h.coins+'</span>'
         +'<span class="hcat">'+catLine+'</span><span class="hdate">'+h.date+'</span>'
-        +(admin?'<button class="btn-edit-sm" onclick="openEdit('+h.gi+','+roll+')">Edit</button>'
-          +'<button class="btn-del-sm" onclick="delEntry('+h.gi+','+roll+')">Del</button>':'')+'</div>';
+        +(admin?'<button class="btn-edit-sm" onclick="openEdit(\''+h.id+'\','+roll+')">Edit</button>'
+          +'<button class="btn-del-sm" onclick="delEntry(\''+h.id+'\','+roll+')">Del</button>':'')+'</div>';
     }).join(''):'<div class="empty-state">No activity yet</div>';
 }
-function openEdit(idx,roll){
-  editIdx=idx;editRoll=roll;var h=S.history[idx];
+function openEdit(id,roll){
+  editId=id;editRoll=roll;var h=S.history.find(function(x){return x.id===id;});
+  if(!h)return;
   document.getElementById('editTitle').textContent='Edit \u2014 '+h.name;
   document.getElementById('editCat').value=h.cat;document.getElementById('editCoins').value=h.coins;document.getElementById('editNote').value=h.note||'';
   openModal('editOv');
 }
 function saveEdit(){
   var cat=document.getElementById('editCat').value.trim();var coins=parseInt(document.getElementById('editCoins').value);
-  if(!cat||!coins)return;
-  S.history[editIdx].cat=cat;S.history[editIdx].coins=coins;S.history[editIdx].note=document.getElementById('editNote').value.trim();
-  recompute();save();closeModal('editOv');openProfile(editRoll);renderLB();renderGrid();
+  if(!cat||!coins||!editId)return;
+  historyRef.doc(editId).update({cat:cat,coins:coins,note:document.getElementById('editNote').value.trim()}).then(function(){
+    closeModal('editOv');
+    var pOv=document.getElementById('profOv');
+    if(editRoll>0&&pOv&&pOv.classList.contains('open'))openProfile(editRoll);
+  }).catch(function(e){console.error('Edit failed',e);showToast('Failed to save edit','error');});
 }
-function delEntry(idx,roll){
+function delEntry(id,roll){
   if(!confirm('Delete this achievement?'))return;
-  S.history.splice(idx,1);recompute();save();openProfile(roll);renderLB();renderGrid();
+  historyRef.doc(id).delete().then(function(){openProfile(roll);})
+    .catch(function(e){console.error('Delete failed',e);showToast('Delete failed','error');});
 }
 function buildChart(roll,accentColor){
   var hist=S.history.filter(function(h){return h.r===roll;});
@@ -1191,11 +1261,12 @@ function buildAchieve(roll){
 function quickAdd(roll){
   var catId=document.getElementById('qCat').value;
   var cat=S.cats.find(function(c){return c.id===catId;});if(!cat)return;
-  S.coins[roll]=(S.coins[roll]||0)+cat.coins;
   var stu=STU.find(function(s){return s.r===roll;});var now=new Date();
-  S.history.push({r:roll,name:stu.n,cat:cat.name,coins:cat.coins,addedBy:admin?admin.name:'',date:now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear()});
-  save();openProfile(roll);renderLB();renderGrid();
-  showToast('Added '+cat.coins+' coins to '+stu.n,'success');
+  historyRef.add({r:roll,name:stu.n,cat:cat.name,coins:cat.coins,note:'',addedBy:admin?admin.name:'',
+    date:now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear(),ts:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){
+    openProfile(roll);playAwardSound();confetti(36);
+    showToast('Added '+cat.coins+' coins to '+stu.n,'success');
+  }).catch(function(e){console.error('Quick add failed',e);showToast('Failed to save \u2014 check connection','error');});
 }
 function closeProfile(){closeModal('profOv');if(chart){chart.destroy();chart=null;}profRoll=-1;}
 
@@ -1290,16 +1361,14 @@ function addCoins(){
   var amt=parseInt(document.getElementById('coinAmt').value);var note=document.getElementById('coinNote').value;
   if(!roll||!catId||!amt||amt<1){showToast('Fill all fields!','error');return;}
   var cat=S.cats.find(function(c){return c.id===catId;});var stu=STU.find(function(s){return s.r===roll;});
-  S.coins[roll]=(S.coins[roll]||0)+amt;
-  S.history.push({r:roll,name:stu.n,cat:cat?cat.name:catId,coins:amt,note:note,addedBy:admin?admin.name:'',date:dateStrFromInput('coinDate')});
-  save();showToast('Added '+amt+' coins to '+stu.n+'!','success');renderHist();
-  playAwardSound();
-  confetti(36);
+  historyRef.add({r:roll,name:stu.n,cat:cat?cat.name:catId,coins:amt,note:note,addedBy:admin?admin.name:'',
+    date:dateStrFromInput('coinDate'),ts:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){
+    showToast('Added '+amt+' coins to '+stu.n+'!','success');
+    playAwardSound();confetti(36);
+    var top=sortedSTU()[0];
+    if(top&&top.r===roll){setTimeout(function(){confetti(90);showToast('🏆 '+stu.n+' is now Rank #1!','success');},350);}
+  }).catch(function(e){console.error('Add coins failed',e);showToast('Failed to save — check connection','error');});
   document.getElementById('coinDate').value=todayISO();
-  var top=sortedSTU()[0];
-  if(top&&top.r===roll){
-    setTimeout(function(){confetti(90);showToast('🏆 '+stu.n+' is now Rank #1!','success');},350);
-  }
 }
 function deductCoins(){
   var roll=parseInt(document.getElementById('dedStu').value);
@@ -1308,10 +1377,10 @@ function deductCoins(){
   var note=document.getElementById('dedNote').value.trim();
   if(!roll||!reason||!amt||amt<1){showToast('Fill all fields!','error');return;}
   var stu=STU.find(function(s){return s.r===roll;});
-  S.coins[roll]=(S.coins[roll]||0)-amt;
-  S.history.push({r:roll,name:stu.n,cat:'Deduction: '+reason,coins:-amt,note:note,addedBy:admin?admin.name:'',date:dateStrFromInput('dedDate')});
-  save();showToast('Deducted '+amt+' coins from '+stu.n,'error');renderHist();
-  playDeductSound();
+  historyRef.add({r:roll,name:stu.n,cat:'Deduction: '+reason,coins:-amt,note:note,addedBy:admin?admin.name:'',
+    date:dateStrFromInput('dedDate'),ts:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){
+    showToast('Deducted '+amt+' coins from '+stu.n,'error');playDeductSound();
+  }).catch(function(e){console.error('Deduct failed',e);showToast('Failed to save — check connection','error');});
   document.getElementById('dedReason').value='';document.getElementById('dedAmt').value='';document.getElementById('dedNote').value='';
   document.getElementById('dedDate').value=todayISO();
 }
@@ -1330,7 +1399,7 @@ function addCat(){
 }
 function renderHist(){
   var q=(document.getElementById('histSearch')||{value:''}).value.toLowerCase();
-  var all=[];for(var i=S.history.length-1;i>=0;i--){all.push(Object.assign({},S.history[i],{gi:i}));}
+  var all=S.history.slice().reverse();
   var fl=q?all.filter(function(h){return h.name.toLowerCase().includes(q);}):all.slice(0,50);
   document.getElementById('histList').innerHTML=fl.length
     ?fl.map(function(h){
@@ -1340,18 +1409,21 @@ function renderHist(){
         +'<span class="hcat">'+catLine+'</span><span class="hbadge '+(neg?'red':'gold')+'">'+(neg?'':'+')+h.coins+'</span>'
         +(h.addedBy?'<span class="hbadge blue">'+(h.addedBy.split(' ')[1]||h.addedBy.split(' ')[0])+'</span>':'')
         +'<span class="hdate">'+h.date+'</span>'
-        +'<button class="btn-edit-sm" onclick="openEditH('+h.gi+')">Edit</button>'
-        +'<button class="btn-del-sm" onclick="delH('+h.gi+')">Del</button></div>';
+        +'<button class="btn-edit-sm" onclick="openEditH(\''+h.id+'\')">Edit</button>'
+        +'<button class="btn-del-sm" onclick="delH(\''+h.id+'\')">Del</button></div>';
     }).join(''):'<div class="empty-state">No history yet</div>';
 }
-function openEditH(idx){
-  editIdx=idx;editRoll=S.history[idx].r;var h=S.history[idx];
+function openEditH(id){
+  var h=S.history.find(function(x){return x.id===id;});
+  if(!h)return;
+  editId=id;editRoll=h.r;
   document.getElementById('editTitle').textContent='Edit: '+h.name;
   document.getElementById('editCat').value=h.cat;document.getElementById('editCoins').value=h.coins;document.getElementById('editNote').value=h.note||'';
   openModal('editOv');
 }
-function delH(idx){
-  if(!confirm('Delete?'))return;S.history.splice(idx,1);recompute();save();renderHist();renderLB();renderGrid();
+function delH(id){
+  if(!confirm('Delete?'))return;
+  historyRef.doc(id).delete().catch(function(e){console.error('Delete failed',e);showToast('Delete failed','error');});
 }
 // ── REPORTS ──
 let repOffset=0,repChartObj=null;
@@ -1505,7 +1577,7 @@ function printReport(){
   setTimeout(function(){window.print();},80);
 }
 
-load();initPicsListener();renderLB();renderGrid();
+load();loadHistory();initPicsListener();renderLB();renderGrid();
 
 </script>
 <div id="printArea"></div>
