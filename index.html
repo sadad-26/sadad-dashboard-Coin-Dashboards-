@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>(function(){try{var t=localStorage.getItem('sadad_theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SADAD Sec2 Dashboard</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
 :root{--bg:#0f0e17;--surface:#1a1a2e;--surface2:#16213e;--card:#1e1e3a;--card2:#252545;--border:rgba(255,255,255,.08);--text:#fffffe;--text2:#a7a9be;--text3:#6b6d8a;--gold:#ffd700;--gold2:#ffba08;--green:#22c55e;--purple:#6C63FF;--radius:14px;--radius-sm:8px;--shadow:0 8px 32px rgba(0,0,0,.45)}
+[data-theme="light"]{--bg:#F7F5FB;--surface:#FFFFFF;--surface2:#EFEAF9;--card:#FFFFFF;--card2:#F5F1FB;--border:rgba(45,35,90,.1);--text:#1C1B2E;--text2:#57567A;--text3:#8A88A8;--gold:#B8860B;--gold2:#9A6E08;--green:#15803D;--purple:#6C63FF;--shadow:0 8px 28px rgba(108,99,255,.14)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 20% 20%,rgba(108,99,255,.12) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(255,101,132,.08) 0%,transparent 50%);pointer-events:none;z-index:0}
@@ -24,10 +26,10 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .header-logos{display:flex;gap:.4rem;align-items:center;flex-shrink:0;z-index:1}
 .logo-img{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid rgba(108,99,255,.5);box-shadow:0 0 16px rgba(108,99,255,.3)}
 .header-text{flex:1;z-index:1}
-.header-text h1{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.3px;margin-bottom:2px}
-.header-text p{font-size:10.5px;color:var(--text2);line-height:1.4}
+.header-text h1{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:#fffffe;letter-spacing:-.3px;margin-bottom:2px}
+.header-text p{font-size:10.5px;color:#a7a9be;line-height:1.4}
 .meta{display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap}
-.meta span{font-size:10px;color:var(--text2);background:rgba(255,255,255,.06);padding:2px 8px;border-radius:20px;border:1px solid var(--border)}
+.meta span{font-size:10px;color:#a7a9be;background:rgba(255,255,255,.06);padding:2px 8px;border-radius:20px;border:1px solid rgba(255,255,255,.08)}
 .sync-pill{display:inline-flex;align-items:center;gap:5px;font-weight:700}
 .led{display:inline-block;width:8px;height:8px;border-radius:50%;position:relative;flex-shrink:0}
 .led::after{content:"";position:absolute;inset:-4px;border-radius:50%;background:inherit;opacity:.45;animation:ledPulse 1.4s ease-in-out infinite}
@@ -196,6 +198,7 @@ canvas{display:block;width:100%!important}
 .pr-sig{display:flex;justify-content:space-around;margin-top:28px;text-align:center}
 .pr-sig div{font-size:10.5px;color:#333!important}
 .pr-sig .line{border-top:1px solid #333;padding-top:4px;margin-top:26px;font-weight:600;color:#154D33!important}
+.pr-committee-seal{width:44px;height:44px;border-radius:50%;border:2px dashed #C8A951;display:flex;align-items:center;justify-content:center;font-size:6.5px;font-weight:800;color:#154D33!important;text-align:center;line-height:1.15;margin:0 auto;background:#FBFDFC}
 .pr-foot{text-align:center;font-size:9px;color:#7c8a82!important;margin-top:16px;border-top:1px solid #dde5e0;padding-top:6px}
 .pr-seal{position:absolute;top:14px;right:18px;width:52px;height:52px;border-radius:50%;border:2px solid #C8A951;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#154D33!important;text-align:center;line-height:1.15;transform:rotate(-8deg);background:#FBFDFC}
 @media print{
@@ -279,12 +282,13 @@ canvas{display:block;width:100%!important}
 
 <!-- HEADER -->
 <div class="header">
+  <button id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark theme" style="position:absolute;top:10px;right:12px;z-index:5;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fffffe;border-radius:20px;padding:5px 10px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px">&#9728;&#65039;</button>
   <div class="header-logos">
     <img class="logo-img" id="logoImgSadad" alt="SADAD">
     <span style="background:#fff;border-radius:50%;padding:2px;display:inline-flex;box-shadow:0 0 16px rgba(108,99,255,.3)"><img class="logo-img" id="logoImgUnion" alt="Union"></span>
   </div>
   <div class="header-text">
-    <h1>Secondary Second &mdash; SADAD Velliyode</h1>
+    <h1>SECOND BATCH (SADAD) - DSA VELLIYODE</h1>
     <p>Valiyullahi Thangal Memorial Darussalam Academy &bull; Second Batch Association of Darussalam for Academic Developments</p>
     <div class="meta">
       <span>Usthad Muhammed Arafath Hudawi</span>
@@ -328,7 +332,7 @@ canvas{display:block;width:100%!important}
 <div class="section active slide-in" id="tab-lb">
   <div class="grid2">
     <div class="metric-card"><div class="metric-val" id="totCoins">0</div><div class="metric-lbl">Total coins awarded</div></div>
-    <div class="metric-card" style="background:linear-gradient(135deg,var(--card),#1a1a3e)"><div class="metric-val" id="topName" style="font-size:15px;line-height:1.25;word-break:break-word">-</div><div class="metric-lbl">Top student</div></div>
+    <div class="metric-card" style="background:linear-gradient(135deg,#6C63FF,#8B5CF6)"><div class="metric-val" id="topName" style="font-size:15px;line-height:1.25;word-break:break-word;color:#fffffe">-</div><div class="metric-lbl" style="color:rgba(255,255,255,.75)">Top student</div></div>
   </div>
   <div class="podium" id="podium"></div>
   <div class="card">
@@ -388,6 +392,7 @@ canvas{display:block;width:100%!important}
     <button class="sub-tab" onclick="showSub('editProf',this)">Students</button>
     <button class="sub-tab" onclick="showSub('cats',this)">Categories</button>
     <button class="sub-tab" onclick="showSub('hist',this)">History</button>
+    <button class="sub-tab" onclick="showSub('audit',this)">&#128269; Audit</button>
   </div>
 
   <div id="subtab-addCoins">
@@ -499,6 +504,24 @@ canvas{display:block;width:100%!important}
       <div id="histList"></div>
     </div>
   </div>
+
+  <div id="subtab-audit" style="display:none">
+    <div class="card">
+      <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Current Totals (top 10) &mdash; check against your known reference</div>
+      <div id="auditTotals"></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem">
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;flex:1">Activity by real upload time</div>
+        <select id="auditFilter" onchange="renderAudit()" style="width:auto;margin-bottom:0;font-size:12px;padding:5px 8px">
+          <option value="sinceYesterday" selected>Since yesterday morning</option>
+          <option value="today">Today only</option>
+          <option value="all">All time</option>
+        </select>
+      </div>
+      <div id="auditList"></div>
+    </div>
+  </div>
 </div>
 
 </div><!-- end wrap -->
@@ -510,9 +533,9 @@ canvas{display:block;width:100%!important}
 <script>
 
 const ADMINS=[
-  {name:"Usthad Arafath Hudawi",pw:"6068",role:"Class Teacher",place:"Vanimel"},
-  {name:"Usthad Savad Wafy",pw:"4835",role:"Mentor",place:"Kunjom"},
-  {name:"Usthad Sharafudheen Hudawi",pw:"sadad",role:"College Principal",place:"Kondotty"}
+  {name:"Usthad Arafath Hudawi",pw:"366069",role:"Class Teacher",place:"Vanimel"},
+  {name:"Usthad Savad Wafy",pw:"898436",role:"Mentor",place:"Kunjom"},
+  {name:"Usthad Sharafudheen Hudawi",pw:"921629",role:"College Principal",place:"Kondotty"}
 ];
 let admin=null,chart=null,editId=null,editRoll=-1,profRoll=-1;
 const SADAD_LOGO_B64='/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQDAwMEBAQFBgoGBgUFBgwICQcKDgwPDg4MDQ0PERYTDxAVEQ0NExoTFRcYGRkZDxIbHRsYHRYYGRj/2wBDAQQEBAYFBgsGBgsYEA0QGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBj/wAARCADwAPADASIAAhEBAxEB/8QAHQABAAMAAwEBAQAAAAAAAAAAAAcICQEFBgMEAv/EAGEQAAAEBAICCwcMCwsNAQAAAAABAgMEBQYRBwgSIRMYMThBUXWUs9LTFVRXYXGVshQXGSIjMjdCcoGRsRYzNlJTVnN0kpPBCSUpNUNVYqG0wtEmJyg0OUVGZGWCg4Wio//EABsBAQADAQEBAQAAAAAAAAAAAAADBAUCAQYH/8QAOxEAAQMCAgYHBQcEAwAAAAAAAAECAwQREjMFITFRcYETFBVBYaHBNFKx0fAGIiMycpHhByQ1U0JDYv/aAAwDAQACEQMRAD8Av8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZkRXMAB0VP1bJqlmU8gZVEk69JY85dFp4UOkhCzLyWXbykfEIZx3zPU1hzJ4iSUpGwk5qtwjQltpeyMwNy+2OqLUai4EXuZ7tiFSMAscI3CrFaJm06XFx0mnKtGbpI9Nw1GozKIIvjLSZquXCSjLiGpT6LllhdLbX3Jv3/wUJq9kcjWJr3+Bp0A6emqqp2sJA1O6YnMHNYB0rpfhXCWReIy3Un4jsZDuBmKiotlLyKipdAAAPD0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6ioappyk5SqZ1NPICUwib+7Rj6WyO3AVz1n4i1j1EVVsh4qomtTtwFaqnzs4WSd02ZBAzmolkX2xhkodq/FpOWP5ySY7LBzNLAYvYlnSENRkZKVlBuxfql6NQ6VkGktHRJJbulu+IWVop0ar1bqQiSojV2FHayfomIYhIN2KiXkMsNINxxxxWilCSK5mZ8BEQz3zBZnp3Xs5iqYoeYRMspVlSm1RMOtTbsy4DUoysaWt2yeEtZ8RWFzjV9E0jgSmQy91TUXUb5wJuJOxpYJOk7+kWijyKMUmwdw3isVMV5fSzTqoeDIlRMfFEV9gh0WNZl/SO5JT41FxDX0TSxsjWrn2Js5d5maRqHq9KePv8Aqx5+maKq2so9cDSdNzGcvtlpLRBMGsm/GpW4n5zHppvgTjBIZY5MZph1PWoZpOmt1tkniQXGZIMzL6BoPJpdKaYlMPTNKQbFPSaGXZKWVJLSSSdJS1lfSUo9Ws+PWfAOw9UxkMbalTJbb57EomycJGm2sjJJ6R6tIj99crH4h8vU/wBR2slVIYbsRbXvt4J8N+xDRj+yqqxFkks5e7b5mZNG11VeHtRtzukp1ES2LQsjWltR7G9b4rrZ+1WXiMvoGkuBGNMsxkoI44mm4KeQJpamUAk7khZlqWi+s21WO3EZGR7ggDMxhBKZ1QcTinT0vh5bNpf7ebQ0MlJIjGTXom/ZOonEn77jK99wjEG5ca3foTMXT8WcSbUDMHylkaRn7VTbp2I1fJXoKLyGPqmy02m6JKun2+fBfT6QykSXR1T0Eq6vrWajAI/xsrabYd4Ez6sZG1Cux8AhtTSIpJqbM1OoQdyIyPcUfCKjyjPTiHDRKO7VJ09Hw9/blDG7DuGXiM1KL+oY8FFLO1Xs7jVlqmROwvL8AK7Ye5x8MaxjG5fPkRVJxriiSg5golw6zPcLZk6k/wDcSS8YsKy8zEQ6H4d1DrTiSWhxCiUlRHrIyMt0hDLC+JbPSxJHKyRLsW59AABESAAAAAAAAAAAAAAAAAAAAAAAAH45rMoWTyKMm0cvQhoNhcQ6riQhJqM/oIARTj7jzKcGqWQhhDUfUkck/UMApXtUkWo3nbayQR6uNR6i4TLOasq3qnEGpFz6r5w/M4xXvTd1IZL71tBakJ8RF9I/TiNXMyxJxLm1ZTUzJ2Od0mmuBlktTbZfJTb57nwj9WGWF9VYr1kdO0uyyTjbZvxEVEqNLMM3e2ksyIz1nqIi1n9I+rpKWOljxu296mDUTPqHYW7O5DxhlruLD5LLbZw+Ror02hX2JYVCxr8KtRKUy6pozLcM0qNJn/ULBZLN84rkaK9NoS1mQ/gRU2c3iSHn0cWb9DMmo9AvVa7cF/cyuPK5Km0/ZRXkQV0uokzaEr3dEjcO/wBRD0+fP/X6H+RF/W2PP5JU3qqui0TXeVs3Skrmr3VWoi4Rm1d+w5cO3CvqTx/5NqrvT4FrUFEQ0Cw7Cwq2ow2lJbaYYJ5txs7aSjc3VHax349VjHDyYFDuwwUZFREEttsoh0mieNs0n7kkjPcK9+P9oFsBOJiSg34WHcdWWxQxOJeZQpNtZFq3SuZFueMcKch4tCG1NRDClk0yZGlxDRtt67qsWu/AW75B+Dq9LK1qp4a116tvdbFqRyW2blRT9F13uvpv53ttTXt3nWVXBtO0ZVsLGQTTZPyKM2RomyRsidiUZKWkjslVy3OKxjMuRLUioZWslHpFFMHcj4dNI02mzRpw0qBVmiMpJHm5oNKJWkbarGpStZ+TgsMyJJqncr/OGfTSP1/+nKL1GRd7r+ScOfifD/albVDLdyW8zSzNPryj1cZ/gmP7Q2MxyGnGabejVb+RY/tDYzGIztct2w+g0Pku4+iFTSOYnA/oyK2sTzl8zFznCudwsgqGLiI6jHlmlxg/brgTV/KNGeskluqRuWuZFfd6WjMCJpX2XmdYh07HqemcpjnGnJQaC92YQ2lalIVu7IWkZkk9RkVi1iIN0iMtdyuLz0iqGujdrt5FVFkhVHobLw0QxFwbUVCuoeYdQTjbiDulaTK5GR8JGR3H1FaMmGIURU+EUZSUzi9mjKdeS0xpHdXqVZXbLxkkyWnyEQsuPkp4VhkWNe4+gikSRqOQAACEkAAAAAAAAAAAAAAAAAAAIRzZz9yQ5Wp6hlZodmTjMuSojMjs4stLc/opUQm4VszvX2t8EZH/AL9hvQdFmjajp2Iu8gqXK2JyoZ9XGgmSmTQMFl4i5uyykouYTR/Z3eFSW7IQXkIr/pGM+r7g0Vya71yH5SjPTIb2llVIOaGVo/N5Ges3+6KYn/zj3SKE9ZLd86rkWK9NoQLN/uhmH5290ihPeS3fOHyNFek0LVZkP4FelzW8SQM+ZGcdRGoz9pF7n/jFVqXresKJi4iJpGoJhJXolBNvOQa9A3EkdyI9R8JjSXEqS4FV5MYeDxFmlPxMVKlLbQzETUmFsKVbSJSSWR31FqMeMg8Ecp8wj2YGAYp2Jin1khplmdqWtxR7hJSTtzPxCnRaRjip0jexVt4atpNV0UkkyvY5Ev46ymXr+Y131Yl1HzguqHr+Y1mmx4l1HzguqLvxuXDLZLor1PMJBLIV6xK2N+auNqsfDY3CMfnLL9lfUZEUskpmeoiKcq7US9p0a/8AUv7J8yLqFX7/AJ/wUjisccYY6XvwMZiLUL8NENqadaW+RktCisaT1bhkZkPGSgjKoZcRFqKKZ3fyiRo7G5Zsusu2M5hS8DCbJfQ2eZOt6Vt213NY/Ozl/wAtEPENxDUok6VtrJaVd1l6jI7l/KcY6ZpmmYn3GKnJPmHaMqHWxORef8Ha5pdeUWrvyMP/AGhsZjEVy+YabZoXmH8oFWPQzqHWVsQ5oW2olJUXqhuxkZbpDMovefMIND5K8fRCfSX504F+cjRErBKfpMiMu7Si8vuLYpBVcEzL8QJ9Aw5aLMPM4llBf0UuqIv6iF38jPwKT/ltXRNilNdH/nTqbliLL/8AdY7pfaZeQqFtFHz+JNuSmcPQGYt6WIMjamUqfbWR8bakrSfl3fpMaGjN3J2X+lVKy4pfGdGQ0iGZphLT8vmXNGqqw6/rUgAAGUaAAAAAAAAAAAAAAAAAAABWzO9vboLl6G9B0WTFbM729uguXob0HRaoc9nErVeS4z54SGiuTXetw3KUZ6Yzq4SGiuTXetw3KUZ6Y3dL5HNDM0fmrwM9puX+UMx/O3ukUJ6yXb5w+Ror02hA03+6GY/nb3SKE85L984Z/wDRYr0mharMh/Ar02Y3ihG+PSELzO14akJUfdh7WaSPiH84EtoTmaoQyQgj7tMbiS4x9MeN85XfLD37BxgVvmaE5aY+sG5CcPQ9XO5+p7/OihCsz6jUlJ/vVDEdy+WIDgWmu60JdpH29v4pffEJ+zob51fJcL/fECwH8bQv5dv0yCjT8BnBDypVUmeW9z47mH5WL3kZ9TIpwREZlcXIz5btAfIjfqZFNyLcEWjfZ2/Xep1VqvTuT62IXzqov4K2EIv5ggOmbFDPi/ML6VUX8FdCcgQHTNihp+9PyDnRv5X/AKl9Dut/4r/5L75GfgUn/LSuibFKa9t67FT2/nmM6dYutka+BSfctK6JsUpr34WKo5ajOnWOKX2qXkd1OVHz+KEs5O99ZLOT4zoyGkIzeyd76yWcnxnRkNIRnaYz04fMuaNyl4+iAAAZJoAAAAAAAAAAAAAAAAAAAFbM729uguXYb0HRZMVtzu726D5dhvQdFqhz2cStV5LjPjhIaK5Nd63DcpRnpkM6r+Mhotk13rcNylGemN3S6/gc0MzR+byM9pv90Ux/O3ukUJ5yX75s+Ror0mhA04+6OY/nb3SKE9ZLt82fI0V6TQtVuQ/gV6bMbxQjrHjfN13yw9+wcYFb5mheWmPrMc48b5uu+WHv2DjArfM0Ly0x9ZgzIT9J6ubz9SQc5+vM2rkuF/viBIAv32hPy7fpkJ7zn75pXJkL/fECwH8awv5dv0yHtHkM4J8Dmqznlvc+P/AHyYz6mRTgt0hcfPju0B8mM+pkU4Ld+gRaN9nbz+KnVXnu+u5C+dVav3K+E5AgOmbFDPin5BfOq/8AZYQnIEB0rYoYfvfmHGjfyv8A1L6ElZsb+kvxka+BSfctK6JsUor34WKo5ajOnWLr5GvgUn3LSuibFKK9+FmqOWYzp1jil9ql5HdRlR8/ihLOTzfWSzk+M6MhpCM3snm+rlnJ8Z0ZDSEZumM9OHzLmjcpePogAAGUaAAAAAAAAAAAAAAAAAAAB4nFLDWmsVKKapyq4mNYgWotuLJUI8TStNJKSkjMyPV7c9XkHthBGb8zTlTnJkZkfqqE1kdv5dImpmq6VrWrZVUjmVEYquS6Hntpfgva3deovOLfUExYcUHS+FtBopOm419yBQ85EEqMiEuL0lnc9ZEWoZQ6bn4Vz9M/8Q03Pwjn6Z/4jfl0fLImF8t04GSysjYt2ssfpm5XqKYmRkZHFvGVuLZFCeMmKkN5llKcWlBdxokiNRkXxmhXwisBGZKuRmRlwkdhoTR9JGrL7SnE/A9HW2Eg49GleZ+u1IMlEc2csZbnvUj54FqSjMtQqlqSlJThgzMzsW6Y8DbXe5mfjMLFwagSO0fR37rHmP7+PxuT/nMUhzM0pSFpUXcqG96d/vxA8v8A41hDPUWzNnc/lkPgZaR3UZmfGZ3MLEEMfRxpHfYeyPxvV9tpcHPa606VA7G62uyIwz0VEfAzxCndvbEQ+h3VbSUo7cZmY40SuOaaHoI0jvewlf0j1fbaXsqp5lX7lpBtk83p9wYD2ukV/trfAKIHufMPpdWjo6a9Hi0jsP4UREXzDylp+hRyXvdbns8vSImrYli+2Rr4FJ9y0romxSmvPhZqjlmM6dYuvkb1YKT7lpXRNilNefCzVHLMZ06xUpfapeRZqcqPn8UJXyeb6uWcnxnoENIRm/k931Us5PjOjIaQDN0xnpw9VLmjcpePogAAGUaAAAAAAAAAAAAAAAAAFLs1OaipKRrV/DfDaLagYuDQXdObaCXXELUkjJlq9ySZEZGpRkZkZkRWsYmghdM7C0jkkSNuJxdG4i/MBQU+xLwMmNJ02cKUwiH2HEeq3DbRZDpKVdREdtRcQzEVjNi446pxeKFXmpRmZ2mrxbviJVhx68mLd/hPq/zs/wBYaUWjpI3I9HJdCg+uY9qtVF1k9bTDGn72nufn1A2mGNP3tPc/PqCBfXjxb8J9X+dn+sHrx4t+FCr/ADs/1ho3qveT9il/b7l/cnssl+NBlc/sbLyx6uzHO0uxn46aP/2CuzHicAsUcSpxmbomVzbECp46CiJohD0NEzN1xtxOirUpJqsZatwx7nOPiJX1NZllyynK1qCUQRSqGc9TQMe6y3pHp3VopMiuer6BCs9SkiR3TZfYTJHAseOyn8bS7GfjprzgrsxwWS/Gjjpo/JMF9mI+wWxUxOmmYmiZdM8Q6ojIOInEO09DvzN5bbiDVrSpJqsZHxCWM7FfVzS2YCWS+mayn0nhVyNp1TEBHOMNqWbzpGo0pMivYiK/iIerPUpIkd0169gSKBWK+y6vE6naXYz2vemvOC+zHG0wxn++pnzgrsxHuC+KmJ00zE0RLpniHVEZBxE6hmnod+ZvLbdQa9aVJNVjI+IxOObTHbFXDnHxinqMqtcslqpSxEmwmGacu4pbhGq60me4kvoHjp6pJEjRU1+ASKBWK/WeR2mGMv39M+cFdmG0vxl/CUz5wV2Yjfba5gPCC5zGH6gbbXMD4QXOYw/UEmKr3t8zj+23L5EkbS/GX8JTPnBXZjg8l2Mp/HpnzgrsxHO21zA+EFzmMP1BwebXMD4QneYw/UDFV72+YtTbl8i9mWfCupsJ8M5lJaqcgDi4qYqikJg3TdSSNBCSuZkWu6TEF1Jkqr2dVpOJyxVtONtR0e/FoQtL2klLjilkR2Tu2UIH22mYDwhO8yh+oBZtcwBH8ILp+WBh+oK7YKpj3SNcl1+txM6anc1Gqi6i1eBmVysMLMZoOsJxUUkjYRmGfYUzCE6Thm4kiIy0iIt0WtuXGMqNttmAtYsQHL/mMP1BynNvmDQsl/Z+tVtdlQMOZH/8CGeiqJ3Y3uS/14EkVVDEmFiLY1WAU5y15u5pWtYQ1AYmphe6UaehLpvDoJlL7lr7E6gtRKOx6Kk2Iz1GRahcYZc0LoXYXl+KVsiYmgAAREgAAAAAAAAAAAFL63yNzuscSp/VasS4OH7qx70bsSpWtZo01GZJNWylexar2F0DGUeKeLWKkuxwq+AgMR6phoVicxTbTDMzdQhtBOqIkpIjsREXAL9A2RXL0brFSrViImNLk3ex7zjwpQPmdXah7HvOfClA+Z1dqKyevPi74UKv86vdYPXnxd8KFX+dXusNXoqr/Z5FHpIPcLN+x7znwpQPmdXah7HvOfClA+Z1dqKyevPi74UKv86vdYPXnxd8KFX+dXusHRVX+zyHSQe4XEw0ySzWgMXqerR3EODj25TGJilQqJYps3SIjLRJWyHbd3bGIUzxEZZql3Iy/eiF3eH34ib158XfChV/nV7rDzM+qKf1RNe6lSTqPm8boE16pjn1POaBbidJRmdiuerxhHBKkiSSOvqscyTRqzAxLHr8CN83QXLcN6YmTPrvkpTyAz07ohzAfXmcoLluG9MTHn23yUp5AZ6d4eu9pbwUNyHcUIawI3zlA8uwvpi3+ZrLNiLi5jW1VVLPyRECiWMwhlGxKm16aVuGeoknq9sQqDgPvnaB5dhfTFlM1+OuK+H2YZynqPq9+WSxMth3yh0Q7Sy01aWkd1JM9diEdQj1nb0dr2XadQ4EhXHsuh4PaLY0d9Utz5fZhtFsaO+qV58vsx4rbXZgfCJFc0h+oG2uzA+EWK5pD9Qd4av3m+Z5jpvE9rtFsaO+qV58vsw2i2NHfVK8+X2Y8VtrswPhFiuaQ/UDbXZgfCJFc0h+oGGr95vmMdN4ntdotjR31SvPl9mG0Wxo75pbny+zHittdmB8IsVzSH6gba7MD4RYrmkP1Aw1fvN8xjpvE9ttFsaO+qW58vsxFeLeClX4LzCVwVXuyxxyZNOOsHAPG4REgyI9K6St74h3xZrswPhFiuaQ/UHia9xQrvE2LgomuKhdm7sChTcOpbTbexpUZGrUhJXuZFu8Q7jSoR34ipbwOJHQq37iLc6yi4uIl2JNOx8KvY4hiaQrra+JRPJMjG0xDFKmvu3knKEP0qRtaM/S21nP0Lmj9jk4AAAZBogAAAAAAAAAAAUXrjI3XdVYmVBUsLWlOsMTOYPRjbTrTxqQlazURHYrXK4vQAmhnfCqqxSOSJsiWcZ8ex+4h/j1TP6p/qh7H7iH+PVM/qn+qNBwFjtGff5IQdSh3GfHsfuIf49Uz+qf6oex+4h/j1TP6p/qjQcA7Rn3+SDqUO4z49j9xD/Hqmf1T/VD2P3EL8eqZ/VP9UaDgHaM+/yQdSi3FH8Ocklc0Xi3TdWxlY09Ew8qmDUY6yy28S1pQq5km5Wv5R7rMhlcqrGrFaCqqSVJJ5bDw8sRBKajEOKWakuOLMy0Stayy+gWmARrWSq9JL60JEpo0bhRNRR7DrJHXNF4t01VsZWNPRMNKpizGOsstvEtaUKuZJuVr+Ud1mUywYk4s44uVbS8RIW5eqAYhiKNiltuaSNK+okGVtZcIuOA969Ljxqus56rHhw9xmztE8au/KS5852QbRLGnv2kufO9kNJgE3ac3gcdRiM2doljT37SXPneyDaJY09+0lz53shpMAdpzeA6jEZs7RLGnv2kufO9kG0Sxp79pLnzvZDSYA7Tm8B1GIzZ2iWNPftJc+d7INonjT37SfPnOyGkwDztObwHUYjOeTZHsZoCpJdHPxlKm1DxTTyyTHOGeilZKO3uW7YhowACvPUvntj7ieKFsV8IAAFclAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//2Q==';
@@ -960,6 +983,18 @@ function importData(input){
   };
   reader.readAsText(input.files[0]);
 }
+function toggleTheme(){
+  var isLight=document.documentElement.getAttribute('data-theme')==='light';
+  if(isLight){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('sadad_theme','dark');}catch(e){}}
+  else{document.documentElement.setAttribute('data-theme','light');try{localStorage.setItem('sadad_theme','light');}catch(e){}}
+  syncThemeIcon();
+}
+function syncThemeIcon(){
+  var btn=document.getElementById('themeToggle');if(!btn)return;
+  var isLight=document.documentElement.getAttribute('data-theme')==='light';
+  btn.innerHTML=isLight?'&#127769;':'&#9728;&#65039;';
+}
+syncThemeIcon();
 function showToast(msg,type){
   var t=document.getElementById('toast');
   t.textContent=msg;
@@ -993,6 +1028,7 @@ function showSub(t,btn){
   document.getElementById('subtab-'+t).style.display='block';
   btn&&btn.classList.add('active');
   if(t==='myProfile')loadAdminProfile();
+  if(t==='audit')renderAudit();
 }
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -1194,10 +1230,13 @@ function openProfile(roll){
   var pa=document.getElementById('pAdminArea');
   if(admin){
     pa.innerHTML='<div class="quick-add-box"><div class="qa-label">Add coins as <strong>'+admin.name+'</strong></div>'
-      +'<div style="display:flex;gap:.5rem"><select id="qCat" class="qa-select"></select>'
-      +'<button class="btn-add" onclick="quickAdd('+roll+')">+ Add</button></div></div>';
+      +'<select id="qCat" class="qa-select" onchange="qaAutofill()" style="margin-bottom:.4rem"></select>'
+      +'<input type="number" id="qCoins" class="qa-select" placeholder="Coins" min="1" style="margin-bottom:.4rem">'
+      +'<input type="text" id="qNote" class="qa-select" placeholder="Note (optional) \u2014 why this award?" style="margin-bottom:.4rem">'
+      +'<button class="btn-add" onclick="quickAdd('+roll+')" style="width:100%">+ Add</button></div>';
     var qc=document.getElementById('qCat');
     S.cats.forEach(function(c){var o=document.createElement('option');o.value=c.id;o.textContent=c.name+' ('+c.coins+')';qc.appendChild(o);});
+    qaAutofill();
   }else{pa.innerHTML='';}
   openModal('profOv');
 }
@@ -1268,14 +1307,24 @@ function buildAchieve(roll){
     ?entries.map(function(e){return '<div class="ach-row"><span class="ach-cat">'+e[0]+'</span><span class="ach-cnt">'+e[1].count+'x</span><span class="hbadge gold">+'+e[1].coins+'</span></div>';}).join('')
     :'<div class="empty-state">No achievements yet</div>';
 }
+function qaAutofill(){
+  var id=document.getElementById('qCat').value;var cat=S.cats.find(function(c){return c.id===id;});
+  var el=document.getElementById('qCoins');
+  if(cat&&el)el.value=cat.coins;
+}
 function quickAdd(roll){
   var catId=document.getElementById('qCat').value;
   var cat=S.cats.find(function(c){return c.id===catId;});if(!cat)return;
+  var coinsEl=document.getElementById('qCoins');
+  var amt=coinsEl&&coinsEl.value?parseInt(coinsEl.value):cat.coins;
+  if(!amt||amt<1){showToast('Enter a valid coin amount!','error');return;}
+  var noteEl=document.getElementById('qNote');
+  var note=noteEl?noteEl.value.trim():'';
   var stu=STU.find(function(s){return s.r===roll;});var now=new Date();
-  historyRef.add({r:roll,name:stu.n,cat:cat.name,coins:cat.coins,note:'',addedBy:admin?admin.name:'',
+  historyRef.add({r:roll,name:stu.n,cat:cat.name,coins:amt,note:note,addedBy:admin?admin.name:'',
     date:now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear(),ts:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){
     openProfile(roll);playAwardSound();confetti(36);
-    showToast('Added '+cat.coins+' coins to '+stu.n,'success');
+    showToast('Added '+amt+' coins to '+stu.n,'success');
   }).catch(function(e){console.error('Quick add failed',e);showToast('Failed to save \u2014 check connection','error');});
 }
 function closeProfile(){closeModal('profOv');if(chart){chart.destroy();chart=null;}profRoll=-1;}
@@ -1407,6 +1456,37 @@ function addCat(){
   document.getElementById('newCatName').value='';document.getElementById('newCatCoins').value='';
   showToast('Category added!','success');renderCatList();fillSelects();
 }
+function renderAudit(){
+  var totEl=document.getElementById('auditTotals');
+  var sorted=sortedSTU().slice(0,10);
+  totEl.innerHTML=sorted.map(function(s,i){
+    return '<div class="hist-row"><span class="hbadge blue">#'+(i+1)+'</span><span class="hcat">'+s.n+'</span><span class="hbadge gold">'+(S.coins[s.r]||0)+' coins</span></div>';
+  }).join('');
+
+  var filter=(document.getElementById('auditFilter')||{value:'sinceYesterday'}).value;
+  var now=new Date();
+  var todayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  var yesterdayStart=new Date(todayStart.getTime());yesterdayStart.setDate(yesterdayStart.getDate()-1);
+  var cutoff=filter==='today'?todayStart:filter==='sinceYesterday'?yesterdayStart:null;
+  var all=S.history.slice().reverse();
+  var fl=all.filter(function(h){
+    if(!cutoff)return true;
+    if(!h.ts||!h.ts.toMillis)return false;
+    return h.ts.toMillis()>=cutoff.getTime();
+  });
+  var listEl=document.getElementById('auditList');
+  listEl.innerHTML=fl.length?fl.map(function(h){
+    var neg=h.coins<0;
+    var when=h.ts&&h.ts.toMillis?new Date(h.ts.toMillis()).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'(no timestamp)';
+    var catLine=h.cat+(h.note?' &mdash; <span style="color:var(--text3);font-weight:400">'+h.note+'</span>':'');
+    return '<div class="hist-row"><span class="hbadge '+(neg?'red':'green')+'">'+h.name+'</span>'
+      +'<span class="hcat">'+catLine+'</span><span class="hbadge '+(neg?'red':'gold')+'">'+(neg?'':'+')+h.coins+'</span>'
+      +'<span class="hbadge blue">'+(h.addedBy?h.addedBy.split(' ')[1]||h.addedBy:'?')+'</span>'
+      +'<span class="hdate">uploaded '+when+'</span>'
+      +'<button class="btn-edit-sm" onclick="openEditH(\''+h.id+'\')">Edit</button>'
+      +'<button class="btn-del-sm" onclick="delH(\''+h.id+'\')">Del</button></div>';
+  }).join(''):'<div class="empty-state">No entries in this range</div>';
+}
 function renderHist(){
   var q=(document.getElementById('histSearch')||{value:''}).value.toLowerCase();
   var all=S.history.slice().reverse();
@@ -1522,7 +1602,7 @@ function buildPrintHTML(d){
   html+='<div class="pr-seal">OFFICIAL<br>RECORD</div>';
   html+='<div class="pr-header">';
   html+='<div class="pr-logos"><img src="data:image/jpeg;base64,'+SADAD_LOGO_B64+'" alt="SADAD"><img src="data:image/jpeg;base64,'+UNION_LOGO_B64+'" alt="Union"></div>';
-  html+='<div class="pr-acad">VALIYULLAHI THANGAL MEMORIAL DARUSSALAM ACADEMY (SADAD)</div>';
+  html+='<div class="pr-acad">VALIYULLAHI THANGAL MEMORIAL DARUSSALAM ACADEMY</div>';
   html+='<div class="pr-sub">Velliyode, Kerala</div>';
   html+='<div class="pr-rule"></div>';
   html+='<div class="pr-title">SECOND BATCH-DSA &mdash; '+typeLabel+' COIN REPORT &mdash; '+r.label.toUpperCase()+'</div>';
@@ -1533,6 +1613,7 @@ function buildPrintHTML(d){
   });
   html+='</div>';
   html+='<div class="pr-sub" style="margin-top:6px">Generated: '+genDate+' &bull; Total Students: '+STU.length+'</div>';
+  html+='<div class="pr-sub" style="margin-top:4px;font-style:italic">In cooperation with SADAD (Second Batch Association of Darussalam for Academic Developments)</div>';
   html+='</div>';
 
   html+='<div class="pr-stats">';
@@ -1564,6 +1645,7 @@ function buildPrintHTML(d){
     var p=S.adminProfiles[a.name]||{};
     html+='<div><div class="line">'+a.name+'</div>'+(p.role||a.role)+'</div>';
   });
+  html+='<div><div class="pr-committee-seal">&nbsp;</div><div class="line">&nbsp;</div>SADAD Committee</div>';
   html+='</div>';
   html+='<div class="pr-foot">SECOND BATCH-DSA, SADAD Velliyode &bull; Valiyullahi Thangal Memorial Darussalam Academy &bull; Generated via SADAD Coin Dashboard</div>';
   html+='</div>';
