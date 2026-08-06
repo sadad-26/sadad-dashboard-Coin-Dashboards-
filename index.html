@@ -278,6 +278,21 @@ canvas{display:block;width:100%!important}
   </div>
 </div>
 
+<div class="modal-overlay" id="leaderOv">
+  <div class="edit-modal">
+    <h3>Edit Class Committee</h3>
+    <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Class Leader</label>
+    <select id="clSelect"></select>
+    <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Assistant Leader</label>
+    <select id="alSelect"></select>
+    <div style="display:flex;gap:.5rem;margin-top:.75rem">
+      <button class="btn btn-primary" style="flex:1" onclick="saveLeaderEdit()">Save changes</button>
+      <button class="btn" style="background:var(--card2);color:var(--text2)" onclick="closeModal('leaderOv')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
 <div class="wrap">
 
 <!-- HEADER -->
@@ -324,6 +339,7 @@ canvas{display:block;width:100%!important}
   <button class="tab-btn active" onclick="showTab('lb',this)">&#127942; Leaderboard</button>
   <button class="tab-btn" onclick="showTab('students',this)">&#128101; Students</button>
   <button class="tab-btn" onclick="showTab('teachers',this)">&#128114; Faculty</button>
+  <button class="tab-btn" onclick="showTab('committee',this)">&#127942; Teams</button>
   <button class="tab-btn" onclick="showTab('reports',this)">&#128202; Reports</button>
   <button class="tab-btn" onclick="showTab('admin',this)">&#9881; Admin</button>
 </div>
@@ -354,6 +370,31 @@ canvas{display:block;width:100%!important}
     <div id="facultyList"></div>
   </div>
 </div>
+
+<!-- COMMITTEE / MENTOR-MENTEES -->
+<div class="section" id="tab-committee">
+  <div class="card" style="text-align:center;background:linear-gradient(135deg,#6C63FF 0%,#8B5CF6 55%,#43B89C 100%);border:none">
+    <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.85);font-weight:700">Second Batch &middot; DSA Velliyode</div>
+    <div style="font-size:18px;font-weight:800;color:#fff;margin-top:2px">&#127963;&#65039; Class Committee &amp; Mentor Teams</div>
+  </div>
+
+  <div class="card">
+    <div id="classCommitteeHead" style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem">Class Committee</div>
+    <div id="classCommitteeList"></div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.6rem">&#9876;&#65039; Team Battle &mdash; Live Coin Race</div>
+    <div id="teamBattleBar"></div>
+  </div>
+
+  <div id="mentorTeams"></div>
+
+  <div class="card" style="text-align:center;color:var(--text3);font-size:12px">
+    Sadad Committee &mdash; details coming soon
+  </div>
+</div>
+
 
 <!-- REPORTS -->
 <div class="section" id="tab-reports">
@@ -408,7 +449,6 @@ canvas{display:block;width:100%!important}
       <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Date</label>
       <input type="date" id="coinDate">
       <button class="btn btn-primary" onclick="addCoins()" style="width:100%;margin-top:.25rem;padding:10px">Add Coins</button>
-      <div id="addMsg" style="font-size:12px;margin-top:.4rem"></div>
     </div>
   </div>
 
@@ -425,7 +465,6 @@ canvas{display:block;width:100%!important}
       <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Date</label>
       <input type="date" id="dedDate">
       <button class="btn btn-danger" onclick="deductCoins()" style="width:100%;margin-top:.25rem;padding:10px">&#10134; Deduct Coins</button>
-      <div id="dedMsg" style="font-size:12px;margin-top:.4rem"></div>
     </div>
   </div>
 
@@ -450,7 +489,6 @@ canvas{display:block;width:100%!important}
       <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Phone</label>
       <input type="text" id="apPhone">
       <button class="btn btn-primary" onclick="saveAdminProfile()" style="width:100%;margin-top:.75rem">Save my profile</button>
-      <div id="apMsg" style="font-size:12px;margin-top:.4rem"></div>
     </div>
   </div>
 
@@ -476,7 +514,6 @@ canvas{display:block;width:100%!important}
         <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Place</label>
         <input type="text" id="epPlace">
         <button class="btn btn-primary" onclick="saveProfile()" style="width:100%;margin-top:.75rem">Save profile</button>
-        <div id="epMsg" style="font-size:12px;margin-top:.4rem"></div>
       </div>
     </div>
   </div>
@@ -491,7 +528,6 @@ canvas{display:block;width:100%!important}
       <input type="text" id="newCatName" placeholder="Category name">
       <input type="number" id="newCatCoins" placeholder="Default coins">
       <button class="btn btn-primary" onclick="addCat()" style="width:100%">Add category</button>
-      <div id="catMsg" style="font-size:12px;margin-top:.4rem"></div>
     </div>
   </div>
 
@@ -533,9 +569,9 @@ canvas{display:block;width:100%!important}
 <script>
 
 const ADMINS=[
-  {name:"Usthad Arafath Hudawi",pw:"366069",role:"Class Teacher",place:"Vanimel"},
-  {name:"Usthad Savad Wafy",pw:"898436",role:"Mentor",place:"Kunjom"},
-  {name:"Usthad Sharafudheen Hudawi",pw:"921629",role:"College Principal",place:"Kondotty"}
+  {name:"Usthad Arafath Hudawi",pw:"6068",role:"Class Teacher",place:"Vanimel"},
+  {name:"Usthad Savad Wafy",pw:"4835",role:"Mentor",place:"Kunjom"},
+  {name:"Usthad Sharafudheen Hudawi",pw:"80241",role:"College Principal",place:"Kondotty"}
 ];
 let admin=null,chart=null,editId=null,editRoll=-1,profRoll=-1;
 const SADAD_LOGO_B64='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';
@@ -554,6 +590,17 @@ const STU=[
   {r:56,n:"Alfid NK"},{r:57,n:"Muhammad Safvan KTK"},{r:58,n:"Muhammad Raseel"},
   {r:59,n:"Amaan Muhammed BK"},{r:60,n:"Muhammed Rabeeh PP"},{r:61,n:"Muhammed Anun Raazi"},
   {r:62,n:"Zamil Abdullah"},{r:64,n:"Mizhab MK"},{r:98,n:"Muhammed C"}
+];
+
+// ── CLASS COMMITTEE & MENTOR-MENTEE TEAMS ──
+// Roll numbers matched from the Students roster. A few names (Rabeeh Vml/Mlp,
+// Misab Pk/Mk vs Muhammed Mizhab/Mizhab MK) were ambiguous from nicknames alone —
+// double-check these against the actual roster and correct roll numbers below if needed.
+const CLASS_LEADER_ROLL=36;   // Muhammed Aban VP, Vilakkottur
+const ASSI_LEADER_ROLL=33;    // Muhammad Abdullah Hazim, Vadakara
+const MENTOR_TEAMS=[
+  {mentor:"Usthad Savad Wafy",place:"Wayanad",captain:38,members:[59,61,48,16,57,50,64,45,55,35,62,54,43,49,38,53]},
+  {mentor:"Usthad Arafath Hudawi",place:"Vanimal",captain:33,members:[18,39,58,33,41,51,52,37,60,98,40,56,42,36,44,46]}
 ];
 const DCATS=[
   {id:"pub_story",name:"Publication — story/poem/essay",coins:10},
@@ -735,7 +782,7 @@ const SEED_HISTORY=[
 {r:39,name:"Muhammed Rabeeh",cat:"MTP Scholarship Exam",coins:10,addedBy:"Usthad Arafath Hudawi",date:"13/7/2026"},
 {r:57,name:"Muhammad Safvan KTK",cat:"MTP Scholarship Exam",coins:10,addedBy:"Usthad Arafath Hudawi",date:"13/7/2026"}
 ];
-let S={coins:{},history:[],cats:JSON.parse(JSON.stringify(DCATS)),profiles:{},adminProfiles:{}};
+let S={coins:{},history:[],cats:JSON.parse(JSON.stringify(DCATS)),profiles:{},adminProfiles:{},leaders:{classLeader:CLASS_LEADER_ROLL,assiLeader:ASSI_LEADER_ROLL}};
 STU.forEach(function(s){S.coins[s.r]=0;});
 
 // ── FIREBASE (real-time cloud sync) ──
@@ -829,13 +876,13 @@ function deletePicRemote(roll){
 }
 
 function stateForSync(){
-  var copy=JSON.parse(JSON.stringify({cats:S.cats,profiles:S.profiles,adminProfiles:S.adminProfiles}));
+  var copy=JSON.parse(JSON.stringify({cats:S.cats,profiles:S.profiles,adminProfiles:S.adminProfiles,leaders:S.leaders}));
   Object.keys(copy.profiles||{}).forEach(function(r){if(copy.profiles[r])delete copy.profiles[r].pic;});
   Object.keys(copy.adminProfiles||{}).forEach(function(k){if(copy.adminProfiles[k])delete copy.adminProfiles[k].pic;});
   return copy;
 }
 function cacheLocal(){
-  try{localStorage.setItem('sadad_v13',JSON.stringify({cats:S.cats,profiles:S.profiles,adminProfiles:S.adminProfiles,history:S.history}));}catch(e){}
+  try{localStorage.setItem('sadad_v13',JSON.stringify({cats:S.cats,profiles:S.profiles,adminProfiles:S.adminProfiles,history:S.history,leaders:S.leaders}));}catch(e){}
 }
 function save(){
   cacheLocal();
@@ -883,6 +930,7 @@ function load(){
     if(snap.exists){
       var d=snap.data();
       S.cats=d.cats||JSON.parse(JSON.stringify(DCATS));S.profiles=d.profiles||{};S.adminProfiles=d.adminProfiles||{};
+      S.leaders=d.leaders||{classLeader:CLASS_LEADER_ROLL,assiLeader:ASSI_LEADER_ROLL};
       if(d.history&&d.history.length)tryMigrateHistory(d.history);
     }else{
       docRef.set(stateForSync()).catch(function(e){console.error('Firestore init failed',e);});
@@ -897,7 +945,7 @@ function load(){
     updateSyncBadge(true,false,true);
     try{
       var raw=localStorage.getItem('sadad_v13');
-      if(raw){var p=JSON.parse(raw);S.cats=p.cats||DCATS;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};S.history=p.history||[];recompute();}
+      if(raw){var p=JSON.parse(raw);S.cats=p.cats||DCATS;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};S.history=p.history||[];S.leaders=p.leaders||{classLeader:CLASS_LEADER_ROLL,assiLeader:ASSI_LEADER_ROLL};recompute();}
       fbReady=true;refreshCurrentView();
     }catch(e){}
   });
@@ -934,6 +982,7 @@ function refreshCurrentView(){
   if(document.getElementById('tab-lb').classList.contains('active'))renderLB();
   if(document.getElementById('tab-students').classList.contains('active'))renderGrid();
   if(document.getElementById('tab-teachers').classList.contains('active'))renderFaculty();
+  if(document.getElementById('tab-committee').classList.contains('active'))renderCommittee();
   if(document.getElementById('tab-reports').classList.contains('active'))renderReports();
   if(document.getElementById('tab-admin').classList.contains('active')){renderCatList();renderHist();}
   var pOv=document.getElementById('profOv');
@@ -966,6 +1015,7 @@ function importData(input){
       if(!p.history){showToast('Invalid file format!','error');return;}
       if(!confirm('This will ADD '+p.history.length+' history records to the live data (existing records are kept). Continue?'))return;
       S.cats=p.cats||DCATS;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};
+      S.leaders=p.leaders||S.leaders;
       save();
       var batch=db.batch();var n=0;
       p.history.forEach(function(h,i){
@@ -1019,6 +1069,7 @@ function showTab(t,btn){
   if(t==='lb')renderLB();
   if(t==='students')renderGrid();
   if(t==='teachers')renderFaculty();
+  if(t==='committee')renderCommittee();
   if(t==='reports')renderReports();
   if(t==='admin'){fillSelects();renderCatList();renderHist();}
 }
@@ -1190,6 +1241,86 @@ function renderFaculty(){
       +'<span class="hbadge green" style="display:inline-block;margin-top:4px">Admin</span></div></div>';
   }).join('');
 }
+function renderCommittee(){
+  var ccEl=document.getElementById('classCommitteeList');
+  if(!ccEl)return;
+  function leaderCard(roll,label,place){
+    var s=STU.find(function(x){return x.r===roll;});
+    if(!s)return '';
+    var p=S.profiles[roll]||{};var col=COLORS[roll%COLORS.length];
+    var av=p.pic?'<img src="'+p.pic+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':ini(s.n);
+    return '<div class="faculty-card" onclick="openProfile('+roll+')" style="cursor:pointer">'
+      +'<div class="faculty-av" style="background:'+col+'">'+av+'</div>'
+      +'<div><div style="font-size:14px;font-weight:600;color:var(--text)">'+s.n+'</div>'
+      +'<div style="font-size:12px;color:var(--text3)">'+place+' &bull; Roll '+roll+'</div>'
+      +'<span class="hbadge blue" style="display:inline-block;margin-top:4px">'+label+'</span></div></div>';
+  }
+  var editBtn=admin?'<button class="btn-edit-sm" onclick="openLeaderEdit()" style="float:right">Edit</button>':'';
+  document.getElementById('classCommitteeHead').innerHTML='Class Committee'+editBtn;
+  ccEl.innerHTML=leaderCard(S.leaders.classLeader,'Class Leader','Vilakkottur')+leaderCard(S.leaders.assiLeader,'Assistant Leader','Vadakara');
+
+  var TEAM_COLORS={};
+  TEAM_COLORS[MENTOR_TEAMS[0].mentor]='#6C63FF';
+  TEAM_COLORS[MENTOR_TEAMS[1].mentor]='#F7A440';
+  var medals=['&#129351;','&#129352;','&#129353;']; // gold, silver, bronze
+
+  var ranked=MENTOR_TEAMS.map(function(team){
+    var total=team.members.reduce(function(sum,r){return sum+(S.coins[r]||0);},0);
+    var sortedMembers=team.members.slice().sort(function(a,b){return (S.coins[b]||0)-(S.coins[a]||0);});
+    return {team:team,total:total,sortedMembers:sortedMembers,color:TEAM_COLORS[team.mentor]};
+  }).sort(function(a,b){return b.total-a.total;});
+
+  var grand=ranked[0].total+ranked[1].total||1;
+  document.getElementById('teamBattleBar').innerHTML=
+    '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text3);margin-bottom:6px">'
+    +'<span>&#127942; '+ranked[0].team.mentor.replace('Usthad ','')+'</span><span>'+ranked[1].team.mentor.replace('Usthad ','')+'</span></div>'
+    +'<div style="display:flex;height:14px;border-radius:20px;overflow:hidden;background:var(--card2);border:1px solid var(--border)">'
+    +'<div style="width:'+(ranked[0].total/grand*100)+'%;background:linear-gradient(90deg,'+ranked[0].color+',#8B5CF6);transition:width .5s ease"></div>'
+    +'<div style="width:'+(ranked[1].total/grand*100)+'%;background:linear-gradient(90deg,'+ranked[1].color+',#e08e2d);transition:width .5s ease"></div></div>'
+    +'<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;margin-top:6px">'
+    +'<span style="color:'+ranked[0].color+'">&#127991;&#65039; '+ranked[0].total+'</span><span style="color:'+ranked[1].color+'">&#127991;&#65039; '+ranked[1].total+'</span></div>';
+
+  document.getElementById('mentorTeams').innerHTML=ranked.map(function(rt,pos){
+    var team=rt.team,col=rt.color;
+    var membersHtml=rt.sortedMembers.map(function(r,mi){
+      var s=STU.find(function(x){return x.r===r;});
+      if(!s)return '';
+      var p=S.profiles[r]||{};var avCol=COLORS[r%COLORS.length];
+      var av=p.pic?'<img src="'+p.pic+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':'<span>'+ini(s.n)+'</span>';
+      var isCaptain=r===team.captain;
+      var medal=mi<3?medals[mi]:'';
+      return '<div class="stu-card" onclick="openProfile('+r+')" style="--accent:'+avCol+(isCaptain?';border-color:'+col+'':'')+'">'
+        +(isCaptain?'<div style="position:absolute;top:4px;right:4px;font-size:14px" title="Team Captain">&#128081;</div>':'')
+        +(medal?'<div style="position:absolute;top:4px;left:4px;font-size:14px" title="Rank '+(mi+1)+' in team">'+medal+'</div>':'')
+        +'<div class="stu-av" style="background:'+avCol+'">'+av+'</div>'
+        +'<div class="stu-roll-badge">'+r+'</div>'
+        +'<div class="stu-nm">'+s.n+'</div>'
+        +'<div class="stu-coins">&#127995;&#65039; '+(S.coins[r]||0)+'</div></div>';
+    }).join('');
+    var rankBadge=pos===0?'<span class="hbadge gold" style="margin-right:6px">&#127942; Leading</span>':'';
+    return '<div class="card" style="border-top:3px solid '+col+'">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:6px">'
+      +'<div style="font-size:14px;font-weight:700;color:var(--text)">'+rankBadge+'&#128302; '+team.mentor+' <span style="color:var(--text3);font-weight:500;font-size:12px">&bull; '+team.place+'</span></div>'
+      +'<div class="hbadge" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+rt.total+' coins</div></div>'
+      +'<div class="sgrid">'+membersHtml+'</div></div>';
+  }).join('');
+}
+function openLeaderEdit(){
+  var opts=STU.slice().sort(function(a,b){return a.n.localeCompare(b.n);})
+    .map(function(s){return '<option value="'+s.r+'">'+s.n+' (Roll '+s.r+')</option>';}).join('');
+  document.getElementById('clSelect').innerHTML=opts;
+  document.getElementById('alSelect').innerHTML=opts;
+  document.getElementById('clSelect').value=S.leaders.classLeader;
+  document.getElementById('alSelect').value=S.leaders.assiLeader;
+  openModal('leaderOv');
+}
+function saveLeaderEdit(){
+  var cl=parseInt(document.getElementById('clSelect').value);
+  var al=parseInt(document.getElementById('alSelect').value);
+  S.leaders={classLeader:cl,assiLeader:al};
+  save();closeModal('leaderOv');renderCommittee();showToast('Class committee updated!','success');
+}
+
 function renderGrid(){
   var q=(document.getElementById('stuSearch').value||'').toLowerCase();
   var fl=STU.filter(function(s){return s.n.toLowerCase().includes(q)||String(s.r).includes(q);});
