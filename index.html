@@ -129,7 +129,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .edit-modal h3{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin-bottom:.75rem;color:var(--text)}
 
 /* FORMS */
-select,input[type=text],input[type=number],input[type=password]{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--card2);color:var(--text);margin-bottom:.5rem;transition:border-color .2s;font-family:'Inter',sans-serif}
+select,input[type=text],input[type=number],input[type=password],input[type=date],input[type=month],input[type=week]{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--card2);color:var(--text);margin-bottom:.5rem;transition:border-color .2s;font-family:'Inter',sans-serif}
 select:focus,input:focus{outline:none;border-color:rgba(108,99,255,.5);box-shadow:0 0 0 3px rgba(108,99,255,.1)}
 option{background:var(--card2);color:var(--text)}
 .btn{padding:8px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:all .2s}
@@ -296,6 +296,20 @@ canvas{display:block;width:100%!important}
         <div class="pstat"><div class="pstat-val" id="pAch">0</div><div class="pstat-lbl">Achievements</div></div>
       </div>
       <button class="btn btn-sm" style="width:100%;margin-bottom:.75rem;background:linear-gradient(135deg,#f5b942,#e08e2d);border:none;color:#1a1a2e;font-weight:800" onclick="celebrate(profRoll)">&#127881; Celebrate</button>
+      <div style="display:flex;gap:.5rem;margin-bottom:.5rem">
+        <select id="pReportType" style="margin-bottom:0;flex:1" onchange="updatePReportPickerVisibility()">
+          <option value="week">Weekly Report</option>
+          <option value="month" selected>Monthly Report</option>
+          <option value="year">Annual Report</option>
+          <option value="all">All-time Report</option>
+        </select>
+        <button class="btn btn-sm" style="background:rgba(108,99,255,.15);border-color:rgba(108,99,255,.35);color:#a9a3ff;white-space:nowrap" onclick="printStudentReport(profRoll)">&#128424; Print</button>
+      </div>
+      <div style="display:flex;gap:.5rem;margin-bottom:.75rem">
+        <input type="date" id="pWeekPick" style="margin-bottom:0;flex:1;display:none">
+        <input type="month" id="pMonthPick" style="margin-bottom:0;flex:1">
+        <input type="number" id="pYearPick" style="margin-bottom:0;flex:1;display:none">
+      </div>
       <div class="section-label">Monthly Progress</div>
       <div class="gw"><canvas id="progChart" height="130"></canvas></div>
       <div class="section-label" style="margin-top:1rem">Achievements by Category</div>
@@ -464,6 +478,7 @@ canvas{display:block;width:100%!important}
     <div class="metric-card" style="background:linear-gradient(135deg,#6C63FF,#8B5CF6)"><div class="metric-val" id="topName" style="font-size:15px;line-height:1.25;word-break:break-word;color:#fffffe">-</div><div class="metric-lbl" style="color:rgba(255,255,255,.75)">Top student</div></div>
   </div>
   <div class="podium" id="podium"></div>
+  <button class="btn btn-sm" id="sharePodiumBtn" style="width:100%;margin-bottom:.9rem;background:linear-gradient(135deg,#6C63FF,#8B5CF6);border:none;color:#fff;font-weight:700" onclick="shareTopPodium()">&#128247; Download / Share Top 3 Podium</button>
   <div class="card">
     <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.6rem">Rankings &mdash; tap to view profile</div>
     <div id="lbList"></div>
@@ -512,17 +527,22 @@ canvas{display:block;width:100%!important}
 <!-- REPORTS -->
 <div class="section" id="tab-reports">
   <div class="card">
-    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap">
-      <select id="repType" onchange="repOffset=0;renderReports()" style="margin-bottom:0;flex:1;min-width:110px">
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap">
+      <select id="repType" onchange="updateRepPickerVisibility();renderReports()" style="margin-bottom:0;flex:1;min-width:110px">
         <option value="week">Weekly</option>
         <option value="month" selected>Monthly</option>
         <option value="year">Annually</option>
         <option value="all">All-time</option>
       </select>
-      <button class="btn btn-sm" onclick="repOffset--;renderReports()">&#8592;</button>
-      <button class="btn btn-sm" onclick="repOffset=0;renderReports()">Today</button>
-      <button class="btn btn-sm" onclick="repOffset++;renderReports()">&#8594;</button>
       <button class="btn btn-sm" onclick="printReport()">&#128424; Print</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap">
+      <input type="date" id="repWeekPick" style="margin-bottom:0;flex:1;min-width:130px;display:none" onchange="renderReports()">
+      <input type="month" id="repMonthPick" style="margin-bottom:0;flex:1;min-width:130px" onchange="renderReports()">
+      <input type="number" id="repYearPick" style="margin-bottom:0;flex:1;min-width:90px;display:none" onchange="renderReports()">
+      <button class="btn btn-sm" onclick="repNudge(-1)">&#8592;</button>
+      <button class="btn btn-sm" onclick="repResetToday()">Today</button>
+      <button class="btn btn-sm" onclick="repNudge(1)">&#8594;</button>
     </div>
     <div id="repLabel" style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:.5rem"></div>
     <canvas id="repChart" height="180"></canvas>
@@ -701,9 +721,24 @@ canvas{display:block;width:100%!important}
   </div>
 </div>
 
+<!-- SHARE CARD (offscreen render target for podium image export) -->
+<div id="shareCardWrap" style="position:fixed;left:-9999px;top:0;width:1080px;z-index:-1">
+  <div id="shareCard" style="width:1080px;padding:56px 60px 70px;background:linear-gradient(160deg,#1a1a2e 0%,#241b3d 45%,#3a2360 100%);font-family:'Space Grotesk',sans-serif;box-sizing:border-box">
+    <div style="text-align:center;margin-bottom:8px">
+      <img id="shareLogo" style="width:74px;height:74px;border-radius:50%;border:3px solid rgba(255,255,255,.5);box-shadow:0 6px 20px rgba(0,0,0,.4)">
+    </div>
+    <div style="text-align:center;color:#f5b942;font-size:15px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-top:14px">Second Batch &middot; DSA Velliyode</div>
+    <div style="text-align:center;color:#fff;font-size:34px;font-weight:800;margin-top:6px">&#127942; Top Performers</div>
+    <div style="text-align:center;color:rgba(255,255,255,.65);font-size:14px;margin-top:6px;font-style:italic">SADAD &mdash; Second Batch Association of Darussalam for Academic Developments</div>
+    <div id="sharePodiumBody" style="display:flex;align-items:flex-end;justify-content:center;gap:34px;margin-top:56px"></div>
+    <div id="shareDate" style="text-align:center;color:rgba(255,255,255,.45);font-size:13px;margin-top:56px;letter-spacing:.05em"></div>
+  </div>
+</div>
+
 </div><!-- end wrap -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -1390,6 +1425,58 @@ function renderPodium(){
   });
   el.innerHTML=html;
 }
+function shareTopPodium(){
+  var top=sortedSTU().slice(0,3).map(function(s){return{s:s,c:S.coins[s.r]||0};}).filter(function(x){return x.c>0;});
+  if(!top.length){showToast('No ranked students yet to share','error');return;}
+  if(typeof html2canvas==='undefined'){showToast('Image export library failed to load. Check your connection.','error');return;}
+  var btn=document.getElementById('sharePodiumBtn');
+  var origTxt=btn.innerHTML;btn.innerHTML='&#8987; Generating image...';btn.disabled=true;
+  var conf=[
+    {rank:2,h:150,bc:'#c0c0c0',grad:'linear-gradient(180deg,#e2e2e2,#a8a8a8)',medal:'&#129352;',av:120},
+    {rank:1,h:210,bc:'#ffd700',grad:'linear-gradient(180deg,#ffe066,#e0a800)',medal:'&#129351;',av:160},
+    {rank:3,h:110,bc:'#cd7f32',grad:'linear-gradient(180deg,#e0995a,#a8672a)',medal:'&#129353;',av:120}
+  ];
+  var html='';
+  conf.forEach(function(c){
+    var item=top[c.rank-1];
+    if(!item){html+='<div style="flex:1;max-width:220px;visibility:hidden"></div>';return;}
+    html+='<div style="display:flex;flex-direction:column;align-items:center;flex:1;max-width:240px">'
+      +'<div style="position:relative;border-radius:50%;border:5px solid '+c.bc+';box-shadow:0 8px 22px rgba(0,0,0,.5);width:'+c.av+'px;height:'+c.av+'px;margin-bottom:14px">'
+      +(c.rank===1?'<div style="position:absolute;top:-38px;left:50%;transform:translateX(-50%);font-size:44px">&#128081;</div>':'')
+      +avatarHTML(item.s.r,c.av,Math.round(c.av*0.36))
+      +'</div>'
+      +'<div style="font-size:20px;font-weight:700;color:#fff;text-align:center;line-height:1.25;max-width:220px">'+item.s.n+'</div>'
+      +'<div style="font-size:14px;color:rgba(255,255,255,.55);margin-top:2px">Adm No: '+item.s.r+'</div>'
+      +'<div style="font-size:22px;font-weight:800;color:#f5b942;margin:8px 0">'+c.medal+' '+item.c+' coins</div>'
+      +'<div style="width:100%;border-radius:12px 12px 4px 4px;height:'+c.h+'px;background:'+c.grad+';box-shadow:inset 0 3px 8px rgba(255,255,255,.3),0 6px 14px rgba(0,0,0,.35)"></div>'
+      +'</div>';
+  });
+  document.getElementById('sharePodiumBody').innerHTML=html;
+  var logoImg=document.getElementById('logoImgSadad');
+  if(logoImg&&logoImg.src)document.getElementById('shareLogo').src=logoImg.src;
+  var now=new Date();
+  document.getElementById('shareDate').textContent='Generated '+now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear()+' \u00b7 SADAD Coin Dashboard';
+  setTimeout(function(){
+    html2canvas(document.getElementById('shareCard'),{backgroundColor:null,scale:2,useCORS:true}).then(function(canvas){
+      btn.innerHTML=origTxt;btn.disabled=false;
+      canvas.toBlob(function(blob){
+        var fname='SADAD-Top3-Podium-'+now.getDate()+'-'+(now.getMonth()+1)+'-'+now.getFullYear()+'.png';
+        var file=new File([blob],fname,{type:'image/png'});
+        if(navigator.canShare&&navigator.canShare({files:[file]})){
+          navigator.share({files:[file],title:'SADAD Top 3 Podium',text:'Top performers of Second Batch SADAD, DSA Velliyode'}).catch(function(){});
+        }else{
+          var url=URL.createObjectURL(blob);
+          var a=document.createElement('a');a.href=url;a.download=fname;document.body.appendChild(a);a.click();
+          setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},500);
+          showToast('Podium image downloaded!','success');
+        }
+      },'image/png');
+    }).catch(function(err){
+      btn.innerHTML=origTxt;btn.disabled=false;
+      showToast('Could not generate image. Try again.','error');
+    });
+  },80);
+}
 function confetti(count){
   count=count||40;
   var colors=['#f5b942','#6C63FF','#43B89C','#e53935','#2ecc71','#ff69b4','#ffd700'];
@@ -1784,6 +1871,7 @@ function openProfile(roll){
     S.cats.forEach(function(c){var o=document.createElement('option');o.value=c.id;o.textContent=c.name+' ('+c.coins+')';qc.appendChild(o);});
     qaAutofill();
   }else{pa.innerHTML='';}
+  updatePReportPickerVisibility();
   openModal('profOv');
 }
 function handleProfPhoto(input){
@@ -2062,30 +2150,79 @@ function delH(id){
   historyRef.doc(id).delete().catch(function(e){console.error('Delete failed',e);showToast('Delete failed','error');});
 }
 // ── REPORTS ──
-let repOffset=0,repChartObj=null;
+let repChartObj=null;
 function parseDMY(s){var p=s.split('/');return new Date(+p[2],+p[1]-1,+p[0]);}
-function repRange(){
-  var type=(document.getElementById('repType')||{value:'month'}).value;
-  var now=new Date();
+function fmt2(n){return n<10?'0'+n:''+n;}
+function todayISO(){var d=new Date();return d.getFullYear()+'-'+fmt2(d.getMonth()+1)+'-'+fmt2(d.getDate());}
+function todayYM(){var d=new Date();return d.getFullYear()+'-'+fmt2(d.getMonth()+1);}
+function computeRange(type,weekVal,monthVal,yearVal){
   if(type==='all')return{start:null,end:null,label:'All-time'};
   if(type==='week'){
-    var d=new Date(now);var day=(d.getDay()+6)%7;d.setDate(d.getDate()-day+repOffset*7);
-    var start=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+    var d=weekVal?new Date(weekVal+'T00:00:00'):new Date();
+    var day=(d.getDay()+6)%7;
+    var start=new Date(d.getFullYear(),d.getMonth(),d.getDate()-day);
     var end=new Date(start);end.setDate(end.getDate()+7);
-    var label='Week of '+start.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    var endIncl=new Date(end);endIncl.setDate(endIncl.getDate()-1);
+    var label='Week of '+start.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+' &ndash; '+endIncl.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
     return{start:start,end:end,label:label};
   }
   if(type==='month'){
-    var m=now.getMonth()+repOffset;var y=now.getFullYear();
+    var parts=(monthVal||todayYM()).split('-');
+    var y=+parts[0],m=+parts[1]-1;
     var start=new Date(y,m,1);var end=new Date(y,m+1,1);
     var label=start.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
     return{start:start,end:end,label:label};
   }
   if(type==='year'){
-    var y=now.getFullYear()+repOffset;
-    var start=new Date(y,0,1);var end=new Date(y+1,0,1);
-    return{start:start,end:end,label:String(y)};
+    var y=(yearVal&&!isNaN(+yearVal))?+yearVal:new Date().getFullYear();
+    return{start:new Date(y,0,1),end:new Date(y+1,0,1),label:String(y)};
   }
+}
+function initPickerDefaults(weekId,monthId,yearId){
+  var w=document.getElementById(weekId),m=document.getElementById(monthId),y=document.getElementById(yearId);
+  if(w&&!w.value)w.value=todayISO();
+  if(m&&!m.value)m.value=todayYM();
+  if(y&&!y.value)y.value=new Date().getFullYear();
+}
+function updateRepPickerVisibility(){
+  initPickerDefaults('repWeekPick','repMonthPick','repYearPick');
+  var type=(document.getElementById('repType')||{value:'month'}).value;
+  document.getElementById('repWeekPick').style.display=type==='week'?'':'none';
+  document.getElementById('repMonthPick').style.display=type==='month'?'':'none';
+  document.getElementById('repYearPick').style.display=type==='year'?'':'none';
+}
+function updatePReportPickerVisibility(){
+  initPickerDefaults('pWeekPick','pMonthPick','pYearPick');
+  var type=(document.getElementById('pReportType')||{value:'month'}).value;
+  document.getElementById('pWeekPick').style.display=type==='week'?'':'none';
+  document.getElementById('pMonthPick').style.display=type==='month'?'':'none';
+  document.getElementById('pYearPick').style.display=type==='year'?'':'none';
+}
+function repResetToday(){
+  document.getElementById('repWeekPick').value=todayISO();
+  document.getElementById('repMonthPick').value=todayYM();
+  document.getElementById('repYearPick').value=new Date().getFullYear();
+  renderReports();
+}
+function repNudge(dir){
+  var type=(document.getElementById('repType')||{value:'month'}).value;
+  if(type==='week'){
+    var w=document.getElementById('repWeekPick');
+    var d=new Date((w.value||todayISO())+'T00:00:00');d.setDate(d.getDate()+dir*7);
+    w.value=d.getFullYear()+'-'+fmt2(d.getMonth()+1)+'-'+fmt2(d.getDate());
+  }else if(type==='month'){
+    var m=document.getElementById('repMonthPick');
+    var parts=(m.value||todayYM()).split('-');var d=new Date(+parts[0],+parts[1]-1+dir,1);
+    m.value=d.getFullYear()+'-'+fmt2(d.getMonth()+1);
+  }else if(type==='year'){
+    var y=document.getElementById('repYearPick');
+    y.value=(y.value?+y.value:new Date().getFullYear())+dir;
+  }
+  renderReports();
+}
+function repRange(){
+  var type=(document.getElementById('repType')||{value:'month'}).value;
+  return computeRange(type,document.getElementById('repWeekPick').value,document.getElementById('repMonthPick').value,document.getElementById('repYearPick').value);
 }
 function renderReports(){
   var r=repRange();
@@ -2202,8 +2339,93 @@ function printReport(){
   document.getElementById('printArea').innerHTML=buildPrintHTML(data);
   setTimeout(function(){window.print();},80);
 }
+function rangeForType(type){
+  return computeRange(type,document.getElementById('pWeekPick').value,document.getElementById('pMonthPick').value,document.getElementById('pYearPick').value);
+}
+function printStudentReport(roll){
+  var s=STU.find(function(x){return x.r===roll;});
+  if(!s){showToast('Student not found','error');return;}
+  var type=(document.getElementById('pReportType')||{value:'month'}).value;
+  var typeLabel=type==='week'?'WEEKLY':type==='month'?'MONTHLY':type==='year'?'ANNUAL':'ALL-TIME';
+  var r=rangeForType(type);
+  var hist=S.history.filter(function(h){
+    if(!r.start)return true;
+    var d=parseDMY(h.date);return d>=r.start&&d<r.end;
+  });
+  // class-wide totals for the same period (for rank + total-coins context)
+  var byStu={};
+  hist.forEach(function(h){byStu[h.r]=(byStu[h.r]||0)+h.coins;});
+  var ranked=STU.map(function(x){return{r:x.r,c:byStu[x.r]||0};}).sort(function(a,b){return b.c-a.c;});
+  var rankIdx=ranked.findIndex(function(x){return x.r===roll;});
+  var myCoins=byStu[roll]||0;
+  var myHist=hist.filter(function(h){return h.r===roll;}).sort(function(a,b){return parseDMY(a.date)-parseDMY(b.date);});
+  var byCat={};
+  myHist.forEach(function(h){if(!byCat[h.cat])byCat[h.cat]={count:0,coins:0};byCat[h.cat].count++;byCat[h.cat].coins+=h.coins;});
+  var catRows=Object.keys(byCat).map(function(k){return{cat:k,count:byCat[k].count,coins:byCat[k].coins};}).sort(function(a,b){return b.coins-a.coins;});
+  var p=S.profiles[roll]||{};
+  var today=new Date();
+  var genDate=today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
 
-load();loadHistory();initPicsListener();renderLB();renderGrid();
+  var html='<div class="pr-frame">';
+  html+='<div class="pr-seal">OFFICIAL<br>RECORD</div>';
+  html+='<div class="pr-header">';
+  html+='<div class="pr-logos"><img src="data:image/jpeg;base64,'+SADAD_LOGO_B64+'" alt="SADAD"><img src="data:image/jpeg;base64,'+UNION_LOGO_B64+'" alt="Union"></div>';
+  html+='<div class="pr-acad">VALIYULLAHI THANGAL MEMORIAL DARUSSALAM ACADEMY</div>';
+  html+='<div class="pr-sub">Velliyode, Kerala</div>';
+  html+='<div class="pr-rule"></div>';
+  html+='<div class="pr-title">SECOND BATCH-DSA &mdash; INDIVIDUAL '+typeLabel+' REPORT &mdash; '+r.label.toUpperCase()+'</div>';
+  html+='<div class="pr-staffrow">';
+  ADMINS.forEach(function(a){
+    var ap=S.adminProfiles[a.name]||{};
+    html+='<span><b>'+(ap.role||a.role)+':</b> '+a.name+', '+(ap.place||a.place)+'</span>';
+  });
+  html+='</div>';
+  html+='<div class="pr-sub" style="margin-top:6px">Generated: '+genDate+'</div>';
+  html+='<div class="pr-sub" style="margin-top:4px;font-style:italic">In cooperation with SADAD (Second Batch Association of Darussalam for Academic Developments)</div>';
+  html+='</div>';
+
+  html+='<div style="display:flex;align-items:center;gap:14px;margin:14px 0;padding:10px 12px;border:1px solid #C8A951;border-radius:6px;background:rgba(31,111,74,.04)">';
+  if(p.pic)html+='<img src="'+p.pic+'" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid #1F6F4A;flex-shrink:0">';
+  html+='<div><div style="font-size:16px;font-weight:800;color:#154D33">'+s.n+'</div><div style="font-size:12px;color:#333">Admission No: '+s.r+'</div></div>';
+  html+='</div>';
+
+  html+='<div class="pr-stats">';
+  html+='<div class="pr-stat"><div class="v">'+myCoins+'</div><div class="l">Coins Earned</div></div>';
+  html+='<div class="pr-stat"><div class="v">'+myHist.length+'</div><div class="l">Achievements</div></div>';
+  html+='<div class="pr-stat"><div class="v">'+(myCoins>0?'#'+(rankIdx+1)+' / '+STU.length:'&mdash;')+'</div><div class="l">Class Rank</div></div>';
+  html+='</div>';
+
+  if(catRows.length){
+    html+='<div style="margin-top:16px;font-size:13px;font-weight:800;color:#154D33;border-bottom:2px solid #1F6F4A;padding-bottom:4px">CATEGORY BREAKDOWN</div>';
+    html+='<table class="pr-table"><thead><tr><th>Category</th><th>Times</th><th>Coins</th></tr></thead><tbody>';
+    catRows.forEach(function(c){html+='<tr><td>'+c.cat+'</td><td>'+c.count+'</td><td>'+c.coins+'</td></tr>';});
+    html+='</tbody></table>';
+  }
+
+  html+='<div style="margin-top:16px;font-size:13px;font-weight:800;color:#154D33;border-bottom:2px solid #1F6F4A;padding-bottom:4px">ACTIVITY LOG</div>';
+  if(myHist.length){
+    html+='<table class="pr-table"><thead><tr><th>Date</th><th>Category</th><th>Note</th><th>Coins</th></tr></thead><tbody>';
+    myHist.forEach(function(h){html+='<tr><td>'+h.date+'</td><td>'+h.cat+'</td><td>'+(h.note||'')+'</td><td>'+h.coins+'</td></tr>';});
+    html+='</tbody></table>';
+  }else{
+    html+='<div class="empty-state">No coins recorded for '+s.n+' in this period</div>';
+  }
+
+  html+='<div class="pr-sig">';
+  ADMINS.forEach(function(a){
+    var ap=S.adminProfiles[a.name]||{};
+    html+='<div><div class="line">'+a.name+'</div>'+(ap.role||a.role)+'</div>';
+  });
+  html+='<div><div class="pr-committee-seal">&nbsp;</div><div class="line">&nbsp;</div>SADAD Committee</div>';
+  html+='</div>';
+  html+='<div class="pr-foot">SECOND BATCH-DSA, SADAD Velliyode &bull; Valiyullahi Thangal Memorial Darussalam Academy &bull; Generated via SADAD Coin Dashboard</div>';
+  html+='</div>';
+
+  document.getElementById('printArea').innerHTML=html;
+  setTimeout(function(){window.print();},80);
+}
+
+load();loadHistory();initPicsListener();renderLB();renderGrid();updateRepPickerVisibility();
 
 </script>
 <div id="printArea"></div>
