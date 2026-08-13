@@ -91,6 +91,18 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
 /* STUDENT GRID */
 .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.6rem}
+.team-list-scroll{max-height:440px;overflow-y:auto;padding-right:2px}
+.team-rank-row{display:flex;align-items:center;gap:12px;background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:10px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
+.team-rank-row:hover{border-color:rgba(108,99,255,.35)}
+.team-rank-num{font-size:14px;font-weight:700;color:var(--text3);width:16px;flex-shrink:0;text-align:center}
+.team-rank-av{width:46px;height:46px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--card);border:2px solid rgba(255,255,255,.08)}
+.team-rank-av img{width:100%;height:100%;object-fit:cover}
+.team-rank-body{flex:1;min-width:0}
+.team-rank-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team-rank-bar-wrap{display:flex;align-items:center;gap:8px}
+.team-rank-bar-track{flex:1;height:9px;border-radius:10px;background:var(--border);overflow:hidden}
+.team-rank-bar-fill{height:100%;border-radius:10px;transition:width .5s ease}
+.team-rank-coin{font-size:11.5px;font-weight:800;color:#fff;background:linear-gradient(135deg,#6C63FF,#8B5CF6);padding:3px 9px;border-radius:20px;display:flex;align-items:center;gap:3px;flex-shrink:0;white-space:nowrap}
 .stu-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem .6rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;transition:all .22s ease;position:relative;overflow:hidden}
 .stu-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,#6C63FF);opacity:0;transition:opacity .22s}
 .stu-card:hover{transform:translateY(-3px);border-color:rgba(108,99,255,.35);box-shadow:0 8px 24px rgba(0,0,0,.4)}.stu-card:hover::before{opacity:1}
@@ -483,6 +495,7 @@ canvas{display:block;width:100%!important}
   <button class="tab-btn" onclick="showTab('students',this)">&#128101; Students</button>
   <button class="tab-btn" onclick="showTab('teachers',this)">&#128114; Faculty</button>
   <button class="tab-btn" onclick="showTab('committee',this)">&#127942; Teams</button>
+  <button class="tab-btn" onclick="showTab('categories',this)">&#129689; Categories</button>
   <button class="tab-btn" onclick="showTab('reports',this)">&#128202; Reports</button>
   <button class="tab-btn" onclick="showTab('sadad',this)">&#127894; Sadad</button>
   <button class="tab-btn" onclick="showTab('admin',this)">&#9881; Admin</button>
@@ -538,6 +551,17 @@ canvas{display:block;width:100%!important}
   <div class="card" style="text-align:center;color:var(--text3);font-size:12px">
     Sadad Committee &mdash; details coming soon
   </div>
+</div>
+
+<!-- CATEGORIES (COIN SYSTEM) -->
+<div class="section" id="tab-categories">
+  <div class="card" style="text-align:center;background:linear-gradient(135deg,#f5b942 0%,#e08e2d 55%,#c46a1f 100%);border:none">
+    <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.85);font-weight:700">Second Batch &middot; DSA Velliyode</div>
+    <div style="font-size:18px;font-weight:800;color:#fff;margin-top:2px">&#129689; Coin System</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.85);margin-top:2px">All categories &amp; coin values &mdash; open to everyone</div>
+  </div>
+  <div id="catAddSectionBtnWrap"></div>
+  <div id="catSectionsList"></div>
 </div>
 
 
@@ -882,37 +906,54 @@ function ensureSadadDefaults(){
     });
   });
 }
+const CAT_SECTIONS_DEFAULT=["Publication","Outer Activities","Inner Campus Contest","Campus Union","Class Union","Class Teacher Program","Examination","Ibadath","Special Appreciation"];
 const DCATS=[
-  {id:"pub_story",name:"Publication — story/poem/essay",coins:10},
-  {id:"pub_pic",name:"Publication — picture/photo",coins:5},
-  {id:"outer",name:"Outer activity (masjid speech/paper presentation)",coins:15},
-  {id:"campus_1",name:"Inner campus contest — 1st",coins:7},
-  {id:"campus_2",name:"Inner campus contest — 2nd",coins:5},
-  {id:"campus_3",name:"Inner campus contest — 3rd",coins:3},
-  {id:"cu_1",name:"Class union program — 1st",coins:5},
-  {id:"cu_2",name:"Class union program — 2nd",coins:3},
-  {id:"cu_3",name:"Class union program — 3rd",coins:1},
-  {id:"balarama",name:"Balarama/Digest GK quiz winner",coins:2},
-  {id:"gk_1",name:"Weekly GK quiz — 1st",coins:5},
-  {id:"gk_2",name:"Weekly GK quiz — 2nd",coins:3},
-  {id:"gk_3",name:"Weekly GK quiz — 3rd",coins:1},
-  {id:"book_review",name:"Selected book review",coins:3},
-  {id:"ct_1",name:"Class teacher program — 1st",coins:5},
-  {id:"ct_2",name:"Class teacher program — 2nd",coins:4},
-  {id:"ct_3",name:"Class teacher program — 3rd",coins:2},
-  {id:"exam_95",name:"Exam topper — above 95%",coins:20},
-  {id:"exam_90",name:"Exam topper — above 90%",coins:15},
-  {id:"exam_85",name:"Exam topper — above 85%",coins:10},
-  {id:"exam_80",name:"Exam topper — above 80%",coins:5},
-  {id:"best_speech",name:"Best speech performance",coins:5},
-  {id:"magazine",name:"Magazine Making",coins:3},
-  {id:"newspaper",name:"News Paper making",coins:2},
-  {id:"al_imam",name:"Al- Imam",coins:3},
-  {id:"lang_speech",name:"Language Speech",coins:3},
-  {id:"speech_review",name:"Speech Review",coins:3},
-  {id:"haddad",name:"Haddad Leading",coins:3},
-  {id:"ziyarath",name:"Ziyarath Dua",coins:3},
-  {id:"mtp_scholarship",name:"MTP Scholarship Exam",coins:10}
+  {id:"pub_essay",name:"Essay",coins:10,section:"Publication"},
+  {id:"pub_story",name:"Story",coins:7,section:"Publication"},
+  {id:"pub_poem",name:"Poem",coins:5,section:"Publication"},
+  {id:"pub_pic",name:"Picture/Painting",coins:5,section:"Publication"},
+  {id:"pub_magazine",name:"Class Magazine",coins:3,section:"Publication"},
+  {id:"pub_newspaper",name:"Newspaper",coins:2,section:"Publication"},
+  {id:"outer_paper",name:"Paper Presentation",coins:15,section:"Outer Activities"},
+  {id:"outer_speech",name:"Public Speech",coins:10,section:"Outer Activities"},
+  {id:"icc_pams",name:"PAMS Scholarship",coins:15,section:"Inner Campus Contest"},
+  {id:"icc_1",name:"First",coins:7,section:"Inner Campus Contest"},
+  {id:"icc_2",name:"Second",coins:5,section:"Inner Campus Contest"},
+  {id:"icc_3",name:"Third",coins:3,section:"Inner Campus Contest"},
+  {id:"cau_1",name:"First",coins:7,section:"Campus Union"},
+  {id:"cau_2",name:"Second",coins:5,section:"Campus Union"},
+  {id:"cau_3",name:"Third",coins:3,section:"Campus Union"},
+  {id:"clu_1",name:"First",coins:5,section:"Class Union"},
+  {id:"clu_2",name:"Second",coins:3,section:"Class Union"},
+  {id:"clu_3",name:"Third",coins:1,section:"Class Union"},
+  {id:"ctp_1",name:"First",coins:5,section:"Class Teacher Program"},
+  {id:"ctp_2",name:"Second",coins:4,section:"Class Teacher Program"},
+  {id:"ctp_3",name:"Third",coins:2,section:"Class Teacher Program"},
+  {id:"sem_95",name:"95%+",coins:20,section:"Examination",sub:"Semester Examination"},
+  {id:"sem_90",name:"90%+",coins:18,section:"Examination",sub:"Semester Examination"},
+  {id:"sem_85",name:"85%+",coins:16,section:"Examination",sub:"Semester Examination"},
+  {id:"sem_80",name:"80%+",coins:14,section:"Examination",sub:"Semester Examination"},
+  {id:"sem_75",name:"75%+",coins:12,section:"Examination",sub:"Semester Examination"},
+  {id:"sem_70",name:"70%+",coins:10,section:"Examination",sub:"Semester Examination"},
+  {id:"sem_65",name:"65%+",coins:8,section:"Examination",sub:"Semester Examination"},
+  {id:"sem_60",name:"60%+",coins:6,section:"Examination",sub:"Semester Examination"},
+  {id:"sem_55",name:"55%+",coins:4,section:"Examination",sub:"Semester Examination"},
+  {id:"sem_50",name:"50%+",coins:2,section:"Examination",sub:"Semester Examination"},
+  {id:"cce_95",name:"95%+",coins:10,section:"Examination",sub:"CCE F of Semester Exam"},
+  {id:"cce_90",name:"90%+",coins:9,section:"Examination",sub:"CCE F of Semester Exam"},
+  {id:"cce_85",name:"85%+",coins:8,section:"Examination",sub:"CCE F of Semester Exam"},
+  {id:"cce_80",name:"80%+",coins:7,section:"Examination",sub:"CCE F of Semester Exam"},
+  {id:"cce_75",name:"75%+",coins:6,section:"Examination",sub:"CCE F of Semester Exam"},
+  {id:"cce_70",name:"70%+",coins:5,section:"Examination",sub:"CCE F of Semester Exam"},
+  {id:"cce_65",name:"65%+",coins:4,section:"Examination",sub:"CCE F of Semester Exam"},
+  {id:"cce_60",name:"60%+",coins:3,section:"Examination",sub:"CCE F of Semester Exam"},
+  {id:"cce_55",name:"55%+",coins:2,section:"Examination",sub:"CCE F of Semester Exam"},
+  {id:"cce_50",name:"50%+",coins:1,section:"Examination",sub:"CCE F of Semester Exam"},
+  {id:"ib_alimam",name:"Al-Imam",coins:3,section:"Ibadath"},
+  {id:"ib_haddad",name:"Haddad Leading",coins:3,section:"Ibadath"},
+  {id:"ib_ziyarat",name:"Ziyarat / Dua",coins:3,section:"Ibadath"},
+  {id:"sp_classteacher",name:"Class Teacher Appreciation",coins:0,section:"Special Appreciation"},
+  {id:"sp_principal",name:"Principal Appreciation",coins:0,section:"Special Appreciation"}
 ];
 const MO=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const COLORS=['#6C63FF','#FF6584','#43B89C','#F7A440','#E05C97','#3A86FF','#8338EC'];
@@ -1062,7 +1103,7 @@ const SEED_HISTORY=[
 {r:39,name:"Muhammed Rabeeh",cat:"MTP Scholarship Exam",coins:10,addedBy:"Usthad Arafath Hudawi",date:"13/7/2026"},
 {r:57,name:"Muhammad Safvan KTK",cat:"MTP Scholarship Exam",coins:10,addedBy:"Usthad Arafath Hudawi",date:"13/7/2026"}
 ];
-let S={coins:{},history:[],cats:JSON.parse(JSON.stringify(DCATS)),profiles:{},adminProfiles:{},leaders:{classLeader:CLASS_LEADER_ROLL,assiLeader:ASSI_LEADER_ROLL},sadad:defaultSadadState()};
+let S={coins:{},history:[],cats:JSON.parse(JSON.stringify(DCATS)),catSectionOrder:CAT_SECTIONS_DEFAULT.slice(),profiles:{},adminProfiles:{},leaders:{classLeader:CLASS_LEADER_ROLL,assiLeader:ASSI_LEADER_ROLL},sadad:defaultSadadState()};
 STU.forEach(function(s){S.coins[s.r]=0;});
 
 // ── FIREBASE (real-time cloud sync) ──
@@ -1156,13 +1197,13 @@ function deletePicRemote(roll){
 }
 
 function stateForSync(){
-  var copy=JSON.parse(JSON.stringify({cats:S.cats,profiles:S.profiles,adminProfiles:S.adminProfiles,leaders:S.leaders,sadad:S.sadad}));
+  var copy=JSON.parse(JSON.stringify({cats:S.cats,catSectionOrder:S.catSectionOrder,profiles:S.profiles,adminProfiles:S.adminProfiles,leaders:S.leaders,sadad:S.sadad}));
   Object.keys(copy.profiles||{}).forEach(function(r){if(copy.profiles[r])delete copy.profiles[r].pic;});
   Object.keys(copy.adminProfiles||{}).forEach(function(k){if(copy.adminProfiles[k])delete copy.adminProfiles[k].pic;});
   return copy;
 }
 function cacheLocal(){
-  try{localStorage.setItem('sadad_v13',JSON.stringify({cats:S.cats,profiles:S.profiles,adminProfiles:S.adminProfiles,history:S.history,leaders:S.leaders,sadad:S.sadad}));}catch(e){}
+  try{localStorage.setItem('sadad_v13',JSON.stringify({cats:S.cats,catSectionOrder:S.catSectionOrder,profiles:S.profiles,adminProfiles:S.adminProfiles,history:S.history,leaders:S.leaders,sadad:S.sadad}));}catch(e){}
 }
 function save(){
   cacheLocal();
@@ -1211,7 +1252,7 @@ function load(){
   docRef.onSnapshot({includeMetadataChanges:true},function(snap){
     if(snap.exists){
       var d=snap.data();
-      S.cats=d.cats||JSON.parse(JSON.stringify(DCATS));S.profiles=d.profiles||{};S.adminProfiles=d.adminProfiles||{};
+      S.cats=d.cats||JSON.parse(JSON.stringify(DCATS));S.catSectionOrder=d.catSectionOrder||CAT_SECTIONS_DEFAULT.slice();S.profiles=d.profiles||{};S.adminProfiles=d.adminProfiles||{};
       S.leaders=d.leaders||{classLeader:CLASS_LEADER_ROLL,assiLeader:ASSI_LEADER_ROLL};
       S.sadad=d.sadad||defaultSadadState();
       if(d.history&&d.history.length)tryMigrateHistory(d.history);
@@ -1228,7 +1269,7 @@ function load(){
     updateSyncBadge(true,false,true);
     try{
       var raw=localStorage.getItem('sadad_v13');
-      if(raw){var p=JSON.parse(raw);S.cats=p.cats||DCATS;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};S.history=p.history||[];S.leaders=p.leaders||{classLeader:CLASS_LEADER_ROLL,assiLeader:ASSI_LEADER_ROLL};S.sadad=p.sadad||defaultSadadState();recompute();}
+      if(raw){var p=JSON.parse(raw);S.cats=p.cats||DCATS;S.catSectionOrder=p.catSectionOrder||CAT_SECTIONS_DEFAULT.slice();S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};S.history=p.history||[];S.leaders=p.leaders||{classLeader:CLASS_LEADER_ROLL,assiLeader:ASSI_LEADER_ROLL};S.sadad=p.sadad||defaultSadadState();recompute();}
       fbReady=true;refreshCurrentView();
     }catch(e){}
   });
@@ -1299,7 +1340,7 @@ function importData(input){
       var p=JSON.parse(e.target.result);
       if(!p.history){showToast('Invalid file format!','error');return;}
       if(!confirm('This will ADD '+p.history.length+' history records to the live data (existing records are kept). Continue?'))return;
-      S.cats=p.cats||DCATS;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};
+      S.cats=p.cats||DCATS;S.catSectionOrder=p.catSectionOrder||S.catSectionOrder;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};
       S.leaders=p.leaders||S.leaders;S.sadad=p.sadad||S.sadad;
       save();
       var batch=db.batch();var n=0;
@@ -1355,6 +1396,7 @@ function showTab(t,btn){
   if(t==='students')renderGrid();
   if(t==='teachers')renderFaculty();
   if(t==='committee')renderCommittee();
+  if(t==='categories')renderCategoriesTab();
   if(t==='reports')renderReports();
   if(t==='sadad')renderSadadCommittee();
   if(t==='admin'){fillSelects();renderCatList();renderHist();}
@@ -1399,7 +1441,7 @@ function checkPw(){
     document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
     var el=document.getElementById('tab-admin');el.classList.add('active');
     setTimeout(function(){el.classList.add('slide-in');},10);
-    document.querySelectorAll('.tab-btn')[6].classList.add('active');
+    document.querySelectorAll('.tab-btn')[7].classList.add('active');
     fillSelects();renderCatList();renderHist();renderFaculty();loadAdminProfile();
   }else{document.getElementById('pwErr').textContent='Incorrect password.';}
 }
@@ -1633,27 +1675,31 @@ function renderCommittee(){
 
   document.getElementById('mentorTeams').innerHTML=ranked.map(function(rt,pos){
     var team=rt.team,col=rt.color;
+    var maxC=Math.max.apply(null,rt.sortedMembers.map(function(r){return S.coins[r]||0;}))||1;
     var membersHtml=rt.sortedMembers.map(function(r,mi){
       var s=STU.find(function(x){return x.r===r;});
       if(!s)return '';
-      var p=S.profiles[r]||{};var avCol=COLORS[r%COLORS.length];
-      var av=p.pic?'<img src="'+p.pic+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':'<span>'+ini(s.n)+'</span>';
+      var p=S.profiles[r]||{};
+      var av=p.pic?'<img src="'+p.pic+'">':'<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:'+COLORS[r%COLORS.length]+';color:#fff;font-weight:700;font-size:14px">'+ini(s.n)+'</span>';
       var isCaptain=r===team.captain;
-      var medal=mi<3?medals[mi]:'';
-      return '<div class="stu-card" onclick="openProfile('+r+')" style="--accent:'+avCol+(isCaptain?';border-color:'+col+'':'')+'">'
-        +(isCaptain?'<div style="position:absolute;top:4px;right:4px;font-size:14px" title="Team Captain">&#128081;</div>':'')
-        +(medal?'<div style="position:absolute;top:4px;left:4px;font-size:14px" title="Rank '+(mi+1)+' in team">'+medal+'</div>':'')
-        +'<div class="stu-av" style="background:'+avCol+'">'+av+'</div>'
-        +'<div class="stu-roll-badge">'+r+'</div>'
-        +'<div class="stu-nm">'+s.n+'</div>'
-        +'<div class="stu-coins">&#127995;&#65039; '+(S.coins[r]||0)+'</div></div>';
+      var c=S.coins[r]||0;
+      var pct=Math.max(4,Math.round(c/maxC*100));
+      return '<div class="team-rank-row" onclick="openProfile('+r+')">'
+        +'<div class="team-rank-num">'+(mi+1)+'</div>'
+        +'<div class="team-rank-av">'+av+'</div>'
+        +'<div class="team-rank-body">'
+        +'<div class="team-rank-name">'+(isCaptain?'&#128081; ':'')+esc(s.n)+'</div>'
+        +'<div class="team-rank-bar-wrap">'
+        +'<div class="team-rank-bar-track"><div class="team-rank-bar-fill" style="width:'+pct+'%;background:linear-gradient(90deg,'+col+',#8B5CF6)"></div></div>'
+        +'<div class="team-rank-coin">&#129689; '+c+'</div>'
+        +'</div></div></div>';
     }).join('');
     var rankBadge=pos===0?'<span class="hbadge gold" style="margin-right:6px">&#127942; Leading <span class="celebrate-lead">&#127882;</span></span>':'';
     return '<div class="card" style="border-top:3px solid '+col+'">'
       +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:6px">'
-      +'<div style="font-size:14px;font-weight:700;color:var(--text)">'+rankBadge+'&#128302; '+team.mentor+' <span style="color:var(--text3);font-weight:500;font-size:12px">&bull; '+team.place+'</span></div>'
+      +'<div style="font-size:14px;font-weight:700;color:var(--text)">'+rankBadge+'&#128302; '+esc(team.mentor)+'\u2019s Team ('+rt.sortedMembers.length+') <span style="color:var(--text3);font-weight:500;font-size:12px">&bull; '+esc(team.place)+'</span></div>'
       +'<div class="hbadge" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+rt.total+' coins</div></div>'
-      +'<div class="sgrid">'+membersHtml+'</div></div>';
+      +'<div class="team-list-scroll">'+membersHtml+'</div></div>';
   }).join('');
 }
 function openLeaderEdit(){
@@ -2108,16 +2154,114 @@ function deductCoins(){
 }
 function renderCatList(){
   document.getElementById('catList').innerHTML=S.cats.map(function(c,i){
-    return '<div class="cat-row"><span class="cat-name">'+c.name+'</span><span class="hbadge gold">'+c.coins+'</span><button class="btn-del-sm" onclick="delCat('+i+')">Del</button></div>';
+    return '<div class="cat-row"><span class="cat-name">'+esc(c.name)+'</span><span class="hbadge gold">'+c.coins+'</span><button class="btn-del-sm" onclick="delCat('+i+')">Del</button></div>';
   }).join('');
 }
-function delCat(i){S.cats.splice(i,1);save();renderCatList();fillSelects();}
+function delCat(i){S.cats.splice(i,1);save();renderCatList();fillSelects();renderCategoriesTab();}
 function addCat(){
   var name=document.getElementById('newCatName').value.trim();var coins=parseInt(document.getElementById('newCatCoins').value);
   if(!name||!coins){showToast('Fill both fields!','error');return;}
-  S.cats.push({id:'c'+Date.now(),name:name,coins:coins});save();
+  S.cats.push({id:'c'+Date.now(),name:name,coins:coins,section:S.catSectionOrder[S.catSectionOrder.length-1]||'General'});save();
   document.getElementById('newCatName').value='';document.getElementById('newCatCoins').value='';
-  showToast('Category added!','success');renderCatList();fillSelects();
+  showToast('Category added!','success');renderCatList();fillSelects();renderCategoriesTab();
+}
+// ── PUBLIC COIN-SYSTEM TAB (grouped by section, admin add/edit/delete) ──
+function renderCategoriesTab(){
+  if(!S.catSectionOrder||!S.catSectionOrder.length)S.catSectionOrder=CAT_SECTIONS_DEFAULT.slice();
+  document.getElementById('catAddSectionBtnWrap').innerHTML=admin
+    ?'<button class="btn btn-sm" style="width:100%;margin:.75rem 0;background:linear-gradient(135deg,#6C63FF,#8B5CF6);border:none;color:#fff;font-weight:700" onclick="addCatSection()">&#10133; Add Section</button>'
+    :'';
+  var html=S.catSectionOrder.map(function(secName){
+    var cats=S.cats.filter(function(c){return c.section===secName;});
+    var subGroups={};var subOrder=[];
+    cats.forEach(function(c){
+      var key=c.sub||'';
+      if(!(key in subGroups)){subGroups[key]=[];subOrder.push(key);}
+      subGroups[key].push(c);
+    });
+    var editBtns=admin?(
+      '<button class="icon-btn-sm" title="Rename section" onclick="renameCatSection(\''+encodeURIComponent(secName)+'\')">&#9998;&#65039;</button>'
+      +'<button class="icon-btn-sm del" title="Delete section" onclick="deleteCatSection(\''+encodeURIComponent(secName)+'\')">&#10005;</button>'
+    ):'';
+    var body=subOrder.map(function(subKey){
+      var rows=subGroups[subKey].map(function(c){
+        var adminCtl=admin?(
+          '<button class="icon-btn-sm" title="Edit" onclick="editCategory(\''+c.id+'\')">&#9998;&#65039;</button>'
+          +'<button class="icon-btn-sm del" title="Delete" onclick="deleteCategory(\''+c.id+'\')">&#10005;</button>'
+        ):'';
+        return '<div class="cat-row"><span class="cat-name">'+esc(c.name)+'</span><span class="hbadge gold">'+(c.coins>0?c.coins+' coins':'To be decided')+'</span>'+adminCtl+'</div>';
+      }).join('');
+      var subHead=subKey?'<div style="font-size:11px;font-weight:700;color:var(--text3);margin:.5rem 0 .3rem 2px">'+esc(subKey)+'</div>':'';
+      return subHead+rows;
+    }).join('');
+    var addRow=admin?'<button class="btn btn-sm" style="width:100%;margin-top:.5rem;background:rgba(108,99,255,.12);border-color:rgba(108,99,255,.3);color:#a9a3ff" onclick="addCategoryToSection(\''+encodeURIComponent(secName)+'\')">&#10133; Add Category</button>':'';
+    return '<div class="card">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">'
+      +'<div style="font-size:13px;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:.04em">'+esc(secName)+'</div>'
+      +'<div>'+editBtns+'</div></div>'
+      +(body||'<div class="empty-state" style="padding:.4rem 0">No categories yet</div>')
+      +addRow+'</div>';
+  }).join('');
+  document.getElementById('catSectionsList').innerHTML=html;
+}
+function addCatSection(){
+  if(!admin)return;
+  var name=prompt('New section name:');
+  if(!name)return;name=name.trim();
+  if(!name)return;
+  if(S.catSectionOrder.indexOf(name)>-1){showToast('Section already exists','error');return;}
+  S.catSectionOrder.push(name);save();renderCategoriesTab();showToast('Section added!','success');
+}
+function renameCatSection(encName){
+  if(!admin)return;
+  var oldName=decodeURIComponent(encName);
+  var name=prompt('Rename section:',oldName);
+  if(!name)return;name=name.trim();
+  if(!name||name===oldName)return;
+  var idx=S.catSectionOrder.indexOf(oldName);
+  if(idx>-1)S.catSectionOrder[idx]=name;
+  S.cats.forEach(function(c){if(c.section===oldName)c.section=name;});
+  save();renderCategoriesTab();fillSelects();showToast('Section renamed!','success');
+}
+function deleteCatSection(encName){
+  if(!admin)return;
+  var name=decodeURIComponent(encName);
+  var count=S.cats.filter(function(c){return c.section===name;}).length;
+  if(!confirm('Delete section "'+name+'"'+(count?' and its '+count+' categor'+(count===1?'y':'ies'):'')+'?'))return;
+  S.cats=S.cats.filter(function(c){return c.section!==name;});
+  S.catSectionOrder=S.catSectionOrder.filter(function(s){return s!==name;});
+  save();renderCategoriesTab();fillSelects();showToast('Section deleted','success');
+}
+function addCategoryToSection(encName){
+  if(!admin)return;
+  var section=decodeURIComponent(encName);
+  var name=prompt('Category name:');
+  if(!name)return;name=name.trim();if(!name)return;
+  var coinsStr=prompt('Coins for this category (enter 0 for "To be decided"):','0');
+  if(coinsStr===null)return;
+  var coins=parseInt(coinsStr);if(isNaN(coins)||coins<0)coins=0;
+  S.cats.push({id:'c'+Date.now(),name:name,coins:coins,section:section});
+  save();renderCategoriesTab();fillSelects();showToast('Category added!','success');
+}
+function editCategory(id){
+  if(!admin)return;
+  var c=S.cats.find(function(x){return x.id===id;});
+  if(!c)return;
+  var name=prompt('Category name:',c.name);
+  if(!name)return;name=name.trim();if(!name)return;
+  var coinsStr=prompt('Coins (enter 0 for "To be decided"):',String(c.coins));
+  if(coinsStr===null)return;
+  var coins=parseInt(coinsStr);if(isNaN(coins)||coins<0)coins=0;
+  c.name=name;c.coins=coins;
+  save();renderCategoriesTab();fillSelects();showToast('Category updated!','success');
+}
+function deleteCategory(id){
+  if(!admin)return;
+  var c=S.cats.find(function(x){return x.id===id;});
+  if(!c)return;
+  if(!confirm('Delete category "'+c.name+'"?'))return;
+  S.cats=S.cats.filter(function(x){return x.id!==id;});
+  save();renderCategoriesTab();fillSelects();showToast('Category deleted','success');
 }
 function renderAudit(){
   var totEl=document.getElementById('auditTotals');
