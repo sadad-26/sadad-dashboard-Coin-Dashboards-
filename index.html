@@ -52,6 +52,21 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .tab-btn{flex:1;padding:8px 4px;border-radius:11px;border:none;font-size:12px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;background:transparent;color:var(--text3);transition:all .25s ease;text-align:center}
 .tab-btn.active{background:linear-gradient(135deg,#6C63FF,#8B5CF6);color:#fff;box-shadow:0 4px 14px rgba(108,99,255,.4);font-weight:600}
 .tab-btn:hover:not(.active){background:rgba(255,255,255,.05);color:var(--text2)}
+.hamburger-btn{display:none;position:absolute;top:10px;left:12px;z-index:5;width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fffffe;font-size:17px;align-items:center;justify-content:center;cursor:pointer}
+.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:199;opacity:0;transition:opacity .25s ease}
+.drawer-backdrop.open{display:block;opacity:1}
+@media (max-width:899px){
+  .hamburger-btn{display:flex}
+  .header{padding-left:56px}
+  .tab-bar{position:fixed;top:0;left:0;bottom:0;width:250px;max-width:78vw;flex-direction:column;gap:5px;margin:0;border-radius:0;border:none;border-right:1px solid var(--border);padding:74px 12px 20px;z-index:200;transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto}
+  .tab-bar.drawer-open{transform:translateX(0)}
+  .tab-bar .tab-btn{flex:none;width:100%;text-align:left;padding:12px 14px;font-size:13.5px}
+}
+@media (min-width:900px){
+  .tab-bar{position:fixed;top:0;left:0;bottom:0;width:230px;flex-direction:column;gap:5px;margin:0;border-radius:0;border:none;border-right:1px solid var(--border);padding:26px 14px;z-index:150;overflow-y:auto}
+  .tab-bar .tab-btn{flex:none;width:100%;text-align:left;padding:12px 14px;font-size:13.5px}
+  .wrap{margin:0 0 0 230px;max-width:720px}
+}
 
 /* SECTIONS */
 .section{display:none;opacity:0;transform:translateX(22px);transition:opacity .32s ease,transform .32s cubic-bezier(.4,0,.2,1)}
@@ -423,6 +438,7 @@ canvas{display:block;width:100%!important}
 
 <!-- HEADER -->
 <div class="header">
+  <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleDrawer()">&#9776;</button>
   <button id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark theme" style="position:absolute;top:10px;right:12px;z-index:5;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fffffe;border-radius:20px;padding:5px 10px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px">&#9728;&#65039;</button>
   <div class="header-logos">
     <img class="logo-img" id="logoImgSadad" alt="SADAD">
@@ -461,7 +477,8 @@ canvas{display:block;width:100%!important}
 </div>
 
 <!-- TABS -->
-<div class="tab-bar">
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+<div class="tab-bar" id="tabBar">
   <button class="tab-btn active" onclick="showTab('lb',this)">&#127942; Leaderboard</button>
   <button class="tab-btn" onclick="showTab('students',this)">&#128101; Students</button>
   <button class="tab-btn" onclick="showTab('teachers',this)">&#128114; Faculty</button>
@@ -1150,8 +1167,10 @@ function cacheLocal(){
 function save(){
   cacheLocal();
   fbSaving=true;
-  docRef.set(stateForSync()).catch(function(e){console.error('Firestore save failed',e);})
-    .finally(function(){fbSaving=false;});
+  docRef.set(stateForSync()).catch(function(e){
+    console.error('Firestore save failed',e);
+    showToast('Change saved on this device only — check your connection','error');
+  }).finally(function(){fbSaving=false;});
 }
 // One history entry = one Firestore document. Never rewrite the whole history
 // array as a blob -- that is what caused simultaneous admins to silently
@@ -1258,6 +1277,7 @@ function recompute(){
   S.history.forEach(function(h){S.coins[h.r]=(S.coins[h.r]||0)+h.coins;});
 }
 function ini(n){var p=n.trim().split(' ');return p.length>=2?(p[0][0]+p[1][0]).toUpperCase():n.slice(0,2).toUpperCase();}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 
 // ── EXPORT / IMPORT ──
 function exportData(){
@@ -1338,6 +1358,15 @@ function showTab(t,btn){
   if(t==='reports')renderReports();
   if(t==='sadad')renderSadadCommittee();
   if(t==='admin'){fillSelects();renderCatList();renderHist();}
+  closeDrawer();
+}
+function toggleDrawer(){
+  document.getElementById('tabBar').classList.toggle('drawer-open');
+  document.getElementById('drawerBackdrop').classList.toggle('open');
+}
+function closeDrawer(){
+  document.getElementById('tabBar').classList.remove('drawer-open');
+  document.getElementById('drawerBackdrop').classList.remove('open');
 }
 function showSub(t,btn){
   document.querySelectorAll('[id^="subtab-"]').forEach(function(e){e.style.display='none';});
@@ -1555,7 +1584,7 @@ function renderFaculty(){
     return '<div class="faculty-card">'
       +'<div class="faculty-av" style="background:'+grads[i%grads.length]+';overflow:hidden">'+av+'</div>'
       +'<div><div style="font-size:14px;font-weight:600;color:var(--text)">'+a.name+'</div>'
-      +'<div style="font-size:12px;color:var(--text3)">'+(p.place||a.place)+' &bull; '+(p.role||a.role)+'</div>'
+      +'<div style="font-size:12px;color:var(--text3)">'+esc(p.place||a.place)+' &bull; '+esc(p.role||a.role)+'</div>'
       +'<span class="hbadge green" style="display:inline-block;margin-top:4px">Admin</span></div></div>';
   }).join('');
 }
@@ -1669,7 +1698,7 @@ function renderSadadCommittee(){
       +'<div style="flex:1;cursor:pointer" onclick="openProfile('+cur.r+')">'
       +'<div class="exec-role">'+e.role+'</div>'
       +'<div class="exec-name">'+pc.name+'</div>'
-      +'<div class="exec-place">'+(cur.place||'')+'</div></div>'
+      +'<div class="exec-place">'+esc(cur.place||'')+'</div></div>'
       +editBtn+'</div>';
   }).join('');
 
@@ -1711,7 +1740,7 @@ function wingRolesHtml(w,st){
       +'<span class="wing-role-lbl">'+rl.label+'</span>'
       +'<span class="wing-role-av" style="background:'+pc.avCol+'" onclick="openProfile('+cur.r+')">'+pc.av+'</span>'
       +'<span class="wing-role-name" style="cursor:pointer" onclick="openProfile('+cur.r+')">'+pc.name+'</span>'
-      +'<span class="wing-role-place">'+(cur.place||'')+'</span>'+editBtn+'</div>';
+      +'<span class="wing-role-place">'+esc(cur.place||'')+'</span>'+editBtn+'</div>';
   }).join('')||'<div class="empty-state">No committee members set yet</div>';
 }
 function wingLogHtml(w,st){
@@ -1719,7 +1748,7 @@ function wingLogHtml(w,st){
   return logEntries.length?logEntries.map(function(le,li){
     var realIdx=st.log.length-1-li;
     var delBtn=admin?'<button class="icon-btn-sm del" title="Remove" onclick="deleteSadadStar(\''+w.id+'\','+realIdx+')">&#10005;</button>':'';
-    return '<div class="star-log-row"><span class="star-log-note">'+le.note+'</span>'
+    return '<div class="star-log-row"><span class="star-log-note">'+esc(le.note)+'</span>'
       +'<span class="hbadge gold">&#11088; +'+le.stars+'</span>'
       +'<span class="star-log-meta">'+(le.date||'')+'</span>'+delBtn+'</div>';
   }).join(''):'<div class="empty-state" style="padding:.4rem 0">No star-earning programs logged yet</div>';
@@ -1886,7 +1915,7 @@ function renderProfHist(roll){
   document.getElementById('pHistList').innerHTML=hist.length
     ?hist.map(function(h){
       var neg=h.coins<0;
-      var catLine=h.cat+(h.note?' &mdash; <span style="color:var(--text3);font-weight:400">'+h.note+'</span>':'');
+      var catLine=esc(h.cat)+(h.note?' &mdash; <span style="color:var(--text3);font-weight:400">'+esc(h.note)+'</span>':'');
       return '<div class="hist-row"><span class="hbadge '+(neg?'red':'gold')+'">'+(neg?'':'+')+h.coins+'</span>'
         +'<span class="hcat">'+catLine+'</span><span class="hdate">'+h.date+'</span>'
         +(admin?'<button class="btn-edit-sm" onclick="openEdit(\''+h.id+'\','+roll+')">Edit</button>'
@@ -2112,7 +2141,7 @@ function renderAudit(){
   listEl.innerHTML=fl.length?fl.map(function(h){
     var neg=h.coins<0;
     var when=h.ts&&h.ts.toMillis?new Date(h.ts.toMillis()).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'(no timestamp)';
-    var catLine=h.cat+(h.note?' &mdash; <span style="color:var(--text3);font-weight:400">'+h.note+'</span>':'');
+    var catLine=esc(h.cat)+(h.note?' &mdash; <span style="color:var(--text3);font-weight:400">'+esc(h.note)+'</span>':'');
     return '<div class="hist-row"><span class="hbadge '+(neg?'red':'green')+'">'+h.name+'</span>'
       +'<span class="hcat">'+catLine+'</span><span class="hbadge '+(neg?'red':'gold')+'">'+(neg?'':'+')+h.coins+'</span>'
       +'<span class="hbadge blue">'+(h.addedBy?h.addedBy.split(' ')[1]||h.addedBy:'?')+'</span>'
@@ -2128,7 +2157,7 @@ function renderHist(){
   document.getElementById('histList').innerHTML=fl.length
     ?fl.map(function(h){
       var neg=h.coins<0;
-      var catLine=h.cat+(h.note?' &mdash; <span style="color:var(--text3);font-weight:400">'+h.note+'</span>':'');
+      var catLine=esc(h.cat)+(h.note?' &mdash; <span style="color:var(--text3);font-weight:400">'+esc(h.note)+'</span>':'');
       return '<div class="hist-row"><span class="hbadge '+(neg?'red':'green')+'">'+h.name+'</span>'
         +'<span class="hcat">'+catLine+'</span><span class="hbadge '+(neg?'red':'gold')+'">'+(neg?'':'+')+h.coins+'</span>'
         +(h.addedBy?'<span class="hbadge blue">'+(h.addedBy.split(' ')[1]||h.addedBy.split(' ')[0])+'</span>':'')
@@ -2292,7 +2321,7 @@ function buildPrintHTML(d){
   html+='<div class="pr-staffrow">';
   ADMINS.forEach(function(a){
     var p=S.adminProfiles[a.name]||{};
-    html+='<span><b>'+(p.role||a.role)+':</b> '+a.name+', '+(p.place||a.place)+'</span>';
+    html+='<span><b>'+esc(p.role||a.role)+':</b> '+esc(a.name)+', '+esc(p.place||a.place)+'</span>';
   });
   html+='</div>';
   html+='<div class="pr-sub" style="margin-top:6px">Generated: '+genDate+' &bull; Total Students: '+STU.length+'</div>';
@@ -2326,7 +2355,7 @@ function buildPrintHTML(d){
   html+='<div class="pr-sig">';
   ADMINS.forEach(function(a){
     var p=S.adminProfiles[a.name]||{};
-    html+='<div><div class="line">'+a.name+'</div>'+(p.role||a.role)+'</div>';
+    html+='<div><div class="line">'+esc(a.name)+'</div>'+esc(p.role||a.role)+'</div>';
   });
   html+='<div><div class="pr-committee-seal">&nbsp;</div><div class="line">&nbsp;</div>SADAD Committee</div>';
   html+='</div>';
@@ -2377,7 +2406,7 @@ function printStudentReport(roll){
   html+='<div class="pr-staffrow">';
   ADMINS.forEach(function(a){
     var ap=S.adminProfiles[a.name]||{};
-    html+='<span><b>'+(ap.role||a.role)+':</b> '+a.name+', '+(ap.place||a.place)+'</span>';
+    html+='<span><b>'+esc(ap.role||a.role)+':</b> '+esc(a.name)+', '+esc(ap.place||a.place)+'</span>';
   });
   html+='</div>';
   html+='<div class="pr-sub" style="margin-top:6px">Generated: '+genDate+'</div>';
@@ -2405,7 +2434,7 @@ function printStudentReport(roll){
   html+='<div style="margin-top:16px;font-size:13px;font-weight:800;color:#154D33;border-bottom:2px solid #1F6F4A;padding-bottom:4px">ACTIVITY LOG</div>';
   if(myHist.length){
     html+='<table class="pr-table"><thead><tr><th>Date</th><th>Category</th><th>Note</th><th>Coins</th></tr></thead><tbody>';
-    myHist.forEach(function(h){html+='<tr><td>'+h.date+'</td><td>'+h.cat+'</td><td>'+(h.note||'')+'</td><td>'+h.coins+'</td></tr>';});
+    myHist.forEach(function(h){html+='<tr><td>'+esc(h.date)+'</td><td>'+esc(h.cat)+'</td><td>'+esc(h.note||'')+'</td><td>'+h.coins+'</td></tr>';});
     html+='</tbody></table>';
   }else{
     html+='<div class="empty-state">No coins recorded for '+s.n+' in this period</div>';
@@ -2414,7 +2443,7 @@ function printStudentReport(roll){
   html+='<div class="pr-sig">';
   ADMINS.forEach(function(a){
     var ap=S.adminProfiles[a.name]||{};
-    html+='<div><div class="line">'+a.name+'</div>'+(ap.role||a.role)+'</div>';
+    html+='<div><div class="line">'+esc(a.name)+'</div>'+esc(ap.role||a.role)+'</div>';
   });
   html+='<div><div class="pr-committee-seal">&nbsp;</div><div class="line">&nbsp;</div>SADAD Committee</div>';
   html+='</div>';
