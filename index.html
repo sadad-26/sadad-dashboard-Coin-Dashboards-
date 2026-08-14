@@ -92,27 +92,16 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 /* STUDENT GRID */
 .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.6rem}
 .team-list-scroll{max-height:440px;overflow-y:auto;padding-right:2px}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+@media (max-width:640px){.teams-grid{grid-template-columns:1fr}}
 .team-rank-row{display:flex;align-items:center;gap:12px;background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:10px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
 .team-rank-row:hover{border-color:rgba(108,99,255,.35)}
-.team-rank-num{font-size:14px;font-weight:700;color:var(--text3);width:16px;flex-shrink:0;text-align:center}
-
-/* TEAM BATTLE — SIDE BY SIDE */
-.team-battle-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;align-items:start}
-.team-battle-grid .card{padding:.75rem .7rem}
-.team-battle-grid .team-list-scroll{max-height:420px}
-.team-battle-grid .team-rank-row{gap:7px;padding:8px 7px;border-radius:11px;margin-bottom:6px}
-.team-battle-grid .team-rank-num{font-size:11px;width:12px}
-.team-battle-grid .team-rank-av{width:32px;height:32px}
-.team-battle-grid .team-rank-name{font-size:11.5px;margin-bottom:3px}
-.team-battle-grid .team-rank-bar-wrap{gap:5px;flex-wrap:wrap}
-.team-battle-grid .team-rank-bar-track{height:6px;flex-basis:100%;order:2}
-.team-battle-grid .team-rank-coin{font-size:10px;padding:2px 7px;order:1;margin-left:auto}
-.team-battle-grid .team-header-title{font-size:12px}
-@media (max-width:380px){
-  .team-battle-grid{grid-template-columns:1fr}
-}
-.team-rank-av{width:46px;height:46px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--card);border:2px solid rgba(255,255,255,.08)}
+.team-rank-num{font-size:14px;font-weight:700;color:var(--text3);width:20px;flex-shrink:0;text-align:center}
+.team-rank-av{width:54px;height:54px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--card);border:2px solid rgba(255,255,255,.08)}
 .team-rank-av img{width:100%;height:100%;object-fit:cover}
+.team-rank-row.team-medal-1 .team-rank-av{border-color:#ffd700;box-shadow:0 0 0 2px rgba(255,215,0,.25)}
+.team-rank-row.team-medal-2 .team-rank-av{border-color:#c0c0c0;box-shadow:0 0 0 2px rgba(192,192,192,.22)}
+.team-rank-row.team-medal-3 .team-rank-av{border-color:#cd7f32;box-shadow:0 0 0 2px rgba(205,127,50,.22)}
 .team-rank-body{flex:1;min-width:0}
 .team-rank-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .team-rank-bar-wrap{display:flex;align-items:center;gap:8px}
@@ -562,7 +551,7 @@ canvas{display:block;width:100%!important}
     <div id="teamBattleBar"></div>
   </div>
 
-  <div id="mentorTeams" class="team-battle-grid"></div>
+  <div id="mentorTeams" class="teams-grid"></div>
 
   <div class="card" style="text-align:center;color:var(--text3);font-size:12px">
     Sadad Committee &mdash; details coming soon
@@ -1264,6 +1253,15 @@ function seedFreshHistory(){
     batch.commit().catch(function(e){console.error('Seed failed',e);});
   });
 }
+function migrateCatsIfNeeded(){
+  var needsMigration=!S.cats||!S.cats.length||!S.cats.some(function(c){return !!c.section;});
+  if(needsMigration){
+    S.cats=JSON.parse(JSON.stringify(DCATS));
+    S.catSectionOrder=CAT_SECTIONS_DEFAULT.slice();
+    return true;
+  }
+  return false;
+}
 function load(){
   docRef.onSnapshot({includeMetadataChanges:true},function(snap){
     if(snap.exists){
@@ -1271,6 +1269,7 @@ function load(){
       S.cats=d.cats||JSON.parse(JSON.stringify(DCATS));S.catSectionOrder=d.catSectionOrder||CAT_SECTIONS_DEFAULT.slice();S.profiles=d.profiles||{};S.adminProfiles=d.adminProfiles||{};
       S.leaders=d.leaders||{classLeader:CLASS_LEADER_ROLL,assiLeader:ASSI_LEADER_ROLL};
       S.sadad=d.sadad||defaultSadadState();
+      if(migrateCatsIfNeeded())save();
       if(d.history&&d.history.length)tryMigrateHistory(d.history);
     }else{
       docRef.set(stateForSync()).catch(function(e){console.error('Firestore init failed',e);});
@@ -1285,7 +1284,7 @@ function load(){
     updateSyncBadge(true,false,true);
     try{
       var raw=localStorage.getItem('sadad_v13');
-      if(raw){var p=JSON.parse(raw);S.cats=p.cats||DCATS;S.catSectionOrder=p.catSectionOrder||CAT_SECTIONS_DEFAULT.slice();S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};S.history=p.history||[];S.leaders=p.leaders||{classLeader:CLASS_LEADER_ROLL,assiLeader:ASSI_LEADER_ROLL};S.sadad=p.sadad||defaultSadadState();recompute();}
+      if(raw){var p=JSON.parse(raw);S.cats=p.cats||DCATS;S.catSectionOrder=p.catSectionOrder||CAT_SECTIONS_DEFAULT.slice();S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};S.history=p.history||[];S.leaders=p.leaders||{classLeader:CLASS_LEADER_ROLL,assiLeader:ASSI_LEADER_ROLL};S.sadad=p.sadad||defaultSadadState();migrateCatsIfNeeded();recompute();}
       fbReady=true;refreshCurrentView();
     }catch(e){}
   });
@@ -1323,6 +1322,7 @@ function refreshCurrentView(){
   if(document.getElementById('tab-students').classList.contains('active'))renderGrid();
   if(document.getElementById('tab-teachers').classList.contains('active'))renderFaculty();
   if(document.getElementById('tab-committee').classList.contains('active'))renderCommittee();
+  if(document.getElementById('tab-categories').classList.contains('active'))renderCategoriesTab();
   if(document.getElementById('tab-reports').classList.contains('active'))renderReports();
   if(document.getElementById('tab-sadad').classList.contains('active'))renderSadadCommittee();
   if(document.getElementById('tab-admin').classList.contains('active')){renderCatList();renderHist();}
@@ -1357,6 +1357,7 @@ function importData(input){
       if(!p.history){showToast('Invalid file format!','error');return;}
       if(!confirm('This will ADD '+p.history.length+' history records to the live data (existing records are kept). Continue?'))return;
       S.cats=p.cats||DCATS;S.catSectionOrder=p.catSectionOrder||S.catSectionOrder;S.profiles=p.profiles||{};S.adminProfiles=p.adminProfiles||{};
+      migrateCatsIfNeeded();
       S.leaders=p.leaders||S.leaders;S.sadad=p.sadad||S.sadad;
       save();
       var batch=db.batch();var n=0;
@@ -1646,6 +1647,11 @@ function renderFaculty(){
       +'<span class="hbadge green" style="display:inline-block;margin-top:4px">Admin</span></div></div>';
   }).join('');
 }
+function celebrateTeam(mentorEnc){
+  var mentor=decodeURIComponent(mentorEnc);
+  confetti(70);playAwardSound();
+  showToast('🎉 Cheers for '+mentor+'\u2019s Team!','success');
+}
 function renderCommittee(){
   var ccEl=document.getElementById('classCommitteeList');
   if(!ccEl)return;
@@ -1692,6 +1698,7 @@ function renderCommittee(){
   document.getElementById('mentorTeams').innerHTML=ranked.map(function(rt,pos){
     var team=rt.team,col=rt.color;
     var maxC=Math.max.apply(null,rt.sortedMembers.map(function(r){return S.coins[r]||0;}))||1;
+    var medals3=['&#129351;','&#129352;','&#129353;'];
     var membersHtml=rt.sortedMembers.map(function(r,mi){
       var s=STU.find(function(x){return x.r===r;});
       if(!s)return '';
@@ -1700,8 +1707,10 @@ function renderCommittee(){
       var isCaptain=r===team.captain;
       var c=S.coins[r]||0;
       var pct=Math.max(4,Math.round(c/maxC*100));
-      return '<div class="team-rank-row" onclick="openProfile('+r+')">'
-        +'<div class="team-rank-num">'+(mi+1)+'</div>'
+      var medalCls=mi<3?' team-medal-'+(mi+1):'';
+      var rankMark=mi<3?medals3[mi]:(mi+1);
+      return '<div class="team-rank-row'+medalCls+'" onclick="openProfile('+r+')">'
+        +'<div class="team-rank-num">'+rankMark+'</div>'
         +'<div class="team-rank-av">'+av+'</div>'
         +'<div class="team-rank-body">'
         +'<div class="team-rank-name">'+(isCaptain?'&#128081; ':'')+esc(s.n)+'</div>'
@@ -1710,11 +1719,13 @@ function renderCommittee(){
         +'<div class="team-rank-coin">&#129689; '+c+'</div>'
         +'</div></div></div>';
     }).join('');
-    var rankBadge=pos===0?'<span class="hbadge gold" style="margin-right:6px">&#127942; Leading <span class="celebrate-lead">&#127882;</span></span>':'';
+    var rankBadge=pos===0?'<span class="hbadge gold" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-bottom:6px" onclick="event.stopPropagation();celebrateTeam(\''+encodeURIComponent(team.mentor)+'\')">&#127942; Leading <span class="celebrate-lead">&#127882;</span></span>':'';
     return '<div class="card" style="border-top:3px solid '+col+'">'
-      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:6px">'
-      +'<div class="team-header-title" style="font-size:14px;font-weight:700;color:var(--text)">'+rankBadge+'&#128302; '+esc(team.mentor)+'\u2019s Team ('+rt.sortedMembers.length+') <span style="color:var(--text3);font-weight:500;font-size:12px">&bull; '+esc(team.place)+'</span></div>'
-      +'<div class="hbadge" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+rt.total+' coins</div></div>'
+      +'<div style="margin-bottom:.75rem">'
+      +(rankBadge?'<div>'+rankBadge+'</div>':'')
+      +'<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">'
+      +'<div style="font-size:14px;font-weight:700;color:var(--text)">&#128302; '+esc(team.mentor)+'\u2019s Team ('+rt.sortedMembers.length+') <span style="color:var(--text3);font-weight:500;font-size:12px">&bull; '+esc(team.place)+'</span></div>'
+      +'<div class="hbadge" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+rt.total+' coins</div></div></div>'
       +'<div class="team-list-scroll">'+membersHtml+'</div></div>';
   }).join('');
 }
