@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sadad-dashboard-v1';
+const CACHE_NAME = 'sadad-dashboard-v2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -40,21 +40,23 @@ self.addEventListener('fetch', function (event) {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
 
-  // Network-first for the HTML shell so updates show up immediately when online.
-  if (req.mode === 'navigate' || url.pathname.endsWith('index.html') || url.pathname === '/' || url.pathname.endsWith('/')) {
+  // Network-first for the HTML shell AND the manifest, so config/orientation
+  // changes and app updates show up immediately instead of being stuck on
+  // whatever was cached at install time.
+  if (req.mode === 'navigate' || url.pathname.endsWith('index.html') || url.pathname.endsWith('manifest.json') || url.pathname === '/' || url.pathname.endsWith('/')) {
     event.respondWith(
       fetch(req).then(function (res) {
         const copy = res.clone();
         caches.open(CACHE_NAME).then(function (cache) { cache.put(req, copy); });
         return res;
       }).catch(function () {
-        return caches.match('./index.html');
+        return caches.match(req).then(function (cached) { return cached || caches.match('./index.html'); });
       })
     );
     return;
   }
 
-  // Cache-first for static assets (icons, manifest).
+  // Cache-first for static assets (icons only).
   event.respondWith(
     caches.match(req).then(function (cached) {
       return cached || fetch(req).then(function (res) {
