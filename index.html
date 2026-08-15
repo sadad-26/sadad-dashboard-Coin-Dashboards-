@@ -86,6 +86,16 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 /* METRICS */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem}
 .metric-card{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;position:relative;overflow:hidden}
+.bday-card{background:linear-gradient(135deg,#ff8a65 0%,#ff6b9d 55%,#c86dd7 100%);border:none;border-radius:var(--radius);padding:.9rem 1rem;margin-bottom:.9rem;box-shadow:0 8px 20px rgba(255,107,157,.25)}
+.bday-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.9);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem;display:flex;align-items:center;gap:6px}
+.bday-scroll{display:flex;gap:.6rem;overflow-x:auto;padding-bottom:2px}
+.bday-item{flex-shrink:0;width:82px;display:flex;flex-direction:column;align-items:center;text-align:center;background:rgba(255,255,255,.14);border-radius:14px;padding:.55rem .4rem;cursor:pointer}
+.bday-av{width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,.7);margin-bottom:5px;background:rgba(255,255,255,.2)}
+.bday-av img{width:100%;height:100%;object-fit:cover}
+.bday-name{font-size:10.5px;font-weight:700;color:#fff;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.bday-when{font-size:9.5px;color:rgba(255,255,255,.85);margin-top:2px;font-weight:600}
+.bday-item.today{background:rgba(255,255,255,.28);animation:bdayPulse 1.4s ease-in-out infinite}
+@keyframes bdayPulse{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-3px) scale(1.04)}}
 .metric-card::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:rgba(108,99,255,.1);pointer-events:none}
 .metric-val{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--text);line-height:1}
 .metric-lbl{font-size:11px;color:var(--text3);margin-top:4px}
@@ -520,6 +530,7 @@ canvas{display:block;width:100%!important}
     <div class="metric-card"><div class="metric-val" id="totCoins">0</div><div class="metric-lbl">Total coins awarded</div></div>
     <div class="metric-card" style="background:linear-gradient(135deg,#6C63FF,#8B5CF6)"><div class="metric-val" id="topName" style="font-size:15px;line-height:1.25;word-break:break-word;color:#fffffe">-</div><div class="metric-lbl" style="color:rgba(255,255,255,.75)">Top student</div></div>
   </div>
+  <div id="bdayWidgetWrap"></div>
   <div class="podium" id="podium"></div>
   <button class="btn btn-sm" id="sharePodiumBtn" style="width:100%;margin-bottom:.9rem;background:linear-gradient(135deg,#6C63FF,#8B5CF6);border:none;color:#fff;font-weight:700" onclick="shareTopPodium()">&#128247; Download / Share Top 3 Podium</button>
   <div class="card">
@@ -855,6 +866,8 @@ const STU=[
   {r:59,n:"Amaan Muhammed BK"},{r:60,n:"Muhammed Rabeeh PP"},{r:61,n:"Muhammed Anun Raazi"},
   {r:62,n:"Zamil Abdullah"},{r:64,n:"Mizhab MK"},{r:98,n:"Muhammed C"}
 ];
+// Birthdays as MM-DD (day-month, no year)
+const BDAYS={16:"12-04",18:"06-18",33:"12-12",35:"07-29",36:"08-21",37:"08-30",38:"07-24",39:"05-24",40:"01-23",41:"09-13",42:"08-26",43:"03-13",44:"03-12",45:"11-12",46:"12-23",47:"07-19",48:"04-23",49:"09-08",50:"01-08",51:"08-30",52:"03-22",53:"09-17",54:"01-13",55:"10-19",56:"03-06",57:"08-05",58:"08-17",59:"11-04",60:"08-08",61:"08-01",62:"04-09",64:"02-11",98:"09-12"};
 
 // ── CLASS COMMITTEE & MENTOR-MENTEE TEAMS ──
 // Roll numbers matched from the Students roster. A few names (Rabeeh Vml/Mlp,
@@ -1639,10 +1652,48 @@ function celebrate(roll){
   var stu=STU.find(function(s){return s.r===roll;});
   if(stu)showToast('🎉 Cheers for '+stu.n+'!','success');
 }
+function renderBirthdays(){
+  var wrap=document.getElementById('bdayWidgetWrap');
+  if(!wrap)return;
+  var now=new Date();
+  var thisYear=now.getFullYear();
+  var todayMD=fmt2(now.getMonth()+1)+'-'+fmt2(now.getDate());
+  var upcoming=[];
+  Object.keys(BDAYS).forEach(function(rollStr){
+    var roll=+rollStr;
+    var s=STU.find(function(x){return x.r===roll;});
+    if(!s)return;
+    var md=BDAYS[rollStr];
+    var parts=md.split('-');
+    var bdayThisYear=new Date(thisYear,+parts[0]-1,+parts[1]);
+    var diffDays=Math.round((bdayThisYear-new Date(thisYear,now.getMonth(),now.getDate()))/86400000);
+    if(diffDays<0){
+      var bdayNextYear=new Date(thisYear+1,+parts[0]-1,+parts[1]);
+      diffDays=Math.round((bdayNextYear-new Date(thisYear,now.getMonth(),now.getDate()))/86400000);
+    }
+    if(diffDays<=7)upcoming.push({roll:roll,name:s.n,md:md,diff:diffDays,isToday:md===todayMD});
+  });
+  if(!upcoming.length){wrap.innerHTML='';return;}
+  upcoming.sort(function(a,b){return a.diff-b.diff;});
+  var monNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var html='<div class="bday-card"><div class="bday-title">&#127874; Upcoming Birthdays</div><div class="bday-scroll">';
+  upcoming.forEach(function(u){
+    var parts=u.md.split('-');
+    var whenTxt=u.isToday?'Today!':(u.diff===1?'Tomorrow':u.diff+' days');
+    html+='<div class="bday-item'+(u.isToday?' today':'')+'" onclick="openProfile('+u.roll+')">'
+      +'<div class="bday-av">'+avatarHTML(u.roll,44,16)+'</div>'
+      +'<div class="bday-name">'+esc(u.name.split(' ')[0])+'</div>'
+      +'<div class="bday-when">'+(u.isToday?'&#127881; '+whenTxt:whenTxt+' &middot; '+monNames[+parts[0]-1]+' '+(+parts[1]))+'</div>'
+      +'</div>';
+  });
+  html+='</div></div>';
+  wrap.innerHTML=html;
+}
 function renderLB(){
   var sorted=sortedSTU();
   document.getElementById('totCoins').textContent=Object.values(S.coins).reduce(function(a,b){return a+b;},0);
   document.getElementById('topName').textContent=sorted[0]?sorted[0].n:'-';
+  renderBirthdays();
   var uc=uniqueCoins();var html='';
   sorted.forEach(function(st,i){
     var c=S.coins[st.r]||0;var medal=getMedal(c,uc);
