@@ -29,11 +29,11 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .toast.error{border-color:rgba(239,68,68,.4);color:#f87171}
 
 /* HEADER */
-.header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);border:1px solid var(--border);border-radius:20px;padding:1.1rem 1.25rem;margin-bottom:.75rem;display:flex;align-items:center;gap:1rem;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);border:1px solid var(--border);border-radius:20px;padding:1.1rem 1.25rem;margin-bottom:.75rem;display:flex;flex-direction:column;align-items:flex-start;gap:.6rem;position:relative;overflow:hidden;box-shadow:var(--shadow)}
 .header::after{content:'';position:absolute;top:0;right:0;width:220px;height:100%;background:linear-gradient(135deg,transparent,rgba(108,99,255,.15));pointer-events:none}
 .header-logos{display:flex;gap:.4rem;align-items:center;flex-shrink:0;z-index:1}
 .logo-img{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid rgba(108,99,255,.5);box-shadow:0 0 16px rgba(108,99,255,.3)}
-.header-text{flex:1;z-index:1}
+.header-text{width:100%;z-index:1}
 .header-text h1{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:#fffffe;letter-spacing:-.3px;margin-bottom:2px}
 .header-text p{font-size:10.5px;color:#a7a9be;line-height:1.4}
 .meta{display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap}
