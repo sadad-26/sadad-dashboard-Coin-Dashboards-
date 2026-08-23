@@ -103,6 +103,21 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .spotlight-name{font-size:16px;font-weight:800;color:#fff;line-height:1.25}
 .spotlight-stats{display:flex;gap:12px;margin-top:5px;flex-wrap:wrap}
 .spotlight-stat{font-size:11.5px;color:rgba(255,255,255,.9);font-weight:600;display:flex;align-items:center;gap:4px}
+.feed-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;margin-top:.75rem}
+.feed-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem;display:flex;align-items:center;gap:6px}
+.feed-list{max-height:260px;overflow-y:auto}
+.feed-row{display:flex;align-items:center;gap:10px;padding:.45rem 0;border-bottom:1px solid var(--border);cursor:pointer}
+.feed-row:last-child{border-bottom:none}
+.feed-av{width:32px;height:32px;border-radius:50%;overflow:hidden;flex-shrink:0}
+.feed-av img{width:100%;height:100%;object-fit:cover}
+.feed-text{flex:1;font-size:12.5px;color:var(--text2);line-height:1.4}
+.feed-text b{color:var(--text)}
+.feed-coins{color:#f5b942;font-weight:700}
+.feed-time{font-size:10.5px;color:var(--text3);flex-shrink:0;white-space:nowrap}
+.sec-leader{display:flex;align-items:center;gap:8px;background:rgba(245,185,66,.1);border:1px solid rgba(245,185,66,.25);border-radius:10px;padding:.4rem .6rem;margin-bottom:.6rem;cursor:pointer;font-size:12px;color:var(--text2)}
+.sec-leader-av{width:26px;height:26px;border-radius:50%;overflow:hidden;flex-shrink:0}
+.sec-leader-av img{width:100%;height:100%;object-fit:cover}
+.sec-leader b{color:var(--text)}
 .metric-card::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:rgba(108,99,255,.1);pointer-events:none}
 .metric-val{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--text);line-height:1}
 .metric-lbl{font-size:11px;color:var(--text3);margin-top:4px}
@@ -546,6 +561,7 @@ canvas{display:block;width:100%!important}
     <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.6rem">Rankings &mdash; tap to view profile</div>
     <div id="lbList"></div>
   </div>
+  <div id="activityFeedWrap"></div>
 </div>
 
 <!-- STUDENTS -->
@@ -1779,8 +1795,8 @@ function renderSpotlight(){
   if(!wrap)return;
   var eligible=STU.filter(function(s){return (S.coins[s.r]||0)>0;}).sort(function(a,b){return a.r-b.r;});
   if(!eligible.length){wrap.innerHTML='';return;}
-  var weekIdx=Math.floor(Date.now()/(7*86400000));
-  var pick=eligible[weekIdx%eligible.length];
+  var dayIdx=Math.floor(Date.now()/86400000);
+  var pick=eligible[dayIdx%eligible.length];
   var roll=pick.r;
   var total=S.coins[roll]||0;
   var myHist=S.history.filter(function(h){return h.r===roll&&h.coins>0;});
@@ -1799,12 +1815,43 @@ function renderSpotlight(){
     +(topCat?'<span class="spotlight-stat">&#11088; '+esc(topCat)+'</span>':'')
     +'</div></div></div>';
 }
+function relTime(ts){
+  if(!ts||!ts.toMillis)return '';
+  var ms=Date.now()-ts.toMillis();
+  if(ms<0)ms=0;
+  if(ms<60000)return 'just now';
+  var m=Math.floor(ms/60000);
+  if(m<60)return m+'m ago';
+  var h=Math.floor(m/60);
+  if(h<24)return h+'h ago';
+  var d=Math.floor(h/24);
+  if(d<7)return d+'d ago';
+  return '';
+}
+function renderActivityFeed(){
+  var wrap=document.getElementById('activityFeedWrap');
+  if(!wrap)return;
+  var recent=S.history.filter(function(h){return h.coins>0;}).slice(-8).reverse();
+  if(!recent.length){wrap.innerHTML='';return;}
+  var html='<div class="feed-card"><div class="feed-title">&#128225; Recent Activity</div><div class="feed-list">';
+  recent.forEach(function(h){
+    var rt=relTime(h.ts);
+    html+='<div class="feed-row" onclick="openProfile('+h.r+')">'
+      +'<div class="feed-av">'+avatarHTML(h.r,32,12)+'</div>'
+      +'<div class="feed-text"><b>'+esc(h.name)+'</b> earned <span class="feed-coins">'+h.coins+' coins</span> for '+esc(h.cat)+'</div>'
+      +(rt?'<div class="feed-time">'+rt+'</div>':'')
+      +'</div>';
+  });
+  html+='</div></div>';
+  wrap.innerHTML=html;
+}
 function renderLB(){
   var sorted=sortedSTU();
   document.getElementById('totCoins').textContent=Object.values(S.coins).reduce(function(a,b){return a+b;},0);
   document.getElementById('topName').textContent=sorted[0]?sorted[0].n:'-';
   renderBirthdays();
   renderSpotlight();
+  renderActivityFeed();
   var uc=uniqueCoins();var html='';
   sorted.forEach(function(st,i){
     var c=S.coins[st.r]||0;var medal=getMedal(c,uc);
@@ -2406,6 +2453,17 @@ function renderCategoriesTab(){
     :'';
   var html=S.catSectionOrder.map(function(secName){
     var cats=S.cats.filter(function(c){return c.section===secName;});
+    var catNames={};cats.forEach(function(c){catNames[c.name]=true;});
+    var byStu={};
+    S.history.forEach(function(h){if(h.coins>0&&catNames[h.cat])byStu[h.r]=(byStu[h.r]||0)+h.coins;});
+    var leaderRoll=Object.keys(byStu).sort(function(a,b){return byStu[b]-byStu[a];})[0];
+    var leaderHtml='';
+    if(leaderRoll){
+      var ls=STU.find(function(x){return x.r===+leaderRoll;});
+      if(ls)leaderHtml='<div class="sec-leader" onclick="event.stopPropagation();openProfile('+leaderRoll+')">'
+        +'<div class="sec-leader-av">'+avatarHTML(+leaderRoll,26,10)+'</div>'
+        +'<span>&#127942; Top: <b>'+esc(ls.n)+'</b> &mdash; '+byStu[leaderRoll]+' coins</span></div>';
+    }
     var subGroups={};var subOrder=[];
     cats.forEach(function(c){
       var key=c.sub||'';
@@ -2432,6 +2490,7 @@ function renderCategoriesTab(){
       +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">'
       +'<div style="font-size:13px;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:.04em">'+esc(secName)+'</div>'
       +'<div>'+editBtns+'</div></div>'
+      +leaderHtml
       +(body||'<div class="empty-state" style="padding:.4rem 0">No categories yet</div>')
       +addRow+'</div>';
   }).join('');
