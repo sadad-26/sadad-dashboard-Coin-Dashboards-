@@ -684,6 +684,7 @@ canvas{display:block;width:100%!important}
     <button class="sub-tab" onclick="showSub('editProf',this)">Students</button>
     <button class="sub-tab" onclick="showSub('cats',this)">Categories</button>
     <button class="sub-tab" onclick="showSub('hist',this)">History</button>
+    <button class="sub-tab" onclick="showSub('dupes',this)">&#128269; Duplicates</button>
     <button class="sub-tab" onclick="showSub('audit',this)">&#128269; Audit</button>
   </div>
 
@@ -789,6 +790,15 @@ canvas{display:block;width:100%!important}
         <input type="text" id="histSearch" placeholder="Search..." oninput="renderHist()" style="width:130px;margin-bottom:0;font-size:12px;padding:5px 10px">
       </div>
       <div id="histList"></div>
+    </div>
+  </div>
+
+  <div id="subtab-dupes" style="display:none">
+    <div class="card">
+      <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Duplicate Entry Finder</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:.75rem">Finds repeated coin entries (same student, category, coins, date &amp; note) that likely came from double-tapping "Add Coins". <b>Today's entries are always skipped</b> so nothing you added today gets touched.</div>
+      <button class="btn btn-primary" style="width:100%" onclick="renderDuplicates()">&#128269; Scan for Duplicates</button>
+      <div id="dupesList" style="margin-top:.75rem"></div>
     </div>
   </div>
 
@@ -2223,14 +2233,18 @@ function handleProfPhoto(input){
   });
 }
 function renderProfHist(roll){
-  var hist=S.history.filter(function(h){return h.r===roll;}).slice().reverse();
+  var chrono=S.history.filter(function(h){return h.r===roll;});
+  var running=0;
+  var withRunning=chrono.map(function(h){running+=h.coins;return {h:h,running:running};});
+  var hist=withRunning.slice().reverse();
   document.getElementById('pHistList').innerHTML=hist.length
-    ?hist.map(function(h){
-      var neg=h.coins<0;
+    ?hist.map(function(x){
+      var h=x.h,neg=h.coins<0;
       var catLine=esc(h.cat)+(h.note?' &mdash; <span style="color:var(--text3);font-weight:400">'+esc(h.note)+'</span>':'');
       return '<div class="hist-row"><span class="hbadge '+(neg?'red':'gold')+'">'+(neg?'':'+')+h.coins+'</span>'
         +'<span class="hcat">'+catLine+'</span><span class="hdate">'+h.date+'</span>'
-        +(admin?'<button class="btn-edit-sm" onclick="openEdit(\''+h.id+'\','+roll+')">Edit</button>'
+        +(admin?'<span class="hbadge blue" title="Running total after this entry">&#8721; '+x.running+'</span>'
+          +'<button class="btn-edit-sm" onclick="openEdit(\''+h.id+'\','+roll+')">Edit</button>'
           +'<button class="btn-del-sm" onclick="delEntry(\''+h.id+'\','+roll+')">Del</button>':'')+'</div>';
     }).join(''):'<div class="empty-state">No activity yet</div>';
 }
@@ -2287,7 +2301,9 @@ function qaAutofill(){
   var el=document.getElementById('qCoins');
   if(cat&&el)el.value=cat.coins;
 }
+var _quickAddLock=false;
 function quickAdd(roll){
+  if(_quickAddLock)return;
   var catId=document.getElementById('qCat').value;
   var cat=S.cats.find(function(c){return c.id===catId;});if(!cat)return;
   var coinsEl=document.getElementById('qCoins');
@@ -2297,12 +2313,16 @@ function quickAdd(roll){
   var note=noteEl?noteEl.value.trim():'';
   var stu=STU.find(function(s){return s.r===roll;});var now=new Date();
   var oldTotal=S.coins[roll]||0;
+  _quickAddLock=true;
+  var btn=document.querySelector('button[onclick="quickAdd('+roll+')"]');
+  if(btn){btn.disabled=true;btn.style.opacity='.6';}
   historyRef.add({r:roll,name:stu.n,cat:cat.name,coins:amt,note:note,addedBy:admin?admin.name:'',
     date:now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear(),ts:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){
     openProfile(roll);playAwardSound();confetti(36);
     showToast('Added '+amt+' coins to '+stu.n,'success');
     checkMilestone(roll,oldTotal,oldTotal+amt,stu.n);
-  }).catch(function(e){console.error('Quick add failed',e);showToast('Failed to save \u2014 check connection','error');});
+  }).catch(function(e){console.error('Quick add failed',e);showToast('Failed to save \u2014 check connection','error');})
+  .finally(function(){_quickAddLock=false;if(btn){btn.disabled=false;btn.style.opacity='';}});
 }
 function closeProfile(){closeModal('profOv');if(chart){chart.destroy();chart=null;}profRoll=-1;}
 
@@ -2402,12 +2422,17 @@ function checkMilestone(roll,oldTotal,newTotal,studentName){
     showToast('&#127882; '+studentName+' just crossed '+m+' coins!','success');
   },900);
 }
+var _addCoinsLock=false;
 function addCoins(){
+  if(_addCoinsLock)return;
   var roll=parseInt(document.getElementById('selStu').value);var catId=document.getElementById('selCat').value;
   var amt=parseInt(document.getElementById('coinAmt').value);var note=document.getElementById('coinNote').value;
   if(!roll||!catId||!amt||amt<1){showToast('Fill all fields!','error');return;}
   var cat=S.cats.find(function(c){return c.id===catId;});var stu=STU.find(function(s){return s.r===roll;});
   var oldTotal=S.coins[roll]||0;
+  _addCoinsLock=true;
+  var btn=document.querySelector('button[onclick="addCoins()"]');
+  if(btn){btn.disabled=true;btn.style.opacity='.6';}
   historyRef.add({r:roll,name:stu.n,cat:cat?cat.name:catId,coins:amt,note:note,addedBy:admin?admin.name:'',
     date:dateStrFromInput('coinDate'),ts:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){
     showToast('Added '+amt+' coins to '+stu.n+'!','success');
@@ -2415,20 +2440,27 @@ function addCoins(){
     var top=sortedSTU()[0];
     if(top&&top.r===roll){setTimeout(function(){confetti(90);showToast('🏆 '+stu.n+' is now Rank #1!','success');},350);}
     checkMilestone(roll,oldTotal,oldTotal+amt,stu.n);
-  }).catch(function(e){console.error('Add coins failed',e);showToast('Failed to save — check connection','error');});
+  }).catch(function(e){console.error('Add coins failed',e);showToast('Failed to save — check connection','error');})
+  .finally(function(){_addCoinsLock=false;if(btn){btn.disabled=false;btn.style.opacity='';}});
   document.getElementById('coinDate').value=todayISO();
 }
+var _deductCoinsLock=false;
 function deductCoins(){
+  if(_deductCoinsLock)return;
   var roll=parseInt(document.getElementById('dedStu').value);
   var reason=document.getElementById('dedReason').value.trim();
   var amt=parseInt(document.getElementById('dedAmt').value);
   var note=document.getElementById('dedNote').value.trim();
   if(!roll||!reason||!amt||amt<1){showToast('Fill all fields!','error');return;}
   var stu=STU.find(function(s){return s.r===roll;});
+  _deductCoinsLock=true;
+  var btn=document.querySelector('button[onclick="deductCoins()"]');
+  if(btn){btn.disabled=true;btn.style.opacity='.6';}
   historyRef.add({r:roll,name:stu.n,cat:'Deduction: '+reason,coins:-amt,note:note,addedBy:admin?admin.name:'',
     date:dateStrFromInput('dedDate'),ts:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){
     showToast('Deducted '+amt+' coins from '+stu.n,'error');playDeductSound();
-  }).catch(function(e){console.error('Deduct failed',e);showToast('Failed to save — check connection','error');});
+  }).catch(function(e){console.error('Deduct failed',e);showToast('Failed to save — check connection','error');})
+  .finally(function(){_deductCoinsLock=false;if(btn){btn.disabled=false;btn.style.opacity='';}});
   document.getElementById('dedReason').value='';document.getElementById('dedAmt').value='';document.getElementById('dedNote').value='';
   document.getElementById('dedDate').value=todayISO();
 }
@@ -2614,6 +2646,48 @@ function delH(id){
   if(!confirm('Delete?'))return;
   historyRef.doc(id).delete().catch(function(e){console.error('Delete failed',e);showToast('Delete failed','error');});
 }
+function renderDuplicates(){
+  var wrap=document.getElementById('dupesList');
+  if(!wrap)return;
+  var todayStr=todayDMY();
+  var groups={};
+  S.history.forEach(function(h){
+    if(h.date===todayStr)return; // never touch today's entries
+    var key=h.r+'|'+h.cat+'|'+h.coins+'|'+h.date+'|'+(h.note||'');
+    if(!groups[key])groups[key]=[];
+    groups[key].push(h);
+  });
+  var dupeGroups=Object.keys(groups).map(function(k){return groups[k];}).filter(function(g){return g.length>1;});
+  if(!dupeGroups.length){
+    wrap.innerHTML='<div class="empty-state">No duplicate entries found (today\u2019s entries are always excluded from this scan).</div>';
+    return;
+  }
+  wrap.innerHTML=dupeGroups.map(function(g,gi){
+    var h=g[0];
+    return '<div class="hist-row" style="flex-wrap:wrap">'
+      +'<span class="hbadge red">'+esc(h.name)+'</span>'
+      +'<span class="hcat">'+esc(h.cat)+(h.note?' &mdash; '+esc(h.note):'')+'</span>'
+      +'<span class="hbadge gold">+'+h.coins+'</span>'
+      +'<span class="hdate">'+h.date+'</span>'
+      +'<span class="hbadge red">&times;'+g.length+' copies</span>'
+      +'<button class="btn-del-sm" onclick="removeDuplicateGroup('+gi+')">Keep 1, delete '+(g.length-1)+' extra</button>'
+      +'</div>';
+  }).join('');
+  window._dupeGroups=dupeGroups;
+}
+function removeDuplicateGroup(gi){
+  var g=window._dupeGroups&&window._dupeGroups[gi];
+  if(!g||g.length<2)return;
+  var extras=g.slice(1); // keep the first, delete the rest
+  if(!confirm('Delete '+extras.length+' duplicate cop'+(extras.length===1?'y':'ies')+' of this entry? The original will be kept.'))return;
+  var batch=db.batch();
+  extras.forEach(function(h){batch.delete(historyRef.doc(h.id));});
+  batch.commit().then(function(){
+    showToast('Removed '+extras.length+' duplicate entr'+(extras.length===1?'y':'ies'),'success');
+    renderDuplicates();
+  }).catch(function(e){console.error('Duplicate cleanup failed',e);showToast('Failed to delete duplicates \u2014 check connection','error');});
+}
+function todayDMY(){var n=new Date();return n.getDate()+'/'+(n.getMonth()+1)+'/'+n.getFullYear();}
 // ── REPORTS ──
 let repChartObj=null;
 function parseDMY(s){var p=s.split('/');return new Date(+p[2],+p[1]-1,+p[0]);}
