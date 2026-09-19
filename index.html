@@ -796,7 +796,7 @@ canvas{display:block;width:100%!important}
   <div id="subtab-dupes" style="display:none">
     <div class="card">
       <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Duplicate Entry Finder</div>
-      <div style="font-size:12px;color:var(--text3);margin-bottom:.75rem">Finds repeated coin entries (same student, category, coins, date &amp; note) that likely came from double-tapping "Add Coins" &mdash; including today's entries. <b>Balarama Digest 2-coin awards are always skipped</b> since students can legitimately win that twice.</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:.75rem">Finds repeated coin entries (same student, category, coins, date &amp; note) that likely came from double-tapping "Add Coins" &mdash; including today's entries.</div>
       <button class="btn btn-primary" style="width:100%" onclick="renderDuplicates()">&#128269; Scan for Duplicates</button>
       <div id="dupesBulkWrap"></div>
       <div id="dupesList" style="margin-top:.75rem"></div>
@@ -1382,7 +1382,14 @@ function load(){
       S.sadad=d.sadad||defaultSadadState();
       if(migrateCatsIfNeeded())save();
       if(d.history&&d.history.length)tryMigrateHistory(d.history);
-    }else{
+    }else if(!snap.metadata.fromCache){
+      // Only ever seed fresh defaults when the SERVER (not the local cache) has
+      // confirmed the document truly does not exist. A cache-only "not found"
+      // snapshot can fire transiently on a cold start (e.g. right after a new
+      // deploy/service-worker update) even though the real data exists on the
+      // server — writing defaults at that point would silently wipe every
+      // wing's stars, roles and history. So we simply wait for the next
+      // (server-confirmed) snapshot instead of assuming data loss here.
       docRef.set(stateForSync()).catch(function(e){console.error('Firestore init failed',e);});
       seedFreshHistory();
     }
@@ -2652,15 +2659,13 @@ function renderDuplicates(){
   if(!wrap)return;
   var groups={};
   S.history.forEach(function(h){
-    var isBalaramaTwo=/balarama/i.test(h.cat||'')&&h.coins===2;
-    if(isBalaramaTwo)return; // Balarama Digest 2-coin awards are allowed to repeat — never flagged
     var key=h.r+'|'+h.cat+'|'+h.coins+'|'+h.date+'|'+(h.note||'');
     if(!groups[key])groups[key]=[];
     groups[key].push(h);
   });
   var dupeGroups=Object.keys(groups).map(function(k){return groups[k];}).filter(function(g){return g.length>1;});
   if(!dupeGroups.length){
-    wrap.innerHTML='<div class="empty-state">No duplicate entries found. (Balarama Digest 2-coin awards are always allowed to repeat and are skipped from this scan.)</div>';
+    wrap.innerHTML='<div class="empty-state">No duplicate entries found.</div>';
     document.getElementById('dupesBulkWrap').innerHTML='';
     return;
   }
@@ -2696,7 +2701,7 @@ function removeAllDuplicates(){
   var groups=window._dupeGroups;
   if(!groups||!groups.length)return;
   var totalExtras=groups.reduce(function(sum,g){return sum+(g.length-1);},0);
-  if(!confirm('Delete '+totalExtras+' duplicate entries across '+groups.length+' students/entries? One original copy of each will always be kept. Balarama Digest 2-coin awards are never touched.'))return;
+  if(!confirm('Delete '+totalExtras+' duplicate entries across '+groups.length+' students/entries? One original copy of each will always be kept.'))return;
   var batch=db.batch();
   groups.forEach(function(g){
     g.slice(1).forEach(function(h){batch.delete(historyRef.doc(h.id));});
